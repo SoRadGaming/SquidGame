@@ -1,12 +1,8 @@
 package com.soradgaming.squidgame.games;
 
-import com.sk89q.worldedit.math.Vector3;
 import com.soradgaming.squidgame.SquidGame;
 import com.soradgaming.squidgame.math.Cuboid;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
+import org.bukkit.*;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
@@ -15,6 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.scheduler.BukkitScheduler;
+import org.bukkit.util.BlockVector;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -43,8 +40,8 @@ public class Game1 implements Listener {
         playerListAlive = input;
         Started = true;
         canWalk = true;
-        int minutes = (plugin.getConfig().getInt("game1_timer")/60);
-        int seconds = (plugin.getConfig().getInt("game1_timer") - (minutes * 60));
+        int minutes = (plugin.getConfig().getInt("Game1.timer")/60);
+        int seconds = (plugin.getConfig().getInt("Game1.timer") - (minutes * 60));
         bossBar = Bukkit.createBossBar(ChatColor.BOLD + "Game Timer " + ChatColor.GOLD + minutes + ":" + ChatColor.GOLD + seconds , BarColor.BLUE, BarStyle.SOLID);
         bossBar.setVisible(true);
         bossBar.setProgress(0);
@@ -58,9 +55,9 @@ public class Game1 implements Listener {
             Player p = Bukkit.getPlayer(uuid);
             //GIVE BRIEFING
         }
-        timerInterval = (1 / (double) plugin.getConfig().getInt("game1_timer"));
+        timerInterval = (1 / (double) plugin.getConfig().getInt("Game1.timer"));
         // With BukkitScheduler
-        scheduler.runTaskLater(plugin, Game1::endGame1, 20L * (plugin.getConfig().getInt("game1_timer") + 1));
+        scheduler.runTaskLater(plugin, Game1::endGame1, 20L * (plugin.getConfig().getInt("Game1.timer") + 1));
         scheduler1.runTaskTimer(plugin, Game1::bossBarProgress, 20L, 20L);
         //START
         singDoll();
@@ -102,11 +99,13 @@ public class Game1 implements Listener {
             return;
         }
         Player player = e.getPlayer();
-        if (Started && playerList.contains(player.getUniqueId())) {
+        if (Started && playerListAlive.contains(player.getUniqueId())) {
             if (!canWalk) {
                 final Location location = e.getPlayer().getLocation();
                 if (getKillZone().contains(location)) {
                     playerListAlive.remove(player.getUniqueId());
+                    player.setGameMode(GameMode.SPECTATOR);
+                    //send message stating eliminated
                 }
             }
         }
@@ -116,10 +115,10 @@ public class Game1 implements Listener {
         if (!Started) {
             return;
         }
-        int max = 5;
-        int min = 1;
+        int max = plugin.getConfig().getInt("Game1.lightSwitchMax");
+        int min = plugin.getConfig().getInt("Game1.lightSwitchMin");
         final int time = (int) Math.floor(Math.random()*(max-min+1)+min);
-        broadcastTitle("games.first.green-light.title", "games.first.green-light.subtitle", time);
+        broadcastTitle("games.first.green-light.title", "games.first.green-light.subtitle",time);
         canWalk = true;
 
         redLight.runTaskLater(plugin, () -> {
@@ -135,34 +134,45 @@ public class Game1 implements Listener {
     public static void broadcastTitle(final String title, final String subtitle , int time) {
         for (final UUID uuid : playerList) {
             Player player = Bukkit.getPlayer(uuid);
-            Objects.requireNonNull(player).sendTitle(title, subtitle,0, time,0);
+            Objects.requireNonNull(player).sendTitle(ChatColor.translateAlternateColorCodes('&',title) , ChatColor.translateAlternateColorCodes('&',subtitle),10, time * 20,20);
         }
     }
 
     public static Cuboid getBarrier() {
         if (barrierZone == null) {
-            Location loc1 = plugin.getConfig().getLocation("games.first.barrier.first");
-            Location loc2 = plugin.getConfig().getLocation("games.first.barrier.second");
-            barrierZone = new Cuboid(Objects.requireNonNull(loc1), Objects.requireNonNull(loc2));
+            BlockVector vector1 = configToVectors("Game1.barrier.first_point");
+            BlockVector vector2 = configToVectors("Game1.barrier.second_point");
+            World world = Bukkit.getWorld(Objects.requireNonNull(plugin.getConfig().getString("Game1.world")));
+            barrierZone = new Cuboid(Objects.requireNonNull(world),vector1.getBlockX(),vector1.getBlockY(),vector1.getBlockZ(),vector2.getBlockX(),vector2.getBlockY(),vector2.getBlockZ());
         }
         return barrierZone;
     }
 
     public static Cuboid getKillZone() {
         if (killZone == null) {
-            Location loc1 = plugin.getConfig().getLocation("games.first.killZone.first");
-            Location loc2 = plugin.getConfig().getLocation("games.first.killZone.second");
-            killZone = new Cuboid(Objects.requireNonNull(loc1), Objects.requireNonNull(loc2));
+            BlockVector vector1 = configToVectors("Game1.killzone.first_point");
+            BlockVector vector2 = configToVectors("Game1.killzone.second_point");
+            World world = Bukkit.getWorld(Objects.requireNonNull(plugin.getConfig().getString("Game1.world")));
+            killZone = new Cuboid(Objects.requireNonNull(world),vector1.getBlockX(),vector1.getBlockY(),vector1.getBlockZ(),vector2.getBlockX(),vector2.getBlockY(),vector2.getBlockZ());
         }
         return killZone;
     }
 
     public static Cuboid getGoalZone() {
         if (goalZone == null) {
-            Location loc1 = plugin.getConfig().getLocation("games.first.goal.first");
-            Location loc2 = plugin.getConfig().getLocation("games.first.goal.second");
-            goalZone = new Cuboid(Objects.requireNonNull(loc1), Objects.requireNonNull(loc2));
+            BlockVector vector1 = configToVectors("Game1.goal.first_point");
+            BlockVector vector2 = configToVectors("Game1.goal.second_point");
+            World world = Bukkit.getWorld(Objects.requireNonNull(plugin.getConfig().getString("Game1.world")));
+            goalZone = new Cuboid(Objects.requireNonNull(world),vector1.getBlockX(),vector1.getBlockY(),vector1.getBlockZ(),vector2.getBlockX(),vector2.getBlockY(),vector2.getBlockZ());
         }
         return goalZone;
+    }
+
+    public static BlockVector configToVectors(String key) {
+        BlockVector pos = new BlockVector();
+        pos.setX(plugin.getConfig().getDouble(key + ".x"));
+        pos.setY(plugin.getConfig().getDouble(key + ".y"));
+        pos.setZ(plugin.getConfig().getDouble(key + ".z"));
+        return pos;
     }
 }

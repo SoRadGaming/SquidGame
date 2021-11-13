@@ -2,6 +2,7 @@ package com.soradgaming.squidgame.commands;
 
 import com.soradgaming.squidgame.SquidGame;
 import com.soradgaming.squidgame.managment.gameManager;
+import com.soradgaming.squidgame.managment.playerManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -39,10 +40,9 @@ public class Commands implements CommandExecutor {
             sender.sendMessage(ChatColor.BLUE + "-----------------=[" + ChatColor.GREEN + "SquidGame" + ChatColor.BLUE + "]=-----------------");
             sender.sendMessage(ChatColor.GREEN + "/sq help" + ChatColor.BLUE + "  The help command.");
             sender.sendMessage(ChatColor.GREEN + "/sq reload" + ChatColor.BLUE + "  To reload the plugin");
-            sender.sendMessage(ChatColor.GREEN + "/sq add player group" + ChatColor.BLUE + " Add player to Data Base");
-            sender.sendMessage(ChatColor.GREEN + "/sq remove player group" + ChatColor.BLUE + " Remove player to Data Base");
-            sender.sendMessage(ChatColor.GREEN + "/sq addall" + ChatColor.BLUE + " Add All Online players to Universal Group All");
-            sender.sendMessage(ChatColor.GREEN + "/sq list" + ChatColor.BLUE + " See all players in Data Base");
+            sender.sendMessage(ChatColor.GREEN + "/sq join" + ChatColor.BLUE + " Join Game");
+            sender.sendMessage(ChatColor.GREEN + "/sq leave" + ChatColor.BLUE + " Leave Game");
+            sender.sendMessage(ChatColor.GREEN + "/sq list" + ChatColor.BLUE + " See all players in Game");
             sender.sendMessage(ChatColor.GREEN + "/sq Initialise" + ChatColor.BLUE + " Start Data Base Creation " + ChatColor.RED + "REQUIRED");
             sender.sendMessage(ChatColor.GREEN + "/sq start" + ChatColor.BLUE + " Start the Plugin " + ChatColor.RED + "REQUIRED");
             sender.sendMessage(ChatColor.GREEN + "/sq start minigames group" + ChatColor.BLUE + " start a MiniGame with certain group of players");
@@ -51,14 +51,6 @@ public class Commands implements CommandExecutor {
             sender.sendMessage(ChatColor.GREEN + "Plugin made by: " + ChatColor.BLUE + "SoRadGaming & Shinx");
             sender.sendMessage(ChatColor.BLUE + "---------------------------------------------------");
 
-        } else if (args.length == 1 && args[0].equalsIgnoreCase("addall")) {
-            if (sender.isOp()) {
-                gameManager.addAllOnlinePlayers();
-                sender.sendMessage(ChatColor.GREEN + "Added all Players");
-            } else {
-                sender.sendMessage(ChatColor.RED + "You don't have permission to do that");
-                return true;
-            }
         } else if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
             if (sender.isOp()) {
                 plugin.reloadConfig();
@@ -69,15 +61,7 @@ public class Commands implements CommandExecutor {
                 sender.sendMessage(ChatColor.RED + "You don't have permission to do that");
                 return true;
             }
-        } else if (args.length == 1 && args[0].equalsIgnoreCase("Initialise")) {
-            if (sender.isOp()) {
-                gameManager.Initialise();
-                sender.sendMessage(ChatColor.GREEN + "All Players Initialised");
-            } else {
-                sender.sendMessage(ChatColor.RED + "You don't have permission to do that");
-                return true;
-            }
-        }   else if (args.length == 1 && args[0].equalsIgnoreCase("start")) {
+        } else if (args.length == 1 && args[0].equalsIgnoreCase("start")) {
             if (sender.isOp()) {
                 //Star
                 sender.sendMessage(ChatColor.GREEN + "Started");
@@ -95,38 +79,26 @@ public class Commands implements CommandExecutor {
                 sender.sendMessage(ChatColor.RED + "You don't have permission to do that");
                 return true;
             }
-        } else if (args.length == 2 && args[0].equalsIgnoreCase("add")) {
-            if (sender.isOp()) {
-                Player player = Bukkit.getServer().getPlayer(args[1]);
-                if (player == null) {
-                    sender.sendMessage(ChatColor.RED + "Player can not be null!");
+        } else if (args.length == 1 && args[0].equalsIgnoreCase("join")) {
+            Player player = ((Player) sender).getPlayer();
+            if (gameManager.getPlayerList().size() <= plugin.getConfig().getInt("max-players")) {
+                if (gameManager.addPlayer(Objects.requireNonNull(player))) {
+                    sender.sendMessage(ChatColor.BLUE + player.getName() + ChatColor.GREEN + " Joined");
+                    playerManager.checkStart();
                     return true;
+                } else {
+                    sender.sendMessage(ChatColor.BLUE + player.getName() + ChatColor.RED + " Can't Join");
                 }
-                if (gameManager.addPlayer(player)) {
-                    sender.sendMessage(ChatColor.BLUE + player.getName() + ChatColor.GREEN + " Added");
-                    return true;
-                }
-                sender.sendMessage(ChatColor.BLUE + player.getName() + ChatColor.RED + " Already Added");
             } else {
-                sender.sendMessage(ChatColor.RED + "You don't have permission to do that");
-                return true;
+                sender.sendMessage(ChatColor.BLUE + Objects.requireNonNull(player).getName() + ChatColor.RED + " Can't Join, Max Players");
             }
-        } else if (args.length == 2 && args[0].equalsIgnoreCase("remove")) {
-            if (sender.isOp()) {
-                Player player = Bukkit.getServer().getPlayer(args[1]);
-
-                if (player == null) {
-                        sender.sendMessage(ChatColor.RED + "Player can not be null!");
-                        return true;
-                    }
-                if (gameManager.removePlayer(player)) {
-                    sender.sendMessage(ChatColor.BLUE + player.getName() + ChatColor.GREEN + " Removed");
-                    return true;
-                }
-                sender.sendMessage(ChatColor.BLUE + player.getName() + ChatColor.RED + " Not in List Already");
-            } else {
-                sender.sendMessage(ChatColor.RED + "You don't have permission to do that");
+        } else if (args.length == 1 && args[0].equalsIgnoreCase("leave")) {
+            Player player = ((Player) sender).getPlayer();
+            if (gameManager.removePlayer(Objects.requireNonNull(player))) {
+                sender.sendMessage(ChatColor.BLUE + player.getName() + ChatColor.GREEN + " Leafed");
                 return true;
+            } else {
+                sender.sendMessage(ChatColor.BLUE + player.getName() + ChatColor.RED + " Not in a Game");
             }
         }  else if (args.length == 4 && args[0].equalsIgnoreCase("data")) {
             if (sender.isOp()) {

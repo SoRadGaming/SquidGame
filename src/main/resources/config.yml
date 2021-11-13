@@ -6,43 +6,46 @@
 ##############################################
 #                   GAME 1                   #
 ##############################################
-game1_world: World
-game1_timer: 60
-game1_spawn:
-  ==: org.bukkit.Location
+Game1:
   world: World
-  x: -819.0
-  y: 4.0
-  z: 409.0
-  pitch: 0.0
-  yaw: 0.0
-game1_barrier:
-  first_point:
-    x: -790.0
-    y: 3.0
-    z: 415.0
-  second_point:
-   x: -850.0
-   y: 7.0
-    z: 415.0
-game1_killzone:
-  first_point:
-    x: -789.0
-    y: 22.0
-    z: 510.0
- second_point:
-   x: -850.0
-    y: 22.0
-   z: 415.0
-game1_goal:
-  first_point:
-    x: -850.0
+  timer: 60
+  lightSwitchMin: 1
+  lightSwitchMax: 5
+  spawn:
+    ==: org.bukkit.Location
+    world: World
+    x: -819.0
     y: 4.0
-    z: 511.0
-  second_point:
-    x: -789.0
-    y: 22.0
-    z: 537.0
+    z: 409.0
+    pitch: 0.0
+    yaw: 0.0
+  barrier:
+    first_point:
+      x: -790.0
+      y: 3.0
+      z: 415.0
+    second_point:
+      x: -850.0
+      y: 7.0
+      z: 415.0
+  killzone:
+    first_point:
+      x: -789.0
+      y: 22.0
+      z: 510.0
+    second_point:
+      x: -850.0
+      y: 22.0
+      z: 415.0
+  goal:
+    first_point:
+      x: -850.0
+      y: 4.0
+      z: 511.0
+    second_point:
+      x: -789.0
+      y: 22.0
+      z: 537.0
 ##############################################
 #                   GAME 2                   #
 ##############################################
@@ -139,6 +142,7 @@ hungergames_points_per_kills: 1
 ##############################################
 min-players: 2
 max-players: 12
+intermission-time: 10
 #Lobby Location
 Lobby:
   ==: org.bukkit.Location

@@ -23,7 +23,7 @@ import java.util.Objects;
 public final class SquidGame extends JavaPlugin {
     public static SquidGame plugin;
     public File dataFile = new File(getDataFolder() + "/data/players.yml");
-    public File messageFile = new File(getDataFolder() + "messages.yml");
+    public File messageFile = new File(getDataFolder(), "messages.yml");
     public FileConfiguration data = YamlConfiguration.loadConfiguration(dataFile);
     public FileConfiguration messages = YamlConfiguration.loadConfiguration(messageFile);
 
@@ -121,7 +121,6 @@ public final class SquidGame extends JavaPlugin {
         if (messageFile.exists()) {
             try {
                 messages.load(messageFile);
-
             } catch (IOException | InvalidConfigurationException e) {
 
                 e.printStackTrace();
@@ -135,10 +134,9 @@ public final class SquidGame extends JavaPlugin {
         }
     }
 
-    //Reload Messages
     public void reloadMessages() {
         if (messageFile == null) {
-            messageFile = new File(getDataFolder() + "messages.yml");
+            messageFile = new File(getDataFolder(), "messages.yml");
         }
         messages = YamlConfiguration.loadConfiguration(messageFile);
 

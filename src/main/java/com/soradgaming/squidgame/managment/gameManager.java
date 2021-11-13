@@ -9,18 +9,12 @@ import java.util.*;
 
 public class gameManager {
 
-    public static ArrayList<UUID> playerList;
-    public static ArrayList<UUID> playerListAlive;
+    public static ArrayList<UUID> playerList = new ArrayList<>();
+    public static ArrayList<UUID> playerListAlive = new ArrayList<>();
     private static final SquidGame plugin = SquidGame.plugin;
 
-    public static void addAllOnlinePlayers() {
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            addPlayer(player);
-        }
-    }
-
     public static void Initialise() {
-        bracketManager.playerBracket(playerList);
+        playerManager.playerBracket(playerList);
     }
 
     public static void updateAlive() {

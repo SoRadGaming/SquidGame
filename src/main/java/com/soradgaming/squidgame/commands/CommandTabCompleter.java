@@ -18,10 +18,10 @@ public class CommandTabCompleter implements TabCompleter {
 
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String s, String[] args) {
-        if(cmd.getName().equalsIgnoreCase("umg")){
+        if(cmd.getName().equalsIgnoreCase("squidgame")){
             ArrayList<String> completions = new ArrayList<>();
             if (args.length == 1) {
-                completions = new ArrayList<>(Arrays.asList("add", "help", "reload", "remove", "list", "data", "Initialise", "start","addall"));
+                completions = new ArrayList<>(Arrays.asList("join", "help", "reload", "leave", "list", "data", "Initialise", "start"));
                 completions = getApplicableTabCompletes(args[0], completions);
             } else if (args.length == 2) {
                 switch (args[0]) {
