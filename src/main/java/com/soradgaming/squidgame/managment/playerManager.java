@@ -32,7 +32,6 @@ public class playerManager implements Listener {
         int min = plugin.getConfig().getInt("min-players");
         if (gameManager.getPlayerList().size() >= min) {
             gameManager.Initialise();
-            gameManager.updateAlive();
             Game1.startGame1(gameManager.getPlayerList());
             //Message Starting
         }
