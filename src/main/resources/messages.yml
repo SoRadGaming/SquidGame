@@ -1,0 +1,109 @@
+arena:
+  join: "&a%squidgame_arena_joined% &ehas joined the game &b(%squidgame_arena_players%/%squidgame_arena_maxplayers%)"
+  leave: "&c%squidgame_arena_leaved% &ehas left the game &b(%squidgame_arena_players%/%squidgame_arena_maxplayers%)"
+  starting: "&eThe game starts in &b%squidgame_arena_time% &eseconds."
+  started: "&aThe game has started Good luck!"
+  death: "&c%squidgame_arena_death% &ehas been eliminated."
+  no-enough-players: "&cNot enough players to start the game, %squidgame_arena_required% required."
+  already-in-game: "&cYou are already in a game."
+  not-in-game: "&cYou are not in game."
+  misconfigured-arena: "&cThere is no arena or it is misconfigured. Contact the server administrator."
+  no-available-arena: "&cThere is no arena available."
+
+setup:
+  arena-not-exist: "&cThere is no arena with this name."
+  arena-already-exist: "&cThere is already an arena with this name."
+  arena-created: "&aThe arena has been created successfully! Use &b/squid editarena &e(name) &eto edit it."
+  set-lobby: "&aYou have defined the lobby in your current position."
+
+events:
+  intermission:
+    title: "&b&lIntermission"
+    subtitle: "&dNext game starts in %squidgame_arena_time% seconds"
+  game-start:
+    title: "&6Go Ahead!"
+    subtitle: "&aGood Luck"
+  game-timeout:
+    title: "&cIt's over!"
+    subtitle: "&etime is over"
+  game-timeout-died:
+    title: "&4You have died"
+    subtitle: "&cYou have not arrived on time"
+  game-pass:
+    title: "&2You've passed!"
+    subtitle: "&aYou advance to the next round"
+  finish:
+    draw:
+      title: "&6&lDraw"
+      subtitle: "&cAll the players have died"
+    winner:
+      title: "&d&lFinished"
+      subtitle: "&b%squidgame_arena_winner% &ehas won the game"
+
+games:
+  first:
+    name: "&cRed Light &7| &aGreen Light"
+    tutorial:
+      "1": 
+        title: "&6&l1"
+        subtitle: "&eTo win you must reach the goal"
+      "2":
+        title: "&6&l2"
+        subtitle: "&eYou can only move when the doll says &aGreen light"
+      "3":
+        title: "&6&l3"
+        subtitle: "&eIf you move in &cRed Light&e, you will be eliminated"
+      "4":
+        title: "&6&l4"
+        subtitle: "&eThey'll only have 60 seconds, it's time to start."
+    green-light:
+      title: "&2&lGreen Light"
+      subtitle: "&aNow you can move"
+    red-light:
+      title: "&4&lRed Light"
+      subtitle: "&cDO NOT MOVE"
+  third:
+    name: "&cBattle"
+    tutorial:
+      "1": 
+        title: "&6&l1"
+        subtitle: "&eIt is enough to survive to win"
+      "2":
+        title: "&6&l2"
+        subtitle: "&eWhen the game starts the PvP will be activated"
+      "3":
+        title: "&6&l3"
+        subtitle: "&eAny player who dies at the hands of another will be eliminated"
+      "4":
+        title: "&6&l4"
+        subtitle: "&eGood luck surviving"
+  sixth:
+    name: "&bGlasses"
+    tutorial:
+      "2":
+        title: "&6&l1"
+        subtitle: "&eWhen the game starts, 2 rows of platforms will be generated"
+      "3": 
+        title: "&6&l2"
+        subtitle: "&eOf each pair of platforms, one will contain a trap"
+      "4":
+        title: "&6&l3"
+        subtitle: "&eThat when stepped on, it will fall"
+      "1":
+        title: "&6&l4"
+        subtitle: "&eTo win you must get to the other side of the arena"
+  seventh:
+    name: "&dSquid&fGame"
+    tutorial:
+      "1":
+        title: "&6&l1"
+        subtitle: "&eYou must push your enemies out of the arena"
+      "2":
+        title: "&6&l2"
+        subtitle: "&eIf a player is out, they will be eliminated"
+      "3": 
+        title: "&6&l3"
+        subtitle: "&eIf a player dies, they will also be eliminated"
+      "4":
+        title: "&6&l4"
+        subtitle: "&eYou will win if you are the last one standing"
