@@ -83,6 +83,7 @@ public class Commands implements CommandExecutor {
             Player player = ((Player) sender).getPlayer();
             if (gameManager.getPlayerList().size() <= plugin.getConfig().getInt("max-players")) {
                 if (gameManager.addPlayer(Objects.requireNonNull(player))) {
+                    gameManager.revivePlayer(player);
                     sender.sendMessage(ChatColor.BLUE + player.getName() + ChatColor.GREEN + " Joined");
                     playerManager.checkStart();
                     return true;
@@ -95,6 +96,7 @@ public class Commands implements CommandExecutor {
         } else if (args.length == 1 && args[0].equalsIgnoreCase("leave")) {
             Player player = ((Player) sender).getPlayer();
             if (gameManager.removePlayer(Objects.requireNonNull(player))) {
+                gameManager.revivePlayer(player);
                 sender.sendMessage(ChatColor.BLUE + player.getName() + ChatColor.GREEN + " Leafed");
                 return true;
             } else {

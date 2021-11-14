@@ -49,94 +49,27 @@ Game1:
 ##############################################
 #                   GAME 2                   #
 ##############################################
-#Spleef Arena Map
-spleef_arena: DeathSpleef
-spleef_start_command: spleef join DeathSpleef
-spleef_end_command: spleef leave
-spleef_max_player_count: 6
-#Spleef Message (support for & colours):
-spleef_message: Joining Parkour
-spleef_rule: Points are based of CheckPopints and if you Finish
-#Prize (Points):
-spleef_first: 5
+
 ##############################################
 #                   GAME 3                   #
 ##############################################
-#TNTRun Arena Map
-tntrun_arena: arena1
-tntrun_start_command: tntrun join arena1
-tntrun_end_command: tntrun leave
-tntrun_max_player_count: 24
-#TNTRun Message (support for & colours):
-tntrun_message: Joining TNTRun
-tntrun_rule: Points are based of if you Win
-#Prize (Points):
-tntrun_first: 10
-tntrun_second: 7
-tntrun_third: 5
+
 ##############################################
 #                   GAME 4                   #
 ##############################################
-#Parkour Arena Map
-game4_arena: parkoursnake
-game4_start_command: pa join parkoursnake
-game4_end_command: pa leave
-game4_timer: 600
-game4_max_player_count: 24
-#Parkour Message (support for & colours):
-game4_message: Joining Parkour
-game4_rule: Points are based of CheckPopints and if you Finish
-#Prize (Points):
-game4_first: 10
-game4_second: 7
-game4_third: 5
-game4_finish: 3
-game4_points_per_checkpoint: 1
+
 ##############################################
 #                   GAME 5                   #
 ##############################################
-#buildbattle Arena Map
-buildbattle_arena: Solo
-buildbattle_start_command: buildbattle join Solo
-buildbattle_end_command: buildbattle leave
-buildbattle_max_player_count: 6
-#buildbattle Message (support for & colours):
-buildbattle_message: Joining Build Battle
-buildbattle_rule: Points are based of Votes and if you Win
-#Prize (Points):
-buildbattle_first_bonus: 10
-buildbattle_points_per_point: 1
+
 ##############################################
 #                   GAME 6                   #
 ##############################################
-#BedWars Arena Map
-bedwars_arena: Castle-Defenders
-bedwars_start_command: bedwars join Castle-Defenders
-bedwars_end_command: bedwars leave
-bedwars_max_player_count: 12
-#BedWars Message (support for & colours):
-bedwars_message: Joining BedWars
-bedwars_rule: Points are based of Kills and if you Win
-#Prize (Points):
-bedwars_first: 10
-bedwars_points_per_kills: 1
-bedwars_points_per_bed: 5
+
 ##############################################
 #                   GAME 7                   #
 ##############################################
-#HungerGames Arena Map:
-hungergames_arena: breeze2
-hungergames_start_command: hg join breeze2
-hungergames_end_command: hg leave
-hungergames_max_player_count: 24
-#HungerGames Message (support for & colours):
-hungergames_message: Joining HungerGames
-hungergames_rule: Points are based of Kills and if you Win
-#Prize (Points):
-hungergames_first: 10
-hungergames_second: 7
-hungergames_third: 5
-hungergames_points_per_kills: 1
+
 ##############################################
 #                   Global                   #
 ##############################################

@@ -23,6 +23,8 @@ public class gameManager {
 
     public static ArrayList<UUID> getPlayerList() { return playerListAlive; }
 
+    public static ArrayList<UUID> getDeadPlayerList() { return playerListDead; }
+
     public static synchronized boolean removePlayer(Player player) {
         if(playerListAlive.contains(player.getUniqueId())) {
             playerListAlive.remove(player.getUniqueId());
@@ -32,9 +34,18 @@ public class gameManager {
         }
     }
 
-    public static synchronized boolean killPlayer(Player player) {
+    public static synchronized boolean revivePlayer(Player player) {
         if(playerListDead.contains(player.getUniqueId())) {
             playerListDead.remove(player.getUniqueId());
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static synchronized boolean killPlayer(Player player) {
+        if(!playerListDead.contains(player.getUniqueId())) {
+            playerListDead.add(player.getUniqueId());
             return true;
         } else {
             return false;
@@ -63,12 +74,12 @@ public class gameManager {
         return plugin.messages.getString(key);
     }
 
-    public static String formatMessage(final String message) {
+    public static String formatMessage(final Player player, final String message) {
         final String translatedMessage = getI18n(message);
         final String formatColor = ChatColor.translateAlternateColorCodes('&',
                 translatedMessage == null
                         ? "§6§lWARNING: §eMissing translation key §7" + message + " §ein message.yml file"
                         : translatedMessage);
-        return PlaceholderAPI.setPlaceholders(Bukkit.getOnlinePlayers().iterator().next().getPlayer(),formatColor);
+        return PlaceholderAPI.setPlaceholders(player,formatColor);
     }
 }

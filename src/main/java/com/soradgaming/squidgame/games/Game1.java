@@ -35,14 +35,16 @@ public class Game1 implements Listener {
     private static Cuboid killZone;
     private static Cuboid goalZone;
     private static Cuboid barrierZone;
+    public static int timeGlobal;
 
     public static void startGame1(ArrayList<UUID> input) {
         playerList = input;
         Started = true;
         canWalk = true;
+        timeGlobal = plugin.getConfig().getInt("Game1.timer");
         int minutes = (plugin.getConfig().getInt("Game1.timer")/60);
         int seconds = (plugin.getConfig().getInt("Game1.timer") - (minutes * 60));
-        bossBar = Bukkit.createBossBar(ChatColor.BOLD + "Game Timer " + ChatColor.GOLD + minutes + ":" + ChatColor.GOLD + seconds , BarColor.BLUE, BarStyle.SOLID);
+        bossBar = Bukkit.createBossBar(ChatColor.BOLD + "Game Timer : " + ChatColor.GOLD + minutes + ":" + ChatColor.GOLD + seconds , BarColor.BLUE, BarStyle.SOLID);
         bossBar.setVisible(true);
         bossBar.setProgress(0);
         for (Block block : getBarrier().getBlocks()) {
@@ -76,6 +78,10 @@ public class Game1 implements Listener {
         if (bossBarProgress + timerInterval < 1) {
             bossBar.setProgress(bossBarProgress + timerInterval);
         }
+        timeGlobal = timeGlobal - 1;
+        int minutes = (timeGlobal/60);
+        int seconds = (timeGlobal - (minutes * 60));
+        bossBar.setTitle(ChatColor.BOLD + "Game Timer : " + ChatColor.GOLD + minutes + ":" + ChatColor.GOLD + seconds);
     }
 
     public static void endGame1() {
@@ -90,23 +96,23 @@ public class Game1 implements Listener {
             broadcastTitle("events.game-timeout.title", "events.game-timeout.subtitle", 5);
             Started = false;
             canWalk = false;
-            for (UUID value : gameManager.playerListAlive) {
+            for (UUID value : gameManager.getPlayerList()) {
                 Player player = Bukkit.getPlayer(value);
                 Location location = Objects.requireNonNull(player).getLocation();
                 if (!getGoalZone().contains(location)) { //Player didn't make it to end in time
-                    gameManager.playerListAlive.remove(player.getUniqueId());
-                    gameManager.playerListDead.add(player.getUniqueId());
+                    gameManager.removePlayer(player);
+                    gameManager.killPlayer(player);
                 }
                 Objects.requireNonNull(player).teleport(Objects.requireNonNull(plugin.getConfig().getLocation("Lobby")));
             }
             Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                for (final UUID uuid : gameManager.playerListDead) {
+                for (final UUID uuid : gameManager.getDeadPlayerList()) {
                     Player player = Bukkit.getPlayer(uuid);
-                    Objects.requireNonNull(player).sendTitle(ChatColor.translateAlternateColorCodes('&',"events.game-timeout-died.title") , ChatColor.translateAlternateColorCodes('&',"events.game-timeout-died.subtitle"),10, 30,20);
+                    Objects.requireNonNull(player).sendTitle(gameManager.formatMessage(player,"events.game-timeout-died.title") , gameManager.formatMessage(player,"events.game-timeout-died.subtitle"),10, 30,10);
                 }
-                for (final UUID uuid : gameManager.playerListAlive) {
+                for (final UUID uuid : gameManager.getPlayerList()) {
                     Player player = Bukkit.getPlayer(uuid);
-                    Objects.requireNonNull(player).sendTitle(ChatColor.translateAlternateColorCodes('&',"events.game-pass.title") , ChatColor.translateAlternateColorCodes('&',"events.game-pass.subtitle"),10, 30,20);
+                    Objects.requireNonNull(player).sendTitle(gameManager.formatMessage(player,"events.game-pass.title") , gameManager.formatMessage(player,"events.game-pass.subtitle"),10, 30,10);
                 }
             }, 40L);
         }
@@ -120,12 +126,12 @@ public class Game1 implements Listener {
             return;
         }
         Player player = e.getPlayer();
-        if (Started && gameManager.playerListAlive.contains(player.getUniqueId())) {
+        if (Started && gameManager.getPlayerList().contains(player.getUniqueId())) {
             if (!canWalk) {
                 final Location location = e.getPlayer().getLocation();
                 if (getKillZone().contains(location)) {
-                    gameManager.playerListAlive.remove(player.getUniqueId());
-                    gameManager.playerListDead.add(player.getUniqueId());
+                    gameManager.removePlayer(player);
+                    gameManager.killPlayer(player);
                     player.setGameMode(GameMode.SPECTATOR);
                     //TODO: send message stating eliminated
                 }
@@ -156,7 +162,7 @@ public class Game1 implements Listener {
     public static void broadcastTitle(final String title, final String subtitle , int time) {
         for (final UUID uuid : playerList) {
             Player player = Bukkit.getPlayer(uuid);
-            Objects.requireNonNull(player).sendTitle(gameManager.formatMessage(title) , gameManager.formatMessage(subtitle),0, time * 20,0);
+            Objects.requireNonNull(player).sendTitle(gameManager.formatMessage(player,title) , gameManager.formatMessage(player,subtitle),10, time * 20,10);
         }
     }
 
