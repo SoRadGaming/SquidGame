@@ -4,6 +4,7 @@ import com.soradgaming.squidgame.SquidGame;
 import com.soradgaming.squidgame.games.Game1;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitScheduler;
@@ -40,6 +41,10 @@ public class playerManager implements Listener {
             for (UUID uuid : gameManager.getPlayerList()) {
                 Objects.requireNonNull(Bukkit.getPlayer(uuid)).sendMessage(gameManager.formatMessage(player,"arena.join"));
             }
+            plugin.data.set(player.getUniqueId() + ".last_location",player.getLocation());
+            plugin.data.set(player.getUniqueId() + ".gamemode", player.getGameMode().toString());
+            player.teleport(Objects.requireNonNull(plugin.getConfig().getLocation("Lobby")));
+            player.setGameMode(GameMode.ADVENTURE);
             return true;
         }
         return false;
@@ -53,6 +58,8 @@ public class playerManager implements Listener {
             for (UUID uuid : gameManager.getPlayerList()) {
                 Objects.requireNonNull(Bukkit.getPlayer(uuid)).sendMessage(gameManager.formatMessage(player,"arena.leave"));
             }
+            player.teleport(Objects.requireNonNull(plugin.data.getLocation(player.getUniqueId() + ".last_location")));
+            player.setGameMode(GameMode.valueOf(plugin.data.getString(player.getUniqueId() + ".gamemode")));
             return true;
         }
         return false;
