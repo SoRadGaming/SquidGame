@@ -48,7 +48,7 @@ public class Game1 implements Listener {
         bossBar.setVisible(true);
         bossBar.setProgress(0);
         for (Block block : getBarrier().getBlocks()) {
-            if (block.getType().toString().equals("AIR")) {
+            if (block.getType() == Material.AIR) {
                 block.setType(Material.BARRIER);
             }
         }
@@ -65,7 +65,7 @@ public class Game1 implements Listener {
             scheduler1.runTaskTimer(plugin, Game1::bossBarProgress, 20L, 20L);
             //START
             for (Block block : getBarrier().getBlocks()) {
-                if (block.getType().toString().equals("BARRIER")) {
+                if (block.getType() == Material.BARRIER) {
                     block.setType(Material.AIR);
                 }
             }
@@ -117,6 +117,7 @@ public class Game1 implements Listener {
                 }
             }, 40L);
         }
+        //TODO Call Gather Event
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -134,7 +135,8 @@ public class Game1 implements Listener {
                     gameManager.removePlayer(player);
                     gameManager.killPlayer(player);
                     player.setGameMode(GameMode.SPECTATOR);
-                    //TODO: send message stating eliminated
+                    //TODO: send message stating eliminated and check if game ends
+
                 }
             }
         }

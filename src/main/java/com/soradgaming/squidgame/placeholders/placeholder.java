@@ -1,6 +1,7 @@
 package com.soradgaming.squidgame.placeholders;
 
 import com.soradgaming.squidgame.SquidGame;
+import com.soradgaming.squidgame.managment.gameManager;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -12,17 +13,17 @@ public class placeholder extends PlaceholderExpansion {
     private static final SquidGame plugin = SquidGame.plugin;
 
     @Override
-    public String getIdentifier() {
+    public @NotNull String getIdentifier() {
         return "squidgame";
     }
 
     @Override
-    public String getAuthor() {
+    public @NotNull String getAuthor() {
         return "SoRadGaming & Shinx";
     }
 
     @Override
-    public String getVersion() {
+    public @NotNull String getVersion() {
         return plugin.getDescription().getVersion();
     }
 
@@ -41,6 +42,29 @@ public class placeholder extends PlaceholderExpansion {
         {
             Set<UUID> leadBoardSet = scoreboard.grabData().keySet();
             List<UUID> leadBoard = new ArrayList<>(leadBoardSet);
+            String[] args = params.split("_");
+            if(args[0].equalsIgnoreCase("arena")){
+                if (args[1].equalsIgnoreCase("joined")) {
+                    return Objects.requireNonNull(Bukkit.getPlayer(Objects.requireNonNull(plugin.data.getString("join")))).getName();
+                } else if (args[1].equalsIgnoreCase("players")) {
+                    return String.valueOf(gameManager.getPlayerList().size() + gameManager.getDeadPlayerList().size());
+                } else if (args[1].equalsIgnoreCase("maxplayers")) {
+                    return String.valueOf(plugin.getConfig().getInt("max-players"));
+                } else if (args[1].equalsIgnoreCase("leaved")) {
+                    return Objects.requireNonNull(Bukkit.getPlayer(Objects.requireNonNull(plugin.data.getString("leave")))).getName();
+                } else if (args[1].equalsIgnoreCase("time")) {
+                    return String.valueOf(plugin.getConfig().getInt("start-time"));
+                } else if (args[1].equalsIgnoreCase("death")) {
+                    return Objects.requireNonNull(Bukkit.getPlayer(Objects.requireNonNull(plugin.data.getString("dead")))).getName();
+                } else if (args[1].equalsIgnoreCase("required")) {
+                    return String.valueOf(plugin.getConfig().getInt("min-players"));
+                } else if (args[1].equalsIgnoreCase("winner")) {
+                    return Objects.requireNonNull(Bukkit.getPlayer(Objects.requireNonNull(plugin.data.getString("winner")))).getName();
+                } else {
+                    return null;
+                }
+            }
+
             if(params.equalsIgnoreCase("wins")){
                 return String.valueOf(plugin.data.getInt(player.getUniqueId() + ".wins"));
             }

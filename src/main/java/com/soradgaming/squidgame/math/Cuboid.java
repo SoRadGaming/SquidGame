@@ -604,26 +604,8 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
             return x < sizeX && y < sizeY && z < sizeZ;
         }
 
-        //1.18 has negative y values, this fixed all negative cords (reason for all the statements)
         public Block next() {
-            Block b;
-            if (this.baseX < 0 && this.baseY > 0 && this.baseZ > 0) {
-                b = this.w.getBlockAt(this.baseX - this.x, this.baseY + this.y, this.baseZ + this.z);
-            } else if (this.baseX > 0 && this.baseY < 0 && this.baseZ > 0) {
-                b = this.w.getBlockAt(this.baseX + this.x, this.baseY - this.y, this.baseZ + this.z);
-            } else if (this.baseX > 0 && this.baseY > 0 && this.baseZ < 0) {
-                b = this.w.getBlockAt(this.baseX + this.x, this.baseY + this.y, this.baseZ - this.z);
-            }  else if (this.baseX < 0 && this.baseY < 0 && this.baseZ > 0) {
-                b = this.w.getBlockAt(this.baseX - this.x, this.baseY - this.y, this.baseZ + this.z);
-            }  else if (this.baseX > 0 && this.baseY < 0 && this.baseZ < 0) {
-                b = this.w.getBlockAt(this.baseX + this.x, this.baseY - this.y, this.baseZ - this.z);
-            }  else if (this.baseX < 0 && this.baseY > 0 && this.baseZ < 0) {
-                b = this.w.getBlockAt(this.baseX - this.x, this.baseY + this.y, this.baseZ - this.z);
-            }  else if (this.baseX < 0 && this.baseY < 0 && this.baseZ < 0) {
-                b = this.w.getBlockAt(this.baseX - this.x, this.baseY - this.y, this.baseZ - this.z);
-            } else {
-                b = this.w.getBlockAt(this.baseX + this.x, this.baseY + this.y, this.baseZ + this.z);
-            }
+            Block b = this.w.getBlockAt(this.baseX + this.x, this.baseY + this.y, this.baseZ + this.z);
             if (++x >= this.sizeX) {
                 this.x = 0;
                 if (++this.y >= this.sizeY) {

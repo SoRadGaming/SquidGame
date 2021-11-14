@@ -46,6 +46,7 @@ public class gameManager {
     public static synchronized boolean killPlayer(Player player) {
         if(!playerListDead.contains(player.getUniqueId())) {
             playerListDead.add(player.getUniqueId());
+            plugin.data.set("dead",player.getUniqueId());
             return true;
         } else {
             return false;

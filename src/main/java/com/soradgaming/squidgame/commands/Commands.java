@@ -81,26 +81,19 @@ public class Commands implements CommandExecutor {
             }
         } else if (args.length == 1 && args[0].equalsIgnoreCase("join")) {
             Player player = ((Player) sender).getPlayer();
-            if (gameManager.getPlayerList().size() <= plugin.getConfig().getInt("max-players")) {
-                if (gameManager.addPlayer(Objects.requireNonNull(player))) {
-                    gameManager.revivePlayer(player);
-                    sender.sendMessage(ChatColor.BLUE + player.getName() + ChatColor.GREEN + " Joined");
-                    playerManager.checkStart();
-                    return true;
-                } else {
-                    sender.sendMessage(ChatColor.BLUE + player.getName() + ChatColor.RED + " Can't Join");
-                }
+            if (playerManager.playerJoin(player)) {
+                sender.sendMessage(ChatColor.BLUE + Objects.requireNonNull(player).getName() + ChatColor.GREEN + " Joined");
+                return true;
             } else {
-                sender.sendMessage(ChatColor.BLUE + Objects.requireNonNull(player).getName() + ChatColor.RED + " Can't Join, Max Players");
+                sender.sendMessage(ChatColor.BLUE + Objects.requireNonNull(player).getName() + ChatColor.RED + " Can't Join");
             }
         } else if (args.length == 1 && args[0].equalsIgnoreCase("leave")) {
             Player player = ((Player) sender).getPlayer();
-            if (gameManager.removePlayer(Objects.requireNonNull(player))) {
-                gameManager.revivePlayer(player);
-                sender.sendMessage(ChatColor.BLUE + player.getName() + ChatColor.GREEN + " Leafed");
+            if (playerManager.playerLeave(player)) {
+                sender.sendMessage(ChatColor.BLUE + Objects.requireNonNull(player).getName() + ChatColor.GREEN + " Leafed");
                 return true;
             } else {
-                sender.sendMessage(ChatColor.BLUE + player.getName() + ChatColor.RED + " Not in a Game");
+                sender.sendMessage(ChatColor.BLUE + Objects.requireNonNull(player).getName() + ChatColor.RED + " Not in a Game");
             }
         }  else if (args.length == 4 && args[0].equalsIgnoreCase("data")) {
             if (sender.isOp()) {

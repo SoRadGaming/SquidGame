@@ -76,6 +76,7 @@ Game1:
 min-players: 2
 max-players: 12
 intermission-time: 10
+start-time: 30
 #Lobby Location
 Lobby:
   ==: org.bukkit.Location
