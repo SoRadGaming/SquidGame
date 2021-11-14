@@ -46,7 +46,10 @@ public class gameManager {
     public static synchronized boolean killPlayer(Player player) {
         if(!playerListDead.contains(player.getUniqueId())) {
             playerListDead.add(player.getUniqueId());
-            plugin.data.set("dead",player.getUniqueId());
+            plugin.data.set("dead",player.getUniqueId().toString());
+            for (UUID uuid : gameManager.getPlayerList()) {
+                Objects.requireNonNull(Bukkit.getPlayer(uuid)).sendMessage(gameManager.formatMessage(player,"arena.death"));
+            }
             return true;
         } else {
             return false;

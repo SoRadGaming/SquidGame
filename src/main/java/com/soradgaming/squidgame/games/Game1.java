@@ -104,20 +104,21 @@ public class Game1 implements Listener {
                     gameManager.killPlayer(player);
                     player.setGameMode(GameMode.SPECTATOR);
                 }
-                Objects.requireNonNull(player).teleport(Objects.requireNonNull(plugin.getConfig().getLocation("Lobby")));
             }
             Bukkit.getScheduler().runTaskLater(plugin, () -> {
                 for (final UUID uuid : gameManager.getDeadPlayerList()) {
                     Player player = Bukkit.getPlayer(uuid);
                     Objects.requireNonNull(player).sendTitle(gameManager.formatMessage(player,"events.game-timeout-died.title") , gameManager.formatMessage(player,"events.game-timeout-died.subtitle"),10, 30,10);
+                    Objects.requireNonNull(player).teleport(Objects.requireNonNull(plugin.getConfig().getLocation("Lobby")));
                 }
                 for (final UUID uuid : gameManager.getPlayerList()) {
                     Player player = Bukkit.getPlayer(uuid);
                     Objects.requireNonNull(player).sendTitle(gameManager.formatMessage(player,"events.game-pass.title") , gameManager.formatMessage(player,"events.game-pass.subtitle"),10, 30,10);
+                    Objects.requireNonNull(player).teleport(Objects.requireNonNull(plugin.getConfig().getLocation("Lobby")));
                 }
             }, 40L);
+            //TODO Next Event
         }
-        //TODO Call Gather Event
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -135,8 +136,7 @@ public class Game1 implements Listener {
                     gameManager.removePlayer(player);
                     gameManager.killPlayer(player);
                     player.setGameMode(GameMode.SPECTATOR);
-                    //TODO: send message stating eliminated and check if game ends
-
+                    player.sendMessage();
                 }
             }
         }

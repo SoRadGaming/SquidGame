@@ -35,8 +35,8 @@ public class playerManager implements Listener {
     public static boolean playerJoin(Player player) {
         if (gameManager.getPlayerList().size() <= plugin.getConfig().getInt("max-players") && gameManager.addPlayer(Objects.requireNonNull(player))) {
             gameManager.revivePlayer(player);
+            plugin.data.set("join",player.getUniqueId().toString());
             playerManager.checkStart();
-            plugin.data.set("join",player.getUniqueId());
             for (UUID uuid : gameManager.getPlayerList()) {
                 Objects.requireNonNull(Bukkit.getPlayer(uuid)).sendMessage(gameManager.formatMessage(player,"arena.join"));
             }
@@ -49,7 +49,7 @@ public class playerManager implements Listener {
         if (gameManager.removePlayer(Objects.requireNonNull(player))) {
             gameManager.revivePlayer(player);
             playerManager.checkStart();
-            plugin.data.set("leave",player.getUniqueId());
+            plugin.data.set("leave",player.getUniqueId().toString());
             for (UUID uuid : gameManager.getPlayerList()) {
                 Objects.requireNonNull(Bukkit.getPlayer(uuid)).sendMessage(gameManager.formatMessage(player,"arena.leave"));
             }
