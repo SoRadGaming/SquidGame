@@ -16,71 +16,50 @@ import java.util.Objects;
 
 public class PlayerWand {
     private static final SquidGame plugin = SquidGame.plugin;
-    private BlockVector firstPoint;
-    private BlockVector secondPoint;
-    private World world;
-    private PlayerWand wand = null;
+    private static BlockVector firstPoint;
+    private static BlockVector secondPoint;
+    private static ItemStack wand = null;
 
-    public BlockVector getFirstPoint() {
-        return this.firstPoint;
+    public static BlockVector getFirstPoint() {
+        return firstPoint;
     }
 
-    public BlockVector getSecondPoint() {
-        return this.secondPoint;
+    public static BlockVector getSecondPoint() {
+        return secondPoint;
     }
 
-    public Cuboid getCuboid() {
-        return new Cuboid(this.world, this.firstPoint, this.secondPoint);
+    public static void setFirstPoint(final Location loc) {
+        firstPoint = new BlockVector(loc.getX(), loc.getY(), loc.getZ());
     }
 
-    public void setFirstPoint(final BlockVector vector) {
-        this.firstPoint = vector;
+    public static void setSecondPoint(final Location loc) {
+        secondPoint = new BlockVector(loc.getX(), loc.getY(), loc.getZ());
     }
 
-    public void setSecondPoint(final BlockVector vector) {
-        this.secondPoint = vector;
+    public static boolean isComplete() {
+        return firstPoint != null && secondPoint != null;
     }
 
-    public void setFirstPoint(final Location loc, final World world) {
-        this.firstPoint = new BlockVector(loc.getX(), loc.getY(), loc.getZ());
-        this.world = world;
+    public static ItemStack getWand() {
+        return wand;
     }
 
-    public void setSecondPoint(final Location loc) {
-        this.secondPoint = new BlockVector(loc.getX(), loc.getY(), loc.getZ());
-    }
+    public ItemStack createWand() {
+        if (wand == null) {
+            final ItemStack item = new ItemStack(Material.BLAZE_ROD);
+            final ItemMeta meta = item.getItemMeta();
+            final List<String> lore = new ArrayList<>();
 
-    public boolean isComplete() {
-        return this.firstPoint != null && this.secondPoint != null;
-    }
+            lore.add("§7");
+            lore.add("§aLeft-click: §eSet first point.");
+            lore.add("§aRight-click: §eSet second point.");
+            lore.add("§7");
+            Objects.requireNonNull(meta).setLore(lore);
 
-    public PlayerWand getWand() {
-        return this.wand;
-    }
-
-    public PlayerWand createWand(final PlayerWand wand) {
-        this.wand = wand;
-        return this.wand;
-    }
-
-    public static void wandGive(Player player) {
-        final ItemStack item = new ItemStack(Material.BLAZE_ROD);
-        final ItemMeta meta = item.getItemMeta();
-        final List<String> lore = new ArrayList<>();
-
-        lore.add("§7");
-        lore.add("§aLeft-click: §eSet first point.");
-        lore.add("§aRight-click: §eSet second point.");
-        lore.add("§7");
-        Objects.requireNonNull(meta).setLore(lore);
-
-        meta.setDisplayName("§dRegion wand §7(Left/Right click)");
-        item.setItemMeta(meta);
-
-        player.getInventory().addItem(item);
-        player.updateInventory();
-
-        PlayerWand squidPlayer = (PlayerWand) player;
-        squidPlayer.createWand(new PlayerWand());
+            meta.setDisplayName("§dRegion wand §7(Left/Right click)");
+            item.setItemMeta(meta);
+            wand = item;
+        }
+        return wand;
     }
 }

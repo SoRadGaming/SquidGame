@@ -12,6 +12,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -25,8 +26,6 @@ public class Commands implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String s, String[] args) {
-        final PlayerWand playerwand = (PlayerWand) sender;
-        final PlayerWand wand = playerwand.getWand();
         final Player plot = (Player) sender;
         final Location loc = plot.getLocation();
         if (args.length == 0) {
@@ -99,7 +98,9 @@ public class Commands implements CommandExecutor {
             }
         } else if (args.length == 1 && args[0].equalsIgnoreCase("wand")) {
             if (sender.isOp()) {
-                PlayerWand.wandGive((Player) sender);
+                Player player = (Player) sender;
+                player.getInventory().addItem(PlayerWand.getWand());
+                player.updateInventory();
             } else {
                 sender.sendMessage(ChatColor.RED + "You don't have permission to do that");
                 return true;
@@ -113,10 +114,11 @@ public class Commands implements CommandExecutor {
         } else if (args.length == 3 && args[0].equalsIgnoreCase("set")) {
             if (sender.isOp()) {
                 Player player = (Player) sender;
+                ItemStack wand = PlayerWand.getWand();
                 if (wand == null) {
                     player.sendMessage("§cYou don't have an region wand, use /sq wand to get it.");
                     return false;
-                } else if (!wand.isComplete()) {
+                } else if (!PlayerWand.isComplete()) {
                     player.sendMessage("§cYou need to set area with your region wand first.");
                     return false;
                 }
@@ -125,17 +127,17 @@ public class Commands implements CommandExecutor {
                         switch (args[2]) {
                             case "spawn":
                             case "barrier":
-                                Cuboid.setConfigVectors("Game1.barrier", wand.getFirstPoint(), wand.getSecondPoint());
+                                Cuboid.setConfigVectors("Game1.barrier", PlayerWand.getFirstPoint(), PlayerWand.getSecondPoint());
                                 player.sendMessage("§eFirst game " + "barrier" + "§a set with your location wand §7("
-                                        + wand.getFirstPoint().toString() + ") (" + wand.getSecondPoint().toString() + ")");
+                                        + PlayerWand.getFirstPoint().toString() + ") (" + PlayerWand.getSecondPoint().toString() + ")");
                             case "killzone":
-                                Cuboid.setConfigVectors("Game1.killzone", wand.getFirstPoint(), wand.getSecondPoint());
+                                Cuboid.setConfigVectors("Game1.killzone", PlayerWand.getFirstPoint(), PlayerWand.getSecondPoint());
                                 player.sendMessage("§eFirst game " + "killzone" + "§a set with your location wand §7("
-                                        + wand.getFirstPoint().toString() + ") (" + wand.getSecondPoint().toString() + ")");
+                                        + PlayerWand.getFirstPoint().toString() + ") (" + PlayerWand.getSecondPoint().toString() + ")");
                             case "goal":
-                                Cuboid.setConfigVectors("Game1.goal", wand.getFirstPoint(), wand.getSecondPoint());
+                                Cuboid.setConfigVectors("Game1.goal", PlayerWand.getFirstPoint(), PlayerWand.getSecondPoint());
                                 player.sendMessage("§eFirst game " + "goal" + "§a set with your location wand §7("
-                                        + wand.getFirstPoint().toString() + ") (" + wand.getSecondPoint().toString() + ")");
+                                        + PlayerWand.getFirstPoint().toString() + ") (" + PlayerWand.getSecondPoint().toString() + ")");
                         }
                     case "Game2":
                     case "Game3":

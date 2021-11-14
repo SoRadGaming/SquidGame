@@ -3,6 +3,7 @@ package com.soradgaming.squidgame.listeners;
 import com.soradgaming.squidgame.SquidGame;
 import com.soradgaming.squidgame.utils.PlayerWand;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -15,17 +16,14 @@ public class PlayerInteractListener implements Listener {
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent e) {
-        PlayerWand player = (PlayerWand) e.getPlayer();
-
-        if (player.getWand() != null && e.getItem() != null && e.getItem().getType().equals(Material.BLAZE_ROD)) {
-            final PlayerWand wand = player.getWand();
-
+        Player player = e.getPlayer();
+        if (player.getItemInUse() == PlayerWand.getWand() && e.getItem() != null && e.getItem().getType().equals(Material.BLAZE_ROD)) {
             if (e.getAction() == Action.LEFT_CLICK_BLOCK) {
-                wand.setFirstPoint(Objects.requireNonNull(e.getClickedBlock()).getLocation(),e.getClickedBlock().getLocation().getWorld());
-                e.getPlayer().sendMessage("§aSet §dfirst §apoint §7(§e" + wand.getFirstPoint().toString() + "§7)");
+                PlayerWand.setFirstPoint(Objects.requireNonNull(e.getClickedBlock()).getLocation());
+                e.getPlayer().sendMessage("§aSet §dfirst §apoint §7(§e" + PlayerWand.getFirstPoint().toString() + "§7)");
             } else if (e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                wand.setSecondPoint(Objects.requireNonNull(e.getClickedBlock()).getLocation());
-                e.getPlayer().sendMessage("§aSet §bsecond §apoint §7(§e" + wand.getSecondPoint().toString() + "§7)");
+                PlayerWand.setSecondPoint(Objects.requireNonNull(e.getClickedBlock()).getLocation());
+                e.getPlayer().sendMessage("§aSet §bsecond §apoint §7(§e" + PlayerWand.getSecondPoint().toString() + "§7)");
             }
             e.setCancelled(true);
         }
