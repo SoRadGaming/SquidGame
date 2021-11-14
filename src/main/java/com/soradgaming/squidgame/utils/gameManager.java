@@ -1,7 +1,6 @@
-package com.soradgaming.squidgame.managment;
+package com.soradgaming.squidgame.utils;
 
 import com.soradgaming.squidgame.SquidGame;
-import com.soradgaming.squidgame.games.Game1;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

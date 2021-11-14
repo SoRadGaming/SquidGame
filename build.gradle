@@ -33,7 +33,6 @@ dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.17.1-R0.1-SNAPSHOT'
     compileOnly "org.jetbrains:annotations:22.0.0"
     compileOnly "me.clip:placeholderapi:2.10.10"
-    compileOnly "com.sk89q.worldedit:worldedit-core:7.2.0-SNAPSHOT"
 }
 
 def targetJavaVersion = 16
@@ -48,7 +47,7 @@ java {
 
 tasks.withType(JavaCompile).configureEach {
     if (targetJavaVersion >= 16 || JavaVersion.current().isJava10Compatible()) {
-        options.release = targetJavaVersion
+        options.release = targetJavaVersion as Property<Integer>
     }
 }
 

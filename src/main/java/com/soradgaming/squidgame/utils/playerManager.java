@@ -1,9 +1,8 @@
-package com.soradgaming.squidgame.managment;
+package com.soradgaming.squidgame.utils;
 
 import com.soradgaming.squidgame.SquidGame;
 import com.soradgaming.squidgame.games.Game1;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -65,7 +64,7 @@ public class playerManager implements Listener {
         return false;
     }
 
-    public static void checkStart() {
+    public static boolean checkStart() {
         int min = plugin.getConfig().getInt("min-players");
         BukkitScheduler gameStartTask = Bukkit.getScheduler();
         if (gameManager.getPlayerList().size() >= min && !gameStarted) {
@@ -83,8 +82,10 @@ public class playerManager implements Listener {
                 Player player = Bukkit.getPlayer(uuid);
                 Objects.requireNonNull(player).sendMessage(gameManager.formatMessage(player, "arena.starting"));
             }
+            return true;
         } else {
             gameStartTask.cancelTasks(plugin);
+            return false;
         }
     }
 }

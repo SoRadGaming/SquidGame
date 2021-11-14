@@ -1,7 +1,7 @@
 package com.soradgaming.squidgame.placeholders;
 
 import com.soradgaming.squidgame.SquidGame;
-import com.soradgaming.squidgame.managment.gameManager;
+import com.soradgaming.squidgame.utils.gameManager;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;

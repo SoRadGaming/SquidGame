@@ -1,5 +1,6 @@
 package com.soradgaming.squidgame.math;
 
+import com.soradgaming.squidgame.SquidGame;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
@@ -9,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializable {
+    private static final SquidGame plugin = SquidGame.plugin;
     protected final String worldName;
     protected final int x1, y1, z1;
     protected final int x2, y2, z2;
@@ -83,11 +85,6 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
         this.z1 = Math.min(z1, z2);
         this.z2 = Math.max(z1, z2);
     }
-    /*
-    public Cuboid(String world, BlockVector vector1, BlockVector vector2) {
-        new Cuboid(world,vector1.getBlockX(),vector1.getBlockY(),vector1.getBlockZ(),vector2.getBlockX(),vector2.getBlockY(),vector2.getBlockZ());
-    }
-     */
 
     public Cuboid(@NotNull Map<String,Object> map) {
         worldName = (String)map.get("worldName");
@@ -97,6 +94,17 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
         y2 = (Integer) map.get("y2");
         z1 = (Integer) map.get("z1");
         z2 = (Integer) map.get("z2");
+    }
+
+    public Cuboid(World world, BlockVector firstPoint, BlockVector secondPoint) {
+        this.worldName = world.toString();
+        this.x1 = firstPoint.getBlockX();
+        this.y1 = firstPoint.getBlockY();
+        this.z1 = firstPoint.getBlockZ();
+        this.x2 = secondPoint.getBlockX();
+        this.y2 = secondPoint.getBlockY();
+        this.z2 = secondPoint.getBlockZ();
+
     }
 
     @Override
@@ -545,6 +553,32 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
             }
         }
         return res;
+    }
+
+    /*
+    public BlockVector getFirstPoint(String key) {
+        double x = plugin.getConfig().getDouble(key + ".first_point.x");
+        double y = plugin.getConfig().getDouble(key + ".first_point.y");
+        double z = plugin.getConfig().getDouble(key + ".first_point.z");
+        return new BlockVector(x,y,z);
+    }
+
+    public BlockVector getSecondPoint(String key) {
+        double x = plugin.getConfig().getDouble(key + ".second_point.x");
+        double y = plugin.getConfig().getDouble(key + ".second_point.y");
+        double z = plugin.getConfig().getDouble(key + ".second_point.z");
+        return new BlockVector(x,y,z);
+    }
+     */
+
+    public static void setConfigVectors(String key, BlockVector pos1, BlockVector pos2) {
+        plugin.getConfig().set(key + ".first_point.x",pos1.getBlockX());
+        plugin.getConfig().set(key + ".first_point.y",pos1.getBlockY());
+        plugin.getConfig().set(key + ".first_point.z",pos1.getBlockZ());
+        plugin.getConfig().set(key + ".second_point.x",pos2.getBlockX());
+        plugin.getConfig().set(key + ".second_point.y",pos2.getBlockY());
+        plugin.getConfig().set(key + ".second_point.z",pos2.getBlockZ());
+        plugin.saveConfig();
     }
 
     public List<Block> getBlocks() {

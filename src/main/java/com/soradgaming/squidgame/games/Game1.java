@@ -1,7 +1,7 @@
 package com.soradgaming.squidgame.games;
 
 import com.soradgaming.squidgame.SquidGame;
-import com.soradgaming.squidgame.managment.gameManager;
+import com.soradgaming.squidgame.utils.gameManager;
 import com.soradgaming.squidgame.math.Cuboid;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -25,8 +25,8 @@ public class Game1 implements Listener {
     private static ArrayList<UUID> playerList;
     private static boolean Started = false;
     private static boolean canWalk = true;
-    private static final BukkitScheduler scheduler = Bukkit.getScheduler();
-    private static final BukkitScheduler scheduler1 = Bukkit.getScheduler();
+    private static final BukkitScheduler gameTimer = Bukkit.getScheduler();
+    private static final BukkitScheduler bossBarProgress = Bukkit.getScheduler();
     private static final BukkitScheduler redLight = Bukkit.getScheduler();
     private static final BukkitScheduler greenLight = Bukkit.getScheduler();
     private static final BukkitScheduler delay = Bukkit.getScheduler();
@@ -61,8 +61,8 @@ public class Game1 implements Listener {
         timerInterval = (1 / (double) plugin.getConfig().getInt("Game1.timer"));
         // With BukkitScheduler
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            scheduler.runTaskLater(plugin, Game1::endGame1, 20L * (plugin.getConfig().getInt("Game1.timer") + 1));
-            scheduler1.runTaskTimer(plugin, Game1::bossBarProgress, 20L, 20L);
+            gameTimer.runTaskLater(plugin, Game1::endGame1, 20L * (plugin.getConfig().getInt("Game1.timer") + 1));
+            bossBarProgress.runTaskTimer(plugin, Game1::bossBarProgress, 20L, 20L);
             //START
             for (Block block : getBarrier().getBlocks()) {
                 if (block.getType() == Material.BARRIER) {
@@ -85,8 +85,8 @@ public class Game1 implements Listener {
     }
 
     public static void endGame1() {
-        scheduler1.cancelTasks(plugin);
-        scheduler.cancelTasks(plugin);
+        bossBarProgress.cancelTasks(plugin);
+        gameTimer.cancelTasks(plugin);
         redLight.cancelTasks(plugin);
         greenLight.cancelTasks(plugin);
         delay.cancelTasks(plugin);
@@ -136,7 +136,6 @@ public class Game1 implements Listener {
                     gameManager.removePlayer(player);
                     gameManager.killPlayer(player);
                     player.setGameMode(GameMode.SPECTATOR);
-                    player.sendMessage();
                 }
             }
         }

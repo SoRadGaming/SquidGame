@@ -1,11 +1,9 @@
 package com.soradgaming.squidgame.commands;
 
 import com.soradgaming.squidgame.SquidGame;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -21,25 +19,30 @@ public class CommandTabCompleter implements TabCompleter {
         if(cmd.getName().equalsIgnoreCase("squidgame")){
             ArrayList<String> completions = new ArrayList<>();
             if (args.length == 1) {
-                completions = new ArrayList<>(Arrays.asList("join", "help", "reload", "leave", "list", "data", "Initialise", "start"));
+                completions = new ArrayList<>(Arrays.asList("join", "help", "reload", "leave", "list", "end", "start", "set", "wand"));
                 completions = getApplicableTabCompletes(args[0], completions);
             } else if (args.length == 2) {
-                switch (args[0]) {
-                    case "add":
-                    case "set":
-                    case "remove":
-                        completions = new ArrayList<>();
-                        for (Player player : Bukkit.getOnlinePlayers()) {
-                            completions.add(player.getName());
-                        }
-                        completions = getApplicableTabCompletes(args[1], completions);
+                if (args[0].equals("set")) {
+                    completions = new ArrayList<>(Arrays.asList("lobby", "Game1", "Game2", "Game3", "Game4", "Game5", "Game6", "Game7"));
+                    completions = getApplicableTabCompletes(args[1], completions);
+                } else {
+                    return null;
+                }
+            } else if (args.length == 3) {
+                switch (args[1]) {
+                    case "Game1":
+                        completions = new ArrayList<>(Arrays.asList("spawn","barrier","killzone","goal"));
+                        completions = getApplicableTabCompletes(args[2], completions);
                         break;
-                    case "start":
-                        completions = new ArrayList<>(Arrays.asList("game1", "game2", "game3", "game4", "game5", "game6", "game7"));
-                        completions = getApplicableTabCompletes(args[1], completions);
+                    case "Game2":
+                    case "Game3":
+                    case "Game4":
+                    case "Game5":
+                    case "Game6":
+                    case "Game7":
+                        completions = new ArrayList<>(Arrays.asList("TODO","TODO","TODO","TODO"));
+                        completions = getApplicableTabCompletes(args[2], completions);
                         break;
-                    default:
-                        return null;
                 }
             }
             Collections.sort(completions);

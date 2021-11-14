@@ -1,7 +1,7 @@
 package com.soradgaming.squidgame.listeners;
 
 import com.soradgaming.squidgame.SquidGame;
-import com.soradgaming.squidgame.managment.gameManager;
+import com.soradgaming.squidgame.utils.gameManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
