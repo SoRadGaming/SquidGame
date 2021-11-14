@@ -48,7 +48,7 @@ public class Game1 implements Listener {
         bossBar.setVisible(true);
         bossBar.setProgress(0);
         for (Block block : getBarrier().getBlocks()) {
-            if (block.getType().equals(Material.AIR)) {
+            if (block.getType().toString().equals("AIR")) {
                 block.setType(Material.BARRIER);
             }
         }
@@ -65,7 +65,7 @@ public class Game1 implements Listener {
             scheduler1.runTaskTimer(plugin, Game1::bossBarProgress, 20L, 20L);
             //START
             for (Block block : getBarrier().getBlocks()) {
-                if (block.getType().equals(Material.BARRIER)) {
+                if (block.getType().toString().equals("BARRIER")) {
                     block.setType(Material.AIR);
                 }
             }
@@ -102,6 +102,7 @@ public class Game1 implements Listener {
                 if (!getGoalZone().contains(location)) { //Player didn't make it to end in time
                     gameManager.removePlayer(player);
                     gameManager.killPlayer(player);
+                    player.setGameMode(GameMode.SPECTATOR);
                 }
                 Objects.requireNonNull(player).teleport(Objects.requireNonNull(plugin.getConfig().getLocation("Lobby")));
             }
