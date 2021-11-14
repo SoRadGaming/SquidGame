@@ -1,11 +1,8 @@
 package com.soradgaming.squidgame.utils;
 
 import com.soradgaming.squidgame.SquidGame;
-import com.soradgaming.squidgame.math.Cuboid;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.BlockVector;
@@ -15,7 +12,6 @@ import java.util.List;
 import java.util.Objects;
 
 public class PlayerWand {
-    private static final SquidGame plugin = SquidGame.plugin;
     private static BlockVector firstPoint;
     private static BlockVector secondPoint;
     private static ItemStack wand = null;
@@ -41,10 +37,6 @@ public class PlayerWand {
     }
 
     public static ItemStack getWand() {
-        return wand;
-    }
-
-    public ItemStack createWand() {
         if (wand == null) {
             final ItemStack item = new ItemStack(Material.BLAZE_ROD);
             final ItemMeta meta = item.getItemMeta();
