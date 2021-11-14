@@ -65,6 +65,7 @@ public final class SquidGame extends JavaPlugin {
         //Listener
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerQuitListener(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new PlayerInteractListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new Game1(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new Game6(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new Game7(), this);

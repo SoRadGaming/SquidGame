@@ -572,12 +572,12 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
      */
 
     public static void setConfigVectors(String key, BlockVector pos1, BlockVector pos2) {
-        plugin.getConfig().set(key + ".first_point.x",pos1.getBlockX());
-        plugin.getConfig().set(key + ".first_point.y",pos1.getBlockY());
-        plugin.getConfig().set(key + ".first_point.z",pos1.getBlockZ());
-        plugin.getConfig().set(key + ".second_point.x",pos2.getBlockX());
-        plugin.getConfig().set(key + ".second_point.y",pos2.getBlockY());
-        plugin.getConfig().set(key + ".second_point.z",pos2.getBlockZ());
+        plugin.getConfig().set(key + ".first_point.x",pos1.getX());
+        plugin.getConfig().set(key + ".first_point.y",pos1.getY());
+        plugin.getConfig().set(key + ".first_point.z",pos1.getZ());
+        plugin.getConfig().set(key + ".second_point.x",pos2.getX());
+        plugin.getConfig().set(key + ".second_point.y",pos2.getY());
+        plugin.getConfig().set(key + ".second_point.z",pos2.getZ());
         plugin.saveConfig();
     }
 

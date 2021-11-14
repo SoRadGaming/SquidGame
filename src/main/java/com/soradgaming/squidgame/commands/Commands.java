@@ -1,6 +1,7 @@
 package com.soradgaming.squidgame.commands;
 
 import com.soradgaming.squidgame.SquidGame;
+import com.soradgaming.squidgame.games.Game1;
 import com.soradgaming.squidgame.math.Cuboid;
 import com.soradgaming.squidgame.utils.PlayerWand;
 import com.soradgaming.squidgame.utils.gameManager;
@@ -72,7 +73,16 @@ public class Commands implements CommandExecutor {
                 sender.sendMessage(ChatColor.RED + "You don't have permission to do that");
                 return true;
             }
-        } else if (args.length == 1 && args[0].equalsIgnoreCase("list")) {
+        } else if (args.length == 1 && args[0].equalsIgnoreCase("end")) {
+            if (sender.isOp()) {
+                if (playerManager.checkStart()) {
+                    Game1.endGame1();
+                }
+            } else {
+                sender.sendMessage(ChatColor.RED + "You don't have permission to do that");
+                return true;
+            }
+        }  else if (args.length == 1 && args[0].equalsIgnoreCase("list")) {
             if (sender.isOp()) {
                 List<UUID> playerList = gameManager.getPlayerList();
                 for (UUID uuid : playerList) {
@@ -116,10 +126,10 @@ public class Commands implements CommandExecutor {
                 Player player = (Player) sender;
                 ItemStack wand = PlayerWand.getWand();
                 if (wand == null) {
-                    player.sendMessage("§cYou don't have an region wand, use /sq wand to get it.");
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&cYou don't have an region wand, use /sq wand to get it."));
                     return false;
                 } else if (!PlayerWand.isComplete()) {
-                    player.sendMessage("§cYou need to set area with your region wand first.");
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&cYou need to set area with your region wand first."));
                     return false;
                 }
                 switch (args[1]) {
@@ -128,16 +138,19 @@ public class Commands implements CommandExecutor {
                             case "spawn":
                             case "barrier":
                                 Cuboid.setConfigVectors("Game1.barrier", PlayerWand.getFirstPoint(), PlayerWand.getSecondPoint());
-                                player.sendMessage("§eFirst game " + "barrier" + "§a set with your location wand §7("
-                                        + PlayerWand.getFirstPoint().toString() + ") (" + PlayerWand.getSecondPoint().toString() + ")");
+                                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eFirst game " + "barrier" + "&a set with your location wand &7("
+                                        + PlayerWand.getFirstPoint().toString() + ") (" + PlayerWand.getSecondPoint().toString() + ")"));
+                                break;
                             case "killzone":
                                 Cuboid.setConfigVectors("Game1.killzone", PlayerWand.getFirstPoint(), PlayerWand.getSecondPoint());
-                                player.sendMessage("§eFirst game " + "killzone" + "§a set with your location wand §7("
-                                        + PlayerWand.getFirstPoint().toString() + ") (" + PlayerWand.getSecondPoint().toString() + ")");
+                                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eFirst game " + "killzone" + "&a set with your location wand &7("
+                                        + PlayerWand.getFirstPoint().toString() + ") (" + PlayerWand.getSecondPoint().toString() + ")"));
+                                break;
                             case "goal":
                                 Cuboid.setConfigVectors("Game1.goal", PlayerWand.getFirstPoint(), PlayerWand.getSecondPoint());
-                                player.sendMessage("§eFirst game " + "goal" + "§a set with your location wand §7("
-                                        + PlayerWand.getFirstPoint().toString() + ") (" + PlayerWand.getSecondPoint().toString() + ")");
+                                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eFirst game " + "goal" + "&a set with your location wand &7("
+                                        + PlayerWand.getFirstPoint().toString() + ") (" + PlayerWand.getSecondPoint().toString() + ")"));
+                                break;
                         }
                     case "Game2":
                     case "Game3":

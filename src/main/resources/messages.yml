@@ -7,19 +7,11 @@ arena:
   no-enough-players: "&cNot enough players to start the game, %squidgame_arena_required% required."
   already-in-game: "&cYou are already in a game."
   not-in-game: "&cYou are not in game."
-  misconfigured-arena: "&cThere is no arena or it is misconfigured. Contact the server administrator."
-  no-available-arena: "&cThere is no arena available."
 
 setup:
-  arena-not-exist: "&cThere is no arena with this name."
-  arena-already-exist: "&cThere is already an arena with this name."
-  arena-created: "&aThe arena has been created successfully! Use &b/squid editarena &e(name) &eto edit it."
   set-lobby: "&aYou have defined the lobby in your current position."
 
 events:
-  intermission:
-    title: "&b&lIntermission"
-    subtitle: "&dNext game starts in %squidgame_arena_time% seconds"
   game-start:
     title: "&6Go Ahead!"
     subtitle: "&aGood Luck"

@@ -1,6 +1,6 @@
 package com.soradgaming.squidgame.utils;
 
-import com.soradgaming.squidgame.SquidGame;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -42,13 +42,13 @@ public class PlayerWand {
             final ItemMeta meta = item.getItemMeta();
             final List<String> lore = new ArrayList<>();
 
-            lore.add("§7");
-            lore.add("§aLeft-click: §eSet first point.");
-            lore.add("§aRight-click: §eSet second point.");
-            lore.add("§7");
+            lore.add(ChatColor.translateAlternateColorCodes('&',"&7"));
+            lore.add(ChatColor.translateAlternateColorCodes('&',"&aLeft-click: &eSet first point."));
+            lore.add(ChatColor.translateAlternateColorCodes('&',"&aRight-click: &eSet second point."));
+            lore.add(ChatColor.translateAlternateColorCodes('&',"&7"));
             Objects.requireNonNull(meta).setLore(lore);
 
-            meta.setDisplayName("§dRegion wand §7(Left/Right click)");
+            meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',"&dRegion wand &7(Left/Right click)"));
             item.setItemMeta(meta);
             wand = item;
         }

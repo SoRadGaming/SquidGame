@@ -3,6 +3,7 @@ SquidGame plugin for Minecraft
 
 **Bugs**:
 - Null World on Plugin Load
+- BlazeRod works as wand
 
 **Commands**:
 - /sq
@@ -13,7 +14,7 @@ SquidGame plugin for Minecraft
 - /sq list
 - /sq start
 - /sq wand
-- /sq end - TODO
+- /sq end
 - /sq set lobby
 - /sq set Game1-7 Variable
 
