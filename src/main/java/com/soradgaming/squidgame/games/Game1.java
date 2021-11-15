@@ -1,6 +1,8 @@
 package com.soradgaming.squidgame.games;
 
+import com.sk89q.worldedit.WorldEditException;
 import com.soradgaming.squidgame.SquidGame;
+import com.soradgaming.squidgame.math.WorldEditCube;
 import com.soradgaming.squidgame.utils.gameManager;
 import com.soradgaming.squidgame.math.Cuboid;
 import org.bukkit.*;
@@ -14,9 +16,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.util.BlockVector;
+import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -32,15 +36,20 @@ public class Game1 implements Listener {
     private static final BukkitScheduler delay = Bukkit.getScheduler();
     private static BossBar bossBar;
     private static double timerInterval;
+    public static int timeGlobal;
+    private static int max;
+    private static int min;
     private static Cuboid killZone;
     private static Cuboid goalZone;
     private static Cuboid barrierZone;
-    public static int timeGlobal;
+    private static Cuboid head;
 
     public static void startGame1(ArrayList<UUID> input) {
         playerList = input;
         Started = true;
         canWalk = true;
+        max = plugin.getConfig().getInt("Game1.lightSwitchMax");
+        min = plugin.getConfig().getInt("Game1.lightSwitchMin");
         timeGlobal = plugin.getConfig().getInt("Game1.timer");
         int minutes = (plugin.getConfig().getInt("Game1.timer")/60);
         int seconds = (plugin.getConfig().getInt("Game1.timer") - (minutes * 60));
@@ -146,12 +155,9 @@ public class Game1 implements Listener {
         if (!Started) {
             return;
         }
-        int max = plugin.getConfig().getInt("Game1.lightSwitchMax");
-        int min = plugin.getConfig().getInt("Game1.lightSwitchMin");
         final int time = (int) Math.floor(Math.random()*(max-min+1)+min);
         broadcastTitle("games.first.green-light.title", "games.first.green-light.subtitle",time);
         canWalk = true;
-
         redLight.runTaskLater(plugin, () -> {
             final int waitTime = (int) Math.floor(Math.random()*(max-min+1)+min);
             broadcastTitle("games.first.red-light.title", "games.first.red-light.subtitle", waitTime);
@@ -197,6 +203,16 @@ public class Game1 implements Listener {
             goalZone = new Cuboid(Objects.requireNonNull(world),vector1.getBlockX(),vector1.getBlockY(),vector1.getBlockZ(),vector2.getBlockX(),vector2.getBlockY(),vector2.getBlockZ());
         }
         return goalZone;
+    }
+
+    public static Cuboid getHead() {
+        if (head == null) {
+            BlockVector vector1 = gameManager.configToVectors("Game1.head.first_point");
+            BlockVector vector2 = gameManager.configToVectors("Game1.head.second_point");
+            World world = Bukkit.getWorld(Objects.requireNonNull(plugin.getConfig().getString("Game1.world")));
+            head = new Cuboid(Objects.requireNonNull(world),vector1.getBlockX(),vector1.getBlockY(),vector1.getBlockZ(),vector2.getBlockX(),vector2.getBlockY(),vector2.getBlockZ());
+        }
+        return head;
     }
 
     public static void onExplainStart(String input) {

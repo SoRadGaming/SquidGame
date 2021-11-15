@@ -4,10 +4,10 @@ import com.soradgaming.squidgame.SquidGame;
 import com.soradgaming.squidgame.games.Game1;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.jetbrains.annotations.NotNull;
@@ -18,8 +18,17 @@ public class playerManager implements Listener {
     private static final SquidGame plugin = SquidGame.plugin;
     public static boolean gameStarted = false;
     //Store Player Stats
-    public static HashMap<UUID, PlayerInventory> playerInv = new HashMap<>();
-    public static HashMap<UUID, Collection<PotionEffect>> playerEffects = new HashMap<>();
+    public static HashMap<Player, ItemStack[]> playerInv = new HashMap<>();
+    public static HashMap<Player, ItemStack[]> playerArmour = new HashMap<>();
+    public static HashMap<Player, Collection<PotionEffect>> playerEffects = new HashMap<>();
+    public static HashMap<Player, Location> last_location = new HashMap<>();
+    public static HashMap<Player, GameMode> gamemode = new HashMap<>();
+    public static HashMap<Player, Double> healthScale = new HashMap<>();
+    public static HashMap<Player, Double> health = new HashMap<>();
+    public static HashMap<Player, Integer> level = new HashMap<>();
+    public static HashMap<Player, Float> xp = new HashMap<>();
+    public static HashMap<Player, Location> bedSpawn = new HashMap<>();
+    public static HashMap<Player, Integer> foodLevel = new HashMap<>();
 
     //Start command
     public static void playerBracket(@NotNull ArrayList<UUID> input) {
@@ -44,19 +53,18 @@ public class playerManager implements Listener {
             for (UUID uuid : gameManager.getPlayerList()) {
                 Objects.requireNonNull(Bukkit.getPlayer(uuid)).sendMessage(gameManager.formatMessage(player,"arena.join"));
             }
-            //New System
-            playerInv.put(player.getUniqueId(), player.getInventory());
-            playerEffects.put(player.getUniqueId(), player.getActivePotionEffects());
-
-            //Old System
-            plugin.data.set(player.getUniqueId() + ".last_location",player.getLocation());
-            plugin.data.set(player.getUniqueId() + ".gamemode", player.getGameMode().toString());
-            plugin.data.set(player.getUniqueId() + ".healthScale", player.getHealthScale());
-            plugin.data.set(player.getUniqueId() + ".health", player.getHealth());
-            plugin.data.set(player.getUniqueId() + ".level", player.getLevel());
-            plugin.data.set(player.getUniqueId() + ".xp", player.getExp());
-            plugin.data.set(player.getUniqueId() + ".bedSpawn", player.getBedSpawnLocation());
-            plugin.data.set(player.getUniqueId() + ".foodLevel", player.getFoodLevel());
+            //Save Stats
+            playerInv.put(player, player.getInventory().getContents());
+            playerArmour.put(player, player.getInventory().getArmorContents());
+            playerEffects.put(player, player.getActivePotionEffects());
+            last_location.put(player, player.getLocation());
+            gamemode.put(player, player.getGameMode());
+            healthScale.put(player,player.getHealthScale());
+            health.put(player, player.getHealth());
+            level.put(player, player.getLevel());
+            xp.put(player,player.getExp());
+            bedSpawn.put(player,player.getBedSpawnLocation());
+            foodLevel.put(player,player.getFoodLevel());
             //SetNewStats
             player.teleport(Objects.requireNonNull(plugin.getConfig().getLocation("Lobby")));
             player.setGameMode(GameMode.ADVENTURE);
@@ -67,6 +75,7 @@ public class playerManager implements Listener {
             player.setBedSpawnLocation(plugin.getConfig().getLocation("Lobby"));
             player.setFoodLevel(20);
             player.getInventory().clear();
+            player.getInventory().setArmorContents(null);
             player.getActivePotionEffects().clear();
             return true;
         }
@@ -81,24 +90,18 @@ public class playerManager implements Listener {
             for (UUID uuid : gameManager.getPlayerList()) {
                 Objects.requireNonNull(Bukkit.getPlayer(uuid)).sendMessage(gameManager.formatMessage(player,"arena.leave"));
             }
-            player.teleport(Objects.requireNonNull(plugin.data.getLocation(player.getUniqueId() + ".last_location")));
-            player.setGameMode(GameMode.valueOf(plugin.data.getString(player.getUniqueId() + ".gamemode")));
-            player.setHealthScale(plugin.data.getDouble(player.getUniqueId() + ".healthScale"));
-            player.setHealth(plugin.data.getDouble(player.getUniqueId() + ".health"));
-            player.setLevel(plugin.data.getInt(player.getUniqueId() + ".level"));
-            player.setExp((float) plugin.data.getDouble(player.getUniqueId() + ".xp"));
-            player.setBedSpawnLocation(plugin.data.getLocation(player.getUniqueId() + ".bedSpawn"));
-            player.setFoodLevel(plugin.data.getInt(player.getUniqueId() + ".foodLevel"));
-            for (ItemStack inv :playerInv.get(player.getUniqueId())) {
-                if (inv != null) {
-                    player.getInventory().addItem(inv);
-                }
-            }
-            for (PotionEffect effect :playerEffects.get(player.getUniqueId())) {
-                if (effect != null) {
-                    player.addPotionEffect(effect);
-                }
-            }
+            //Give Old Stats Back
+            player.teleport(last_location.get(player));
+            player.setGameMode(gamemode.get(player));
+            player.setHealthScale(healthScale.get(player));
+            player.setHealth(health.get(player));
+            player.setLevel(level.get(player));
+            player.setExp(xp.get(player));
+            player.setBedSpawnLocation(bedSpawn.get(player));
+            player.setFoodLevel(foodLevel.get(player));
+            player.getInventory().setContents(playerInv.get(player));
+            player.getInventory().setArmorContents(playerArmour.get(player));
+            player.addPotionEffects(playerEffects.get(player));
             return true;
         }
         return false;

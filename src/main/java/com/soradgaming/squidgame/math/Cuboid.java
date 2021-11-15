@@ -1,10 +1,24 @@
 package com.soradgaming.squidgame.math;
 
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.EmptyClipboardException;
+import com.sk89q.worldedit.LocalSession;
+import com.sk89q.worldedit.WorldEditException;
+import com.sk89q.worldedit.extent.clipboard.BlockArrayClipboard;
+import com.sk89q.worldedit.function.block.BlockReplace;
+import com.sk89q.worldedit.function.mask.Mask;
+import com.sk89q.worldedit.function.operation.ForwardExtentCopy;
+import com.sk89q.worldedit.function.operation.Operations;
+import com.sk89q.worldedit.function.pattern.Pattern;
+import com.sk89q.worldedit.math.transform.AffineTransform;
+import com.sk89q.worldedit.regions.Region;
+import com.sk89q.worldedit.session.ClipboardHolder;
 import com.soradgaming.squidgame.SquidGame;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.util.BlockVector;
+import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -473,6 +487,52 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
         };
     }
 
+    public static void rotate(Cuboid cuboid, int x, int y, int z) {
+        Vector origin = cuboid.getCenter().toVector();
+        List<Vector> vectors = new ArrayList<>();
+        for (Block block : cuboid.getBlocks()) {
+            Vector blockVector = new Vector(block.getX(),block.getY(),block.getZ());
+            Vector blockRelativeVector = blockVector.subtract(origin);
+            vectors.add(blockRelativeVector);
+        }
+        for (Vector vector:vectors) {
+            rotateX(vector,x);
+            rotateY(vector,y);
+            rotateZ(vector,z);
+        }
+    }
+
+    public static Vector rotateX(Vector inputVector,double thetaInRadians) {
+        Vector v1 = new Vector(1,0,0).multiply(inputVector.getX());
+        Vector v2 = new Vector(0,Math.cos(thetaInRadians),-1*Math.sin(thetaInRadians)).multiply(inputVector.getY());
+        Vector v3 = new Vector(0,Math.sin(thetaInRadians),Math.cos(thetaInRadians)).multiply(inputVector.getZ());
+        return v1.add(v2).add(v3);
+    }
+
+    public static Vector rotateY(Vector inputVector,double thetaInRadians) {
+        Vector v1 = new Vector(Math.cos(thetaInRadians),0,Math.sin(thetaInRadians)).multiply(inputVector.getX());
+        Vector v2 = new Vector(0,1,0).multiply(inputVector.getY());
+        Vector v3 = new Vector(-1*Math.sin(thetaInRadians),0,Math.cos(thetaInRadians)).multiply(inputVector.getZ());
+        return v1.add(v2).add(v3);
+    }
+
+    public static Vector rotateZ(Vector inputVector,double thetaInRadians) {
+        Vector v1 = new Vector(Math.cos(thetaInRadians),-1*Math.sin(thetaInRadians),0).multiply(inputVector.getX());
+        Vector v2 = new Vector(Math.sin(thetaInRadians),Math.cos(thetaInRadians),0).multiply(inputVector.getY());
+        Vector v3 = new Vector(0,0,-1).multiply(inputVector.getZ());
+        return v1.add(v2).add(v3);
+    }
+
+    public static Vector rotateGeneral(Vector inputVector, double alphaInRadians) {
+        double generalX = inputVector.getX();
+        double generalY = inputVector.getY();
+        double generalZ = inputVector.getZ();
+        double length = Math.sqrt(generalX*generalX + generalY*generalY + generalZ*generalZ);
+        double theta = Math.acos(generalZ/length);
+        double phi = Math.atan(generalY/generalX);
+        return rotateZ(rotateY(rotateZ(rotateY(rotateZ(inputVector,-1*phi),-1*theta),alphaInRadians),theta),phi);
+    }
+
     /**
      * Check if the Cuboid contains only blocks of the given type
      *
@@ -555,21 +615,13 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
         return res;
     }
 
-    /*
-    public BlockVector getFirstPoint(String key) {
-        double x = plugin.getConfig().getDouble(key + ".first_point.x");
-        double y = plugin.getConfig().getDouble(key + ".first_point.y");
-        double z = plugin.getConfig().getDouble(key + ".first_point.z");
-        return new BlockVector(x,y,z);
+    public BlockVector getFirstPoint() {
+        return new BlockVector(this.x1, this.y1, this.z1);
     }
 
-    public BlockVector getSecondPoint(String key) {
-        double x = plugin.getConfig().getDouble(key + ".second_point.x");
-        double y = plugin.getConfig().getDouble(key + ".second_point.y");
-        double z = plugin.getConfig().getDouble(key + ".second_point.z");
-        return new BlockVector(x,y,z);
+    public BlockVector getSecondPoint() {
+        return new BlockVector(this.x2, this.y2, this.z2);
     }
-     */
 
     public static void setConfigVectors(String key, BlockVector pos1, BlockVector pos2) {
         plugin.getConfig().set(key + ".first_point.x",pos1.getX());

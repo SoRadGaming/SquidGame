@@ -48,16 +48,15 @@ public class Game3 implements Listener {
         delay.cancelTasks(plugin);
         if (Started) {
             //TODO Set PVP off
-            for (UUID uuid: playerList) {
+            for (UUID uuid : gameManager.getPlayerList()) {
                 Player player = Bukkit.getPlayer(uuid);
                 Objects.requireNonNull(player).setHealth(20);
                 player.setFoodLevel(20);
-            }
-            for (UUID uuid : gameManager.getPlayerList()) {
-                Player player = Bukkit.getPlayer(uuid);
-                Objects.requireNonNull(player).sendTitle(gameManager.formatMessage(player,"events.game-pass.title") , gameManager.formatMessage(player,"events.game-pass.subtitle"),10, 30,10);
+                player.getActivePotionEffects().clear();
+                player.sendTitle(gameManager.formatMessage(player,"events.game-pass.title") , gameManager.formatMessage(player,"events.game-pass.subtitle"),10, 30,10);
             }
             //TODO end code
+            Game6.startGame6(gameManager.getPlayerList());
         }
     }
 
@@ -70,12 +69,12 @@ public class Game3 implements Listener {
         for (UUID uuid: playerList) {
             Objects.requireNonNull(Bukkit.getPlayer(uuid)).addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, timeOff * 20, 1, false, false));
         }
-        lightsOff.runTaskLater(plugin, () -> delay.runTaskLater(plugin, () -> {
+        lightsOff.runTaskLater(plugin, () -> {
             for (UUID uuid: playerList) {
                 Objects.requireNonNull(Bukkit.getPlayer(uuid)).addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, timeOn * 20, 1, false, false));
             }
             lightsOn.runTaskLater(plugin, Game3::flashLights, timeOff * 20L);
-        }, 20), timeOn * 20L);
+        },  timeOn * 20L);
     }
 
     public static void broadcastTitle(final String title, final String subtitle , int time) {

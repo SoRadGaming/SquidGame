@@ -1,8 +1,10 @@
 package com.soradgaming.squidgame.commands;
 
+import com.sk89q.worldedit.WorldEditException;
 import com.soradgaming.squidgame.SquidGame;
 import com.soradgaming.squidgame.games.Game1;
 import com.soradgaming.squidgame.math.Cuboid;
+import com.soradgaming.squidgame.math.WorldEditCube;
 import com.soradgaming.squidgame.utils.PlayerWand;
 import com.soradgaming.squidgame.utils.gameManager;
 import com.soradgaming.squidgame.utils.playerManager;
@@ -115,7 +117,14 @@ public class Commands implements CommandExecutor {
                 sender.sendMessage(ChatColor.RED + "You don't have permission to do that");
                 return true;
             }
-        } else if (args.length == 2 && args[0].equalsIgnoreCase("set")) {
+        } else if (args.length == 1 && args[0].equalsIgnoreCase("test")) {
+            if (sender.isOp()) {
+                //QuickTest
+            } else {
+                sender.sendMessage(ChatColor.RED + "You don't have permission to do that");
+                return true;
+            }
+        }else if (args.length == 2 && args[0].equalsIgnoreCase("set")) {
             if (args[1].equalsIgnoreCase("lobby")) {
                 plugin.getConfig().set("Lobby",loc);
                 plugin.saveConfig();
@@ -125,10 +134,10 @@ public class Commands implements CommandExecutor {
             if (sender.isOp()) {
                 Player player = (Player) sender;
                 ItemStack wand = PlayerWand.getWand();
-                if (wand == null) {
+                if (wand == null && !args[2].equals("spawn")) {
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&cYou don't have an region wand, use /sq wand to get it."));
                     return false;
-                } else if (!PlayerWand.isComplete()) {
+                } else if (!PlayerWand.isComplete() && !args[2].equals("spawn")) {
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&cYou need to set area with your region wand first."));
                     return false;
                 }
@@ -136,20 +145,27 @@ public class Commands implements CommandExecutor {
                     case "Game1":
                         switch (args[2]) {
                             case "spawn":
+                                plugin.getConfig().set("Game1.spawn",loc);
+                                plugin.saveConfig();
+                                sender.sendMessage("Spawn set to "  + loc);
+                                break;
                             case "barrier":
                                 Cuboid.setConfigVectors("Game1.barrier", PlayerWand.getFirstPoint(), PlayerWand.getSecondPoint());
                                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eFirst game " + "barrier" + "&a set with your location wand &7("
                                         + PlayerWand.getFirstPoint().toString() + ") (" + PlayerWand.getSecondPoint().toString() + ")"));
+                                plugin.saveConfig();
                                 break;
                             case "killzone":
                                 Cuboid.setConfigVectors("Game1.killzone", PlayerWand.getFirstPoint(), PlayerWand.getSecondPoint());
                                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eFirst game " + "killzone" + "&a set with your location wand &7("
                                         + PlayerWand.getFirstPoint().toString() + ") (" + PlayerWand.getSecondPoint().toString() + ")"));
+                                plugin.saveConfig();
                                 break;
                             case "goal":
                                 Cuboid.setConfigVectors("Game1.goal", PlayerWand.getFirstPoint(), PlayerWand.getSecondPoint());
                                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eFirst game " + "goal" + "&a set with your location wand &7("
                                         + PlayerWand.getFirstPoint().toString() + ") (" + PlayerWand.getSecondPoint().toString() + ")"));
+                                plugin.saveConfig();
                                 break;
                         }
                     case "Game2":
@@ -157,6 +173,25 @@ public class Commands implements CommandExecutor {
                     case "Game4":
                     case "Game5":
                     case "Game6":
+                        switch (args[2]) {
+                            case "spawn":
+                                plugin.getConfig().set("Game6.spawn",loc);
+                                plugin.saveConfig();
+                                sender.sendMessage("Spawn set to "  + loc);
+                                break;
+                            case "glass":
+                                Cuboid.setConfigVectors("Game6.glass", PlayerWand.getFirstPoint(), PlayerWand.getSecondPoint());
+                                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eSixth game " + "glass" + "&a set with your location wand &7("
+                                        + PlayerWand.getFirstPoint().toString() + ") (" + PlayerWand.getSecondPoint().toString() + ")"));
+                                plugin.saveConfig();
+                                break;
+                            case "goal":
+                                Cuboid.setConfigVectors("Game6.goal", PlayerWand.getFirstPoint(), PlayerWand.getSecondPoint());
+                                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eSixth game " + "goal" + "&a set with your location wand &7("
+                                        + PlayerWand.getFirstPoint().toString() + ") (" + PlayerWand.getSecondPoint().toString() + ")"));
+                                plugin.saveConfig();
+                                break;
+                        }
                     case "Game7":
                 }
             } else {
