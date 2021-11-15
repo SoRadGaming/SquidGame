@@ -38,15 +38,6 @@ Game1:
       x: -789.0
       y: 22.0
       z: 537.0
-  doll:
-    first_point:
-      x: -850.0
-      y: 4.0
-      z: 511.0
-    second_point:
-      x: -789.0
-      y: 22.0
-      z: 537.0
 Game3:
   world: World
   timer: 60
@@ -58,29 +49,29 @@ Game6:
   spawn:
     ==: org.bukkit.Location
     world: World
-    x: -819.0
-    y: 4.0
-    z: 409.0
-    pitch: 0.0
-    yaw: 0.0
+    x: -227.94925437318383
+    y: 95.0
+    z: 972.1857812621586
+    pitch: -3.265213
+    yaw: -179.7325
   glass:
     first_point:
-      x: -790.0
-      y: 3.0
-      z: 415.0
+      x: -231.0
+      y: 94.0
+      z: 963.0
     second_point:
-      x: -850.0
-      y: 7.0
-      z: 415.0
+      x: -226.0
+      y: 94.0
+      z: 902.0
   goal:
     first_point:
-      x: -850.0
-      y: 4.0
-      z: 511.0
+      x: -258.0
+      y: 94.0
+      z: 900.0
     second_point:
-      x: -789.0
-      y: 22.0
-      z: 537.0
+      x: -199.0
+      y: 109.0
+      z: 888.0
 min-players: 2
 max-players: 12
 intermission-time: 10
