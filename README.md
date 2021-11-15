@@ -4,6 +4,9 @@ SquidGame plugin for Minecraft
 **Bugs**:
 - None Know
 
+**TODO To get to Same Progress**:
+- Add Glass Gen System
+
 **Commands**:
 - /sq
 - /sq help

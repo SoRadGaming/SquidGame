@@ -2,6 +2,7 @@ package com.soradgaming.squidgame.games;
 
 import com.soradgaming.squidgame.SquidGame;
 import com.soradgaming.squidgame.math.Cuboid;
+import com.soradgaming.squidgame.math.Generator;
 import com.soradgaming.squidgame.utils.gameManager;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -15,6 +16,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.util.BlockVector;
+import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -30,7 +32,7 @@ public class Game6 implements Listener {
     public static int timeGlobal;
     private static Cuboid glassZone;
     private static Cuboid goalZone;
-    private static ArrayList<Block> fakeBlocks = new ArrayList<>();
+    private static final ArrayList<Block> fakeBlocks = new ArrayList<>();
 
     public static void startGame6(ArrayList<UUID> input) {
         playerList = input;
@@ -42,7 +44,7 @@ public class Game6 implements Listener {
         bossBar.setVisible(true);
         bossBar.setProgress(0);
         //Generate Glass
-        generateTiles(Material.GLASS);
+        Generator.generateTiles(Material.valueOf(plugin.getConfig().getString("Game6.material")));
         for (UUID uuid : playerList) {
             Player p = Bukkit.getPlayer(uuid);
             Objects.requireNonNull(p).teleport(Objects.requireNonNull(plugin.getConfig().getLocation("Game6.spawn")));
@@ -113,7 +115,7 @@ public class Game6 implements Listener {
         broadcastTitleAfterSeconds(15, "events.game-start.title", "events.game-start.subtitle");
     }
 
-    private static Cuboid getGlassZone() {
+    public static Cuboid getGlassZone() {
         if (glassZone == null) {
             BlockVector vector1 = gameManager.configToVectors("Game6.barrier.first_point");
             BlockVector vector2 = gameManager.configToVectors("Game6.barrier.second_point");
@@ -147,7 +149,7 @@ public class Game6 implements Listener {
         final Location loc = Objects.requireNonNull(e.getTo()).clone().subtract(0, 1, 0);
         final Block block = loc.getBlock();
 
-        if (block.getType() == Material.GLASS) {
+        if (block.getType() == Material.valueOf(plugin.getConfig().getString("Game6.material"))) {
             if (fakeBlocks.contains(block)) {
                 gameManager.killPlayer(player);
                 player.setGameMode(GameMode.SPECTATOR);
@@ -162,98 +164,6 @@ public class Game6 implements Listener {
         if (!player.getGameMode().equals(GameMode.SPECTATOR)) {
             gameManager.killPlayer(player);
             player.setGameMode(GameMode.SPECTATOR);
-        }
-    }
-
-    private static void generateTiles(final Material material) {
-        final World world = getGlassZone().getWorld();
-
-        final BlockVector first = getGlassZone().getFirstPoint();
-        final BlockVector second = getGlassZone().getSecondPoint();
-
-        world.getBlockAt(first.toLocation(world)).setType(Material.GLASS);
-        world.getBlockAt(second.toLocation(world)).setType(Material.GLASS);
-
-        final int differenceBetweenX = getGlassZone().getSizeX();
-        final int differenceBetweenZ = getGlassZone().getSizeZ();
-
-        final boolean useZAsIndex = differenceBetweenZ > differenceBetweenX;
-        final boolean shouldIncreaseIndex = useZAsIndex ? first.getZ() < second.getZ() : first.getX() < second.getX();
-        final int groundWidth = (useZAsIndex ? differenceBetweenX : differenceBetweenZ) + 1;getGlassZone().getSizeY();
-        final int groundHeight = (useZAsIndex ? differenceBetweenZ : differenceBetweenX) + 1;
-
-        // Platform Parameters
-        final int size = groundWidth < 5 ? 1 : groundWidth < 7 ? 2 : 3;
-        final int spaceXBetweenPlatforms = groundWidth - (size * 2);
-        final int spaceZBetweenPlatforms = 3;
-
-        // Indice de bloque (Incrementa o decrementa relativamente a la dirección de
-        // generación)
-        int blockIndex = (int) (useZAsIndex ? first.getZ() : first.getX());
-
-        // Inicio del X, valor inmutable y absoluto.
-        final int xStart = Math.min((int) first.getX(), (int) second.getX());
-        // Inicio del Y, valor inmutable y absoluto
-        final int yStart = (int) first.getY();
-        // Inicio del Z, valor inmutable y absoluto.
-        final int zStart = Math.max((int) first.getZ(), (int) second.getZ());
-
-        // Obtener el número de pares de plataformas a generar dependiendo el tamaño
-        final int platformGroups = groundHeight / (spaceZBetweenPlatforms + size);
-
-        // Por cada grupo de plataforma (+ 1) iterar:
-        for (int i = 0; i <= platformGroups; i++) {
-            // Is first pair item a fake block?
-            Random random = new Random();
-            boolean isFirstFake = random.nextBoolean();
-
-            // Por cada posición relativa X de la plataforma
-            for (int xPadding = 0; xPadding < size; xPadding++) {
-                // Por cada posición relativa Y de la plataforma
-                for (int zPadding = 0; zPadding < size; zPadding++) {
-                    // Define blocks
-                    Block firstRowBlock, secondRowBlock;
-
-                    // En caso que la coordenada Z deba de usarse como un indice:
-                    if (useZAsIndex) {
-                        // Sumarle valor relativo x padding al valor absoluto x start
-                        int x = xStart + xPadding;
-                        // Sumarle el valor del indice Z al valor relativo z padding
-                        int z = shouldIncreaseIndex ? blockIndex + zPadding : blockIndex - zPadding;
-
-                        // Generar bloque en las coordenadas dadas X Y Z
-                        firstRowBlock = world.getBlockAt(x, yStart, z);
-
-                        // Generar bloque en la misma posicion que el de arriba pero con una separación
-                        secondRowBlock = world.getBlockAt(x + spaceXBetweenPlatforms + size, yStart, z);
-                    } else {
-                        // Sumarle el valor del indice X al valor relativo x padding
-                        int x = shouldIncreaseIndex ? blockIndex + xPadding : blockIndex - xPadding;
-                        // Sumarle valor relativo z padding al valor absoluto z start
-                        int z = zStart + zPadding;
-
-                        // Generar bloque en las coordenadas dadas X Y Z
-                        firstRowBlock = world.getBlockAt(x, yStart, z);
-
-                        // Generar bloque en la misma posicion que el de arriba pero con una separación
-                        secondRowBlock = world.getBlockAt(x, yStart, z + spaceXBetweenPlatforms + size);
-                    }
-
-                    firstRowBlock.setType(material);
-                    secondRowBlock.setType(material);
-
-                    if (material != Material.AIR) {
-                        if (isFirstFake) {
-                            fakeBlocks.add(firstRowBlock);
-                        } else {
-                            fakeBlocks.add(secondRowBlock);
-                        }
-                    }
-                }
-            }
-
-            final int separation = spaceZBetweenPlatforms + size;
-            blockIndex = shouldIncreaseIndex ? blockIndex + separation : blockIndex - separation;
         }
     }
 }

@@ -46,6 +46,7 @@ Game3:
 Game6:
   world: World
   timer: 60
+  material: LIGHT_GRAY_STAINED_GLASS
   spawn:
     ==: org.bukkit.Location
     world: World
