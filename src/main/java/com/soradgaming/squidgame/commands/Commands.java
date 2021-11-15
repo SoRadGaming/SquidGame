@@ -147,7 +147,7 @@ public class Commands implements CommandExecutor {
                             case "spawn":
                                 plugin.getConfig().set("Game1.spawn",loc);
                                 plugin.saveConfig();
-                                sender.sendMessage("Spawn set to "  + loc);
+                                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eFirst game " + "Spawn" + "&a set to your location &7(" + loc.toVector() + ")"));
                                 break;
                             case "barrier":
                                 Cuboid.setConfigVectors("Game1.barrier", PlayerWand.getFirstPoint(), PlayerWand.getSecondPoint());
@@ -177,7 +177,7 @@ public class Commands implements CommandExecutor {
                             case "spawn":
                                 plugin.getConfig().set("Game6.spawn",loc);
                                 plugin.saveConfig();
-                                sender.sendMessage("Spawn set to "  + loc);
+                                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eSixth game " + "Spawn" + "&a set to your location &7(" + loc.toVector() + ")"));
                                 break;
                             case "glass":
                                 Cuboid.setConfigVectors("Game6.glass", PlayerWand.getFirstPoint(), PlayerWand.getSecondPoint());

@@ -20,7 +20,7 @@ public class playerManager implements Listener {
     //Store Player Stats
     public static HashMap<Player, ItemStack[]> playerInv = new HashMap<>();
     public static HashMap<Player, ItemStack[]> playerArmour = new HashMap<>();
-    public static HashMap<Player, Collection<PotionEffect>> playerEffects = new HashMap<>();
+    public static HashMap<Player, Collection<PotionEffect>> playerEffects = new HashMap<>(); //TODO FIX NOT STORING RESTORING OR CLEARING
     public static HashMap<Player, Location> last_location = new HashMap<>();
     public static HashMap<Player, GameMode> gamemode = new HashMap<>();
     public static HashMap<Player, Double> healthScale = new HashMap<>();

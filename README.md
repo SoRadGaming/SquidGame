@@ -2,7 +2,7 @@
 SquidGame plugin for Minecraft
 
 **Bugs**:
-- IllegalArgumentException on Plugin Load (Linked to DataFile)
+- None Know
 
 **Commands**:
 - /sq
