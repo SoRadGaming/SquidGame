@@ -1,4 +1,6 @@
 package com.soradgaming.squidgame.games;
 
-public class Game5 {
+import org.bukkit.event.Listener;
+
+public class Game5 implements Listener {
 }

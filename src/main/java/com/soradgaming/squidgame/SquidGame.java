@@ -2,9 +2,7 @@ package com.soradgaming.squidgame;
 
 import com.soradgaming.squidgame.commands.CommandTabCompleter;
 import com.soradgaming.squidgame.commands.Commands;
-import com.soradgaming.squidgame.games.Game1;
-import com.soradgaming.squidgame.games.Game6;
-import com.soradgaming.squidgame.games.Game7;
+import com.soradgaming.squidgame.games.*;
 import com.soradgaming.squidgame.listeners.*;
 import com.soradgaming.squidgame.placeholders.placeholder;
 import com.soradgaming.squidgame.utils.gameManager;
@@ -76,6 +74,10 @@ public final class SquidGame extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerQuitListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerInteractListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new Game1(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new Game2(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new Game3(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new Game4(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new Game5(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new Game6(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new Game7(), this);
         //PAPI

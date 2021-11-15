@@ -38,6 +38,11 @@ Game1:
       x: -789.0
       y: 22.0
       z: 537.0
+Game3:
+  world: World
+  timer: 60
+  lightSwitchOn: 1
+  lightSwitchOff: 8
 min-players: 2
 max-players: 12
 intermission-time: 10

@@ -118,6 +118,7 @@ public class Game1 implements Listener {
                 }
             }, 40L);
             //TODO Next Event
+            Game3.startGame3(gameManager.getPlayerList());
         }
     }
 

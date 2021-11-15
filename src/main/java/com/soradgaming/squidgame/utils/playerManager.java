@@ -37,7 +37,7 @@ public class playerManager implements Listener {
     }
 
     public static boolean playerJoin(Player player) {
-        if (gameManager.getPlayerList().size() <= plugin.getConfig().getInt("max-players") && gameManager.addPlayer(Objects.requireNonNull(player))) {
+        if (gameManager.getPlayerList().size() <= plugin.getConfig().getInt("max-players") && gameManager.addPlayer(Objects.requireNonNull(player)) && !gameStarted) {
             gameManager.revivePlayer(player);
             plugin.data.set("join",player.getUniqueId().toString());
             playerManager.checkStart();
@@ -74,7 +74,7 @@ public class playerManager implements Listener {
     }
 
     public static boolean playerLeave(Player player) {
-        if (gameManager.removePlayer(Objects.requireNonNull(player))) {
+        if (gameManager.removePlayer(Objects.requireNonNull(player)) && !gameStarted) {
             gameManager.revivePlayer(player);
             playerManager.checkStart();
             plugin.data.set("leave",player.getUniqueId().toString());
