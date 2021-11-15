@@ -48,7 +48,7 @@ public class Game3 implements Listener {
         delay.cancelTasks(plugin);
         if (Started) {
             //TODO Set PVP off
-            for (UUID uuid : gameManager.getPlayerList()) {
+            for (UUID uuid : gameManager.getAlivePlayers()) {
                 Player player = Bukkit.getPlayer(uuid);
                 Objects.requireNonNull(player).setHealth(20);
                 player.setFoodLevel(20);
@@ -56,7 +56,7 @@ public class Game3 implements Listener {
                 player.sendTitle(gameManager.formatMessage(player,"events.game-pass.title") , gameManager.formatMessage(player,"events.game-pass.subtitle"),10, 30,10);
             }
             //TODO end code
-            Game6.startGame6(gameManager.getPlayerList());
+            Game6.startGame6(gameManager.getAllPlayers());
         }
     }
 

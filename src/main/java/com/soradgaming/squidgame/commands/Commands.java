@@ -1,10 +1,8 @@
 package com.soradgaming.squidgame.commands;
 
-import com.sk89q.worldedit.WorldEditException;
 import com.soradgaming.squidgame.SquidGame;
 import com.soradgaming.squidgame.games.Game1;
 import com.soradgaming.squidgame.math.Cuboid;
-import com.soradgaming.squidgame.math.WorldEditCube;
 import com.soradgaming.squidgame.utils.PlayerWand;
 import com.soradgaming.squidgame.utils.gameManager;
 import com.soradgaming.squidgame.utils.playerManager;
@@ -86,7 +84,7 @@ public class Commands implements CommandExecutor {
             }
         }  else if (args.length == 1 && args[0].equalsIgnoreCase("list")) {
             if (sender.isOp()) {
-                List<UUID> playerList = gameManager.getPlayerList();
+                List<UUID> playerList = gameManager.getAlivePlayers();
                 for (UUID uuid : playerList) {
                     sender.sendMessage(ChatColor.BLUE + Objects.requireNonNull(Bukkit.getPlayer(uuid)).getName());
                 }

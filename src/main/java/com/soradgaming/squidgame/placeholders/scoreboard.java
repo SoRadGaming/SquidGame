@@ -11,7 +11,7 @@ public class scoreboard {
     public static final HashMap<UUID, Integer> playerList = new HashMap<>();
 
     public static @NotNull LinkedHashMap<UUID, Integer> grabData() {
-        ArrayList<UUID> uuidList = gameManager.getPlayerList();
+        ArrayList<UUID> uuidList = gameManager.getAlivePlayers();
         for (UUID uuid : uuidList) {
             int points = plugin.data.getInt(uuid + ".wins");
             playerList.put(uuid, points);

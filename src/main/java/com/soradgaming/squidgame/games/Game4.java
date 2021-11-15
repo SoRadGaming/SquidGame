@@ -44,7 +44,7 @@ public class Game4 implements Listener {
                 Objects.requireNonNull(player).setHealth(20);
                 player.setFoodLevel(20);
             }
-            for (UUID uuid : gameManager.getPlayerList()) {
+            for (UUID uuid : gameManager.getAlivePlayers()) {
                 Player player = Bukkit.getPlayer(uuid);
                 Objects.requireNonNull(player).sendTitle(gameManager.formatMessage(player,"events.game-pass.title") , gameManager.formatMessage(player,"events.game-pass.subtitle"),10, 30,10);
             }

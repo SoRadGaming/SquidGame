@@ -20,7 +20,7 @@ public class playerManager implements Listener {
     //Store Player Stats
     public static HashMap<Player, ItemStack[]> playerInv = new HashMap<>();
     public static HashMap<Player, ItemStack[]> playerArmour = new HashMap<>();
-    public static HashMap<Player, Collection<PotionEffect>> playerEffects = new HashMap<>(); //TODO FIX NOT STORING RESTORING OR CLEARING
+    public static HashMap<Player, Collection<PotionEffect>> playerEffects = new HashMap<>();
     public static HashMap<Player, Location> last_location = new HashMap<>();
     public static HashMap<Player, GameMode> gamemode = new HashMap<>();
     public static HashMap<Player, Double> healthScale = new HashMap<>();
@@ -30,14 +30,13 @@ public class playerManager implements Listener {
     public static HashMap<Player, Location> bedSpawn = new HashMap<>();
     public static HashMap<Player, Integer> foodLevel = new HashMap<>();
 
-    //Start command
+
     public static void playerBracket(@NotNull ArrayList<UUID> input) {
         //Active Players
 
         for (UUID uuid : input) {
-            Player p = Bukkit.getPlayer(uuid);
-            //Data
-            if (plugin.data.getInt(uuid + ".wins") >= 0) {
+            //Data Create if Never Player Before
+            if (!plugin.data.contains(uuid + ".wins")) {
                 plugin.data.set(uuid + ".wins", 0);
             }
             //Save Data
@@ -46,11 +45,11 @@ public class playerManager implements Listener {
     }
 
     public static boolean playerJoin(Player player) {
-        if (gameManager.getPlayerList().size() <= plugin.getConfig().getInt("max-players") && gameManager.addPlayer(Objects.requireNonNull(player)) && !gameStarted) {
+        if (gameManager.getAlivePlayers().size() <= plugin.getConfig().getInt("max-players") && gameManager.addPlayer(Objects.requireNonNull(player)) && !gameStarted) {
             gameManager.revivePlayer(player);
             plugin.data.set("join",player.getUniqueId().toString());
             playerManager.checkStart();
-            for (UUID uuid : gameManager.getPlayerList()) {
+            for (UUID uuid : gameManager.getAlivePlayers()) {
                 Objects.requireNonNull(Bukkit.getPlayer(uuid)).sendMessage(gameManager.formatMessage(player,"arena.join"));
             }
             //Save Stats
@@ -76,18 +75,20 @@ public class playerManager implements Listener {
             player.setFoodLevel(20);
             player.getInventory().clear();
             player.getInventory().setArmorContents(null);
-            player.getActivePotionEffects().clear();
+            for (PotionEffect effect : player.getActivePotionEffects()) {
+                player.removePotionEffect(effect.getType());
+            }
             return true;
         }
         return false;
     }
 
     public static boolean playerLeave(Player player) {
-        if (gameManager.removePlayer(Objects.requireNonNull(player)) && !gameStarted) {
+        if (gameManager.removePlayer(Objects.requireNonNull(player))) {
             gameManager.revivePlayer(player);
             playerManager.checkStart();
             plugin.data.set("leave",player.getUniqueId().toString());
-            for (UUID uuid : gameManager.getPlayerList()) {
+            for (UUID uuid : gameManager.getAlivePlayers()) {
                 Objects.requireNonNull(Bukkit.getPlayer(uuid)).sendMessage(gameManager.formatMessage(player,"arena.leave"));
             }
             //Give Old Stats Back
@@ -110,18 +111,18 @@ public class playerManager implements Listener {
     public static boolean checkStart() {
         int min = plugin.getConfig().getInt("min-players");
         BukkitScheduler gameStartTask = Bukkit.getScheduler();
-        if (gameManager.getPlayerList().size() >= min && !gameStarted) {
+        if (gameManager.getAlivePlayers().size() >= min && !gameStarted) {
             gameStartTask.runTaskLater(plugin, () -> {
                 gameManager.Initialise();
-                Game1.startGame1(gameManager.getPlayerList());
-                for (UUID uuid : gameManager.getPlayerList()) {
+                Game1.startGame1(gameManager.getAllPlayers());
+                for (UUID uuid : gameManager.getAllPlayers()) {
                     Player player = Bukkit.getPlayer(uuid);
                     Objects.requireNonNull(player).sendMessage(gameManager.formatMessage(player, "arena.started"));
                 }
                 gameStarted = true;
                 }, 20L * plugin.getConfig().getInt("start-time"));
                 //Message Starting
-            for (UUID uuid : gameManager.getPlayerList()) {
+            for (UUID uuid : gameManager.getAllPlayers()) {
                 Player player = Bukkit.getPlayer(uuid);
                 Objects.requireNonNull(player).sendMessage(gameManager.formatMessage(player, "arena.starting"));
             }

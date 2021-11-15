@@ -55,10 +55,10 @@ public final class SquidGame extends JavaPlugin {
         // Plugin shutdown logic
         plugin.saveFile();
         plugin.saveMessages();
-        for (UUID uuid: gameManager.getPlayerList()) {
+        for (UUID uuid: gameManager.getAlivePlayers()) {
             playerManager.playerLeave(Bukkit.getPlayer(uuid));
         }
-        for (UUID uuid: gameManager.getDeadPlayerList()) {
+        for (UUID uuid: gameManager.getDeadPlayers()) {
             playerManager.playerLeave(Bukkit.getPlayer(uuid));
         }
         getLogger().info("The plugin has been disabled correctly!");

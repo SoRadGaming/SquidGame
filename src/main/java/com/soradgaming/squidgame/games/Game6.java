@@ -78,12 +78,12 @@ public class Game6 implements Listener {
             broadcastTitle("events.game-timeout.title", "events.game-timeout.subtitle", 5);
             Started = false;
             Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                for (final UUID uuid : gameManager.getDeadPlayerList()) {
+                for (final UUID uuid : gameManager.getDeadPlayers()) {
                     Player player = Bukkit.getPlayer(uuid);
                     Objects.requireNonNull(player).sendTitle(gameManager.formatMessage(player,"events.game-timeout-died.title") , gameManager.formatMessage(player,"events.game-timeout-died.subtitle"),10, 30,10);
                     Objects.requireNonNull(player).teleport(Objects.requireNonNull(plugin.getConfig().getLocation("Lobby")));
                 }
-                for (final UUID uuid : gameManager.getPlayerList()) {
+                for (final UUID uuid : gameManager.getAlivePlayers()) {
                     Player player = Bukkit.getPlayer(uuid);
                     Objects.requireNonNull(player).sendTitle(gameManager.formatMessage(player,"events.game-pass.title") , gameManager.formatMessage(player,"events.game-pass.subtitle"),10, 30,10);
                     Objects.requireNonNull(player).teleport(Objects.requireNonNull(plugin.getConfig().getLocation("Lobby")));

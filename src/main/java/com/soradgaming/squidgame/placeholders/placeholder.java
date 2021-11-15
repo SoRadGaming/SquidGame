@@ -47,7 +47,7 @@ public class placeholder extends PlaceholderExpansion {
                 if (args[1].equalsIgnoreCase("joined")) {
                     return Objects.requireNonNull(Bukkit.getPlayer(UUID.fromString(Objects.requireNonNull(plugin.data.getString("join"))))).getName();
                 } else if (args[1].equalsIgnoreCase("players")) {
-                    return String.valueOf(gameManager.getPlayerList().size() + gameManager.getDeadPlayerList().size());
+                    return String.valueOf(gameManager.getAlivePlayers().size() + gameManager.getDeadPlayers().size());
                 } else if (args[1].equalsIgnoreCase("maxplayers")) {
                     return String.valueOf(plugin.getConfig().getInt("max-players"));
                 } else if (args[1].equalsIgnoreCase("leaved")) {

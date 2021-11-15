@@ -1,8 +1,6 @@
 package com.soradgaming.squidgame.games;
 
-import com.sk89q.worldedit.WorldEditException;
 import com.soradgaming.squidgame.SquidGame;
-import com.soradgaming.squidgame.math.WorldEditCube;
 import com.soradgaming.squidgame.utils.gameManager;
 import com.soradgaming.squidgame.math.Cuboid;
 import org.bukkit.*;
@@ -16,11 +14,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.util.BlockVector;
-import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -51,8 +47,8 @@ public class Game1 implements Listener {
         max = plugin.getConfig().getInt("Game1.lightSwitchMax");
         min = plugin.getConfig().getInt("Game1.lightSwitchMin");
         timeGlobal = plugin.getConfig().getInt("Game1.timer");
-        int minutes = (plugin.getConfig().getInt("Game1.timer")/60);
-        int seconds = (plugin.getConfig().getInt("Game1.timer") - (minutes * 60));
+        int minutes = (timeGlobal/60);
+        int seconds = (timeGlobal - (minutes * 60));
         bossBar = Bukkit.createBossBar(ChatColor.BOLD + "Game Timer : " + ChatColor.GOLD + minutes + ":" + ChatColor.GOLD + seconds , BarColor.BLUE, BarStyle.SOLID);
         bossBar.setVisible(true);
         bossBar.setProgress(0);
@@ -67,10 +63,10 @@ public class Game1 implements Listener {
             bossBar.addPlayer(Objects.requireNonNull(p));
         }
         onExplainStart("first");
-        timerInterval = (1 / (double) plugin.getConfig().getInt("Game1.timer"));
+        timerInterval = (1 / (double) timeGlobal);
         // With BukkitScheduler
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            gameTimer.runTaskLater(plugin, Game1::endGame1, 20L * (plugin.getConfig().getInt("Game1.timer") + 1));
+            gameTimer.runTaskLater(plugin, Game1::endGame1, 20L * (timeGlobal + 1));
             bossBarProgress.runTaskTimer(plugin, Game1::bossBarProgress, 20L, 20L);
             //START
             for (Block block : getBarrier().getBlocks()) {
@@ -105,7 +101,7 @@ public class Game1 implements Listener {
             broadcastTitle("events.game-timeout.title", "events.game-timeout.subtitle", 5);
             Started = false;
             canWalk = false;
-            for (UUID value : gameManager.getPlayerList()) {
+            for (UUID value : gameManager.getAlivePlayers()) {
                 Player player = Bukkit.getPlayer(value);
                 Location location = Objects.requireNonNull(player).getLocation();
                 if (!getGoalZone().contains(location)) { //Player didn't make it to end in time
@@ -115,19 +111,19 @@ public class Game1 implements Listener {
                 }
             }
             Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                for (final UUID uuid : gameManager.getDeadPlayerList()) {
+                for (final UUID uuid : gameManager.getDeadPlayers()) {
                     Player player = Bukkit.getPlayer(uuid);
                     Objects.requireNonNull(player).sendTitle(gameManager.formatMessage(player,"events.game-timeout-died.title") , gameManager.formatMessage(player,"events.game-timeout-died.subtitle"),10, 30,10);
                     Objects.requireNonNull(player).teleport(Objects.requireNonNull(plugin.getConfig().getLocation("Lobby")));
                 }
-                for (final UUID uuid : gameManager.getPlayerList()) {
+                for (final UUID uuid : gameManager.getAlivePlayers()) {
                     Player player = Bukkit.getPlayer(uuid);
                     Objects.requireNonNull(player).sendTitle(gameManager.formatMessage(player,"events.game-pass.title") , gameManager.formatMessage(player,"events.game-pass.subtitle"),10, 30,10);
                     Objects.requireNonNull(player).teleport(Objects.requireNonNull(plugin.getConfig().getLocation("Lobby")));
                 }
             }, 40L);
             //TODO Next Event
-            Game3.startGame3(gameManager.getPlayerList());
+            Game3.startGame3(gameManager.getAllPlayers());
         }
     }
 
@@ -139,7 +135,7 @@ public class Game1 implements Listener {
             return;
         }
         Player player = e.getPlayer();
-        if (Started && gameManager.getPlayerList().contains(player.getUniqueId())) {
+        if (Started && gameManager.getAlivePlayers().contains(player.getUniqueId())) {
             if (!canWalk) {
                 final Location location = e.getPlayer().getLocation();
                 if (getKillZone().contains(location)) {

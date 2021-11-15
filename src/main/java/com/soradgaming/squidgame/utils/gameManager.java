@@ -14,19 +14,29 @@ public class gameManager {
 
     public static ArrayList<UUID> playerListAlive = new ArrayList<>();
     public static ArrayList<UUID> playerListDead = new ArrayList<>();
+    public static ArrayList<UUID> playerListAll = new ArrayList<>();
     private static final SquidGame plugin = SquidGame.plugin;
 
     public static void Initialise() {
         playerManager.playerBracket(playerListAlive);
     }
 
-    public static ArrayList<UUID> getPlayerList() { return playerListAlive; }
+    public static ArrayList<UUID> getAlivePlayers() { return playerListAlive; }
 
-    public static ArrayList<UUID> getDeadPlayerList() { return playerListDead; }
+    public static ArrayList<UUID> getDeadPlayers() { return playerListDead; }
+
+    public static ArrayList<UUID> getAllPlayers() { return playerListAll; }
+
+    public static void updateTotal() {
+        playerListAll.clear();
+        playerListAll.addAll(playerListAlive);
+        playerListAll.addAll(playerListDead);
+    }
 
     public static synchronized boolean removePlayer(Player player) {
         if(playerListAlive.contains(player.getUniqueId())) {
             playerListAlive.remove(player.getUniqueId());
+            updateTotal();
             return true;
         } else {
             return false;
@@ -36,6 +46,7 @@ public class gameManager {
     public static synchronized boolean revivePlayer(Player player) {
         if(playerListDead.contains(player.getUniqueId())) {
             playerListDead.remove(player.getUniqueId());
+            updateTotal();
             return true;
         } else {
             return false;
@@ -46,9 +57,10 @@ public class gameManager {
         if(!playerListDead.contains(player.getUniqueId())) {
             playerListDead.add(player.getUniqueId());
             plugin.data.set("dead",player.getUniqueId().toString());
-            for (UUID uuid : gameManager.getPlayerList()) {
+            for (UUID uuid : gameManager.getAlivePlayers()) {
                 Objects.requireNonNull(Bukkit.getPlayer(uuid)).sendMessage(gameManager.formatMessage(player,"arena.death"));
             }
+            updateTotal();
             return true;
         } else {
             return false;
@@ -58,6 +70,7 @@ public class gameManager {
     public static synchronized boolean addPlayer(@NotNull Player player) {
         if(!playerListAlive.contains(player.getUniqueId())) {
             playerListAlive.add(player.getUniqueId());
+            updateTotal();
             return true;
         } else {
             return false;
