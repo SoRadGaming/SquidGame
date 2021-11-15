@@ -2,8 +2,7 @@
 SquidGame plugin for Minecraft
 
 **Bugs**:
-- Null World on Plugin Load
-- BlazeRod works as wand
+- IllegalArgumentException on Plugin Load (Linked to DataFile)
 
 **Commands**:
 - /sq

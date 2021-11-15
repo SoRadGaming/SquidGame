@@ -7,6 +7,8 @@ import com.soradgaming.squidgame.games.Game6;
 import com.soradgaming.squidgame.games.Game7;
 import com.soradgaming.squidgame.listeners.*;
 import com.soradgaming.squidgame.placeholders.placeholder;
+import com.soradgaming.squidgame.utils.gameManager;
+import com.soradgaming.squidgame.utils.playerManager;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -19,12 +21,13 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
+import java.util.UUID;
 
 public final class SquidGame extends JavaPlugin {
     public static SquidGame plugin;
     public File dataFile = new File(getDataFolder() + "/data/players.yml");
     public File messageFile = new File(getDataFolder(), "messages.yml");
-    public FileConfiguration data = YamlConfiguration.loadConfiguration(dataFile);
+    public FileConfiguration data = YamlConfiguration.loadConfiguration(dataFile); //IllegalArgumentException
     public FileConfiguration messages = YamlConfiguration.loadConfiguration(messageFile);
 
 
@@ -54,6 +57,12 @@ public final class SquidGame extends JavaPlugin {
         // Plugin shutdown logic
         plugin.saveFile();
         plugin.saveMessages();
+        for (UUID uuid: gameManager.getPlayerList()) {
+            playerManager.playerLeave(Bukkit.getPlayer(uuid));
+        }
+        for (UUID uuid: gameManager.getDeadPlayerList()) {
+            playerManager.playerLeave(Bukkit.getPlayer(uuid));
+        }
         getLogger().info("The plugin has been disabled correctly!");
     }
 
@@ -102,8 +111,7 @@ public final class SquidGame extends JavaPlugin {
     public void loadFile() {
         if (dataFile.exists()) {
             try {
-                data.load(dataFile);
-
+                data.load(dataFile); //IllegalArgumentException: unknown world
             } catch (IOException | InvalidConfigurationException e) {
 
                 e.printStackTrace();

@@ -1,9 +1,7 @@
 package com.soradgaming.squidgame.listeners;
 
 import com.soradgaming.squidgame.utils.PlayerWand;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,7 +14,7 @@ public class PlayerInteractListener implements Listener {
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent e) {
         Player player = e.getPlayer();
-        if (PlayerWand.getWand() != null && e.getItem() != null && e.getItem().getType().equals(Material.BLAZE_ROD)) {
+        if (PlayerWand.getWand() != null && e.getItem() != null && e.getItem().isSimilar(PlayerWand.getWand())) {
             if (e.getAction() == Action.LEFT_CLICK_BLOCK) {
                 PlayerWand.setFirstPoint(Objects.requireNonNull(e.getClickedBlock()).getLocation());
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&aSet &dfirst &apoint &7(&e" + PlayerWand.getFirstPoint().toString() + "&7)"));
