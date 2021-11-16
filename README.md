@@ -21,9 +21,8 @@ Glass Selection for Game6
 - Tiles need to be 2x2
 - gaped 2x2 in both directions
 - min platforms 3
-- Generator only makes sure half the platforms break, does not make them
 
-- **Placeholders**:
+**Placeholders**:
 - `%squidgame_wins%` Return Player Point Count
 - `%squidgame_first%`  Get First Position Player
 - `%squidgame_second%`  Get Second Position Player
