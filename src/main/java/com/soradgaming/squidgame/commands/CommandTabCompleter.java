@@ -19,11 +19,14 @@ public class CommandTabCompleter implements TabCompleter {
         if(cmd.getName().equalsIgnoreCase("squidgame")){
             ArrayList<String> completions = new ArrayList<>();
             if (args.length == 1) {
-                completions = new ArrayList<>(Arrays.asList("join", "help", "reload", "leave", "list", "end", "start", "set", "wand"));
+                completions = new ArrayList<>(Arrays.asList("join", "help", "reload", "leave", "list", "end", "start", "set", "wand", "test"));
                 completions = getApplicableTabCompletes(args[0], completions);
             } else if (args.length == 2) {
                 if (args[0].equals("set")) {
                     completions = new ArrayList<>(Arrays.asList("lobby", "Game1", "Game2", "Game3", "Game4", "Game5", "Game6", "Game7"));
+                    completions = getApplicableTabCompletes(args[1], completions);
+                } else if (args[0].equals("test")) {
+                    completions = new ArrayList<>(List.of("playerCount"));
                     completions = getApplicableTabCompletes(args[1], completions);
                 } else {
                     return null;

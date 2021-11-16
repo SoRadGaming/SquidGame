@@ -92,7 +92,7 @@ public class Game3 implements Listener {
     public void onPlayerDeath(final PlayerDeathEvent e) {
         final Player player = e.getEntity();
 
-        if (playerList.contains(player.getUniqueId()) && !player.getGameMode().equals(GameMode.SPECTATOR)) {
+        if (Started && playerList.contains(player.getUniqueId()) && !player.getGameMode().equals(GameMode.SPECTATOR)) {
             gameManager.killPlayer(player);
             player.setGameMode(GameMode.SPECTATOR);
         }

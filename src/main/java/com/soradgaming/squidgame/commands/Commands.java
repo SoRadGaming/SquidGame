@@ -118,10 +118,10 @@ public class Commands implements CommandExecutor {
                 sender.sendMessage(ChatColor.RED + "You don't have permission to do that");
                 return true;
             }
-        } else if (args.length == 1 && args[0].equalsIgnoreCase("test")) {
+        } else if (args.length == 2 && args[0].equalsIgnoreCase("test")) {
             if (sender.isOp()) {
                 //QuickTest
-                Game6.startGame6(gameManager.getAllPlayers());
+                Generator.generateTiles(Material.LIGHT_GRAY_STAINED_GLASS, Integer.parseInt(args[1]));
             } else {
                 sender.sendMessage(ChatColor.RED + "You don't have permission to do that");
                 return true;

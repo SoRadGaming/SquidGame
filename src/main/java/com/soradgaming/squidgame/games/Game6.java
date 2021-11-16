@@ -44,7 +44,7 @@ public class Game6 implements Listener {
         bossBar = Bukkit.createBossBar(ChatColor.BOLD + "Game Timer : " + ChatColor.GOLD + minutes + ":" + ChatColor.GOLD + seconds , BarColor.BLUE, BarStyle.SOLID);
         bossBar.setVisible(true);
         bossBar.setProgress(0);
-        Generator.generateTiles(Material.valueOf(plugin.getConfig().getString("Game6.material")));
+        Generator.generateTiles(Material.valueOf(plugin.getConfig().getString("Game6.material")), playerList.size());
         fakeBlocks = Generator.getFakeBlocks();
         fakeCuboids = Generator.getFakeCuboids();
         for (UUID uuid : playerList) {
@@ -164,18 +164,43 @@ public class Game6 implements Listener {
         final Location location = Objects.requireNonNull(e.getTo()).clone().subtract(0, 1, 0);
         final Block block = location.getBlock();
 
-        if (block.getType() == Material.valueOf(plugin.getConfig().getString("Game6.material"))) {
-            if (getGlassZone().contains(location) && fakeBlocks.contains(block)) {
+        //TODO TEMP REMOVE AFTER TESTING
+        fakeBlocks = Generator.getFakeBlocks();
+        fakeCuboids = Generator.getFakeCuboids();
+
+        if (block.getType() == Material.valueOf(plugin.getConfig().getString("Game6.material")) && fakeBlocks.contains(block)) {
+            //Bukkit.getScheduler().runTaskAsynchronously(plugin,() -> {
                 for (Cuboid cuboid: fakeCuboids) {
-                    for (Block blocks : cuboid.getBlocks()) {
-                        if (cuboid.contains(location)) {
+                    if (cuboid.contains(location)) {
+                        for (Block blocks : cuboid.getBlocks()) {
                             blocks.setType(Material.AIR);
                         }
                     }
                 }
-                block.setType(Material.AIR);
-                gameManager.killPlayer(player);
-                player.setGameMode(GameMode.SPECTATOR);
+            //});
+            //Commands to Run
+            gameManager.killPlayer(player);
+            player.setGameMode(GameMode.SPECTATOR);
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void PlayerMoveEventTest(@NotNull PlayerMoveEvent e) {
+        if (e.getFrom().distance(Objects.requireNonNull(e.getTo())) <= 0.015) {
+            return;
+        }
+        final Location location = Objects.requireNonNull(e.getTo()).clone().subtract(0, 1, 0);
+        final Block block = location.getBlock();
+        //TEMP
+        fakeCuboids = Generator.getFakeCuboids();
+
+        if (block.getType() == Material.LIGHT_GRAY_STAINED_GLASS && getGlassZone().contains(location)) {
+            for (Cuboid cuboid: fakeCuboids) {
+                if (cuboid.getBlocks().contains(block)) {
+                    for (Block cuboidBlocks : cuboid.getBlocks()) {
+                        cuboidBlocks.setType(Material.AIR);
+                    }
+                }
             }
         }
     }

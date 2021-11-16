@@ -55,7 +55,7 @@ public class Generator {
         return SecondBlock;
     }
 
-    public static void generateTiles(Material material) {
+    public static void generateTiles(Material material, int count) {
         leftBlocks.clear();
         rightBlocks.clear();
         fakeCuboids.clear();
@@ -94,38 +94,41 @@ public class Generator {
             rightBlocks.set(i, newCuboid);
         }
 
-        if (leftBlocks.size() == rightBlocks.size()) {
-            for (int i = 0; i < rightBlocks.size(); i++) {
-                Cuboid rightPlatforms = rightBlocks.get(i);
-                Cuboid leftPlatforms = leftBlocks.get(i);
-                Random random = new Random();
-                boolean isFirstFake = random.nextBoolean();
-                if (isFirstFake) {
-                    fakeCuboids.add(leftPlatforms);
-                } else {
-                    fakeCuboids.add(rightPlatforms);
-                }
-                Bukkit.getConsoleSender().sendMessage("fakeCuboids size "+ fakeCuboids.size());
-            }
-        }
-        //Add Random Data to List of block (May not be needed)
-        for (Cuboid fakeCuboid : fakeCuboids) {
-            fakeBlocks.addAll(fakeCuboid.getBlocks());
-        }
-
-
         //Generate Tiles
-        Bukkit.getConsoleSender().sendMessage("Changing Left Blocks to Config Block");
         for (Cuboid cuboid : leftBlocks) {
             for (Block block : cuboid.getBlocks()) {
                 block.setType(material);
             }
         }
-        Bukkit.getConsoleSender().sendMessage("Changing Right Blocks to Config Block");
         for (Cuboid cuboid : rightBlocks) {
             for (Block block : cuboid.getBlocks()) {
                 block.setType(material);
             }
+        }
+
+        //Change Breakable Blocks to Player Count
+        int playerCount;
+        if (count <= rightBlocks.size() && count > 0) {
+            playerCount = count;
+        } else {
+            playerCount = rightBlocks.size();
+        }
+
+        //Make Breakable Blocks
+        if (leftBlocks.size() == rightBlocks.size()) {
+            for (int i = 0; i < playerCount; i++) {
+                Random random = new Random();
+                boolean isFirstFake = random.nextBoolean();
+                if (isFirstFake) {
+                    fakeCuboids.add(leftBlocks.get(i));
+                } else {
+                    fakeCuboids.add(rightBlocks.get(i));
+                }
+            }
+        }
+        //Add Random Data to List of block (May not be needed)
+        for (Cuboid fakeCuboid : fakeCuboids) {
+            fakeBlocks.addAll(fakeCuboid.getBlocks());
         }
     }
 
