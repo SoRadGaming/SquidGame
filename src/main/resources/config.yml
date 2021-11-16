@@ -43,6 +43,52 @@ Game3:
   timer: 60
   lightSwitchOn: 1
   lightSwitchOff: 8
+Game4:
+  world: World
+  timer: 60
+  spawn_red:
+    ==: org.bukkit.Location
+    world: World
+    x: -227.94925437318383
+    y: 95.0
+    z: 972.1857812621586
+    pitch: -3.265213
+    yaw: -179.7325
+  spawn_blue:
+    ==: org.bukkit.Location
+    world: World
+    x: -227.94925437318383
+    y: 95.0
+    z: 972.1857812621586
+    pitch: -3.265213
+    yaw: -179.7325
+  goal_red:
+    first_point:
+      x: -258.0
+      y: 94.0
+      z: 900.0
+    second_point:
+      x: -199.0
+      y: 109.0
+      z: 888.0
+  goal_blue:
+    first_point:
+      x: -258.0
+      y: 94.0
+      z: 900.0
+    second_point:
+      x: -199.0
+      y: 109.0
+      z: 888.0
+  barrier:
+    first_point:
+      x: -790.0
+      y: 3.0
+      z: 415.0
+    second_point:
+      x: -850.0
+      y: 7.0
+      z: 415.0
 Game6:
   world: World
   timer: 60
@@ -55,6 +101,15 @@ Game6:
     z: 972.1857812621586
     pitch: -3.265213
     yaw: -179.7325
+  barrier:
+    first_point:
+      x: -790.0
+      y: 3.0
+      z: 415.0
+    second_point:
+      x: -850.0
+      y: 7.0
+      z: 415.0
   glass:
     first_point:
       x: -231.0
@@ -73,6 +128,24 @@ Game6:
       x: -199.0
       y: 109.0
       z: 888.0
+Game7:
+  world: World
+  spawn_1:
+    ==: org.bukkit.Location
+    world: World
+    x: -227.94925437318383
+    y: 95.0
+    z: 972.1857812621586
+    pitch: -3.265213
+    yaw: -179.7325
+  spawn_2:
+    ==: org.bukkit.Location
+    world: World
+    x: -227.94925437318383
+    y: 95.0
+    z: 972.1857812621586
+    pitch: -3.265213
+    yaw: -179.7325
 min-players: 2
 max-players: 12
 intermission-time: 10

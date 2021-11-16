@@ -49,7 +49,7 @@ public class playerManager implements Listener {
             gameManager.revivePlayer(player);
             plugin.data.set("join",player.getUniqueId().toString());
             playerManager.checkStart();
-            for (UUID uuid : gameManager.getAlivePlayers()) {
+            for (UUID uuid : gameManager.getAllPlayers()) {
                 Objects.requireNonNull(Bukkit.getPlayer(uuid)).sendMessage(gameManager.formatMessage(player,"arena.join"));
             }
             //Save Stats
@@ -84,11 +84,9 @@ public class playerManager implements Listener {
     }
 
     public static boolean playerLeave(Player player) {
-        if (gameManager.removePlayer(Objects.requireNonNull(player))) {
-            gameManager.revivePlayer(player);
-            playerManager.checkStart();
+        if (gameManager.removePlayer(Objects.requireNonNull(player)) || gameManager.revivePlayer(player)) {
             plugin.data.set("leave",player.getUniqueId().toString());
-            for (UUID uuid : gameManager.getAlivePlayers()) {
+            for (UUID uuid : gameManager.getAllPlayers()) {
                 Objects.requireNonNull(Bukkit.getPlayer(uuid)).sendMessage(gameManager.formatMessage(player,"arena.leave"));
             }
             //Give Old Stats Back

@@ -4,6 +4,7 @@ import com.soradgaming.squidgame.SquidGame;
 import com.soradgaming.squidgame.math.Cuboid;
 import com.soradgaming.squidgame.math.Generator;
 import com.soradgaming.squidgame.utils.gameManager;
+import com.soradgaming.squidgame.utils.playerManager;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.boss.BarColor;
@@ -102,6 +103,11 @@ public class Game6 implements Listener {
                 }
             }, 40L);
             //TODO end code
+            for (UUID uuid: gameManager.getAllPlayers()) {
+                Player player = Bukkit.getPlayer(uuid);
+                playerManager.playerLeave(player);
+                player.sendMessage("Game Done");
+            }
         }
     }
 
@@ -162,12 +168,12 @@ public class Game6 implements Listener {
             if (getGlassZone().contains(location) && fakeBlocks.contains(block)) {
                 for (Cuboid cuboid: fakeCuboids) {
                     for (Block blocks : cuboid.getBlocks()) {
-                        if (blocks.getType() == Material.valueOf(plugin.getConfig().getString("Game6.material")) && cuboid.contains(location)) {
+                        if (cuboid.contains(location)) {
                             blocks.setType(Material.AIR);
                         }
                     }
                 }
-                gameManager.removePlayer(player);
+                block.setType(Material.AIR);
                 gameManager.killPlayer(player);
                 player.setGameMode(GameMode.SPECTATOR);
             }
@@ -177,7 +183,7 @@ public class Game6 implements Listener {
     @EventHandler
     public void onPlayerDeath(final PlayerDeathEvent e) {
         final Player player = e.getEntity();
-        if (!player.getGameMode().equals(GameMode.SPECTATOR)) {
+        if (!player.getGameMode().equals(GameMode.SPECTATOR) && Started && playerList.contains(player.getUniqueId())) {
             gameManager.killPlayer(player);
             player.setGameMode(GameMode.SPECTATOR);
         }

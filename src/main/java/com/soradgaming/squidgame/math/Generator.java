@@ -83,8 +83,18 @@ public class Generator {
 
         Bukkit.getConsoleSender().sendMessage("Right Platforms " + rightBlocks.size());
         Bukkit.getConsoleSender().sendMessage("Left Platforms " + leftBlocks.size());
+
+        //Modify Cuboid Size
+        for (int i = 0; i < leftBlocks.size(); i++) {
+            Cuboid newCuboid = moveCubeFromTopRight(leftBlocks.get(i));
+            leftBlocks.set(i, newCuboid);
+        }
+        for (int i = 0; i < rightBlocks.size(); i++) {
+            Cuboid newCuboid = moveCubeFromTopRight(rightBlocks.get(i));
+            rightBlocks.set(i, newCuboid);
+        }
+
         if (leftBlocks.size() == rightBlocks.size()) {
-            Bukkit.getConsoleSender().sendMessage("Left = Right Platform");
             for (int i = 0; i < rightBlocks.size(); i++) {
                 Cuboid rightPlatforms = rightBlocks.get(i);
                 Cuboid leftPlatforms = leftBlocks.get(i);
@@ -95,21 +105,12 @@ public class Generator {
                 } else {
                     fakeCuboids.add(rightPlatforms);
                 }
+                Bukkit.getConsoleSender().sendMessage("fakeCuboids size "+ fakeCuboids.size());
             }
         }
         //Add Random Data to List of block (May not be needed)
         for (Cuboid fakeCuboid : fakeCuboids) {
             fakeBlocks.addAll(fakeCuboid.getBlocks());
-        }
-
-        //Modify Cuboid Size
-        for (int i = 0; i < leftBlocks.size(); i++) {
-            Cuboid newCuboid = moveCubeFromTopRight(leftBlocks.get(i));
-            leftBlocks.set(i, newCuboid);
-        }
-        for (int i = 0; i < rightBlocks.size(); i++) {
-            Cuboid newCuboid = moveCubeFromTopRight(rightBlocks.get(i));
-            rightBlocks.set(i, newCuboid);
         }
 
 
