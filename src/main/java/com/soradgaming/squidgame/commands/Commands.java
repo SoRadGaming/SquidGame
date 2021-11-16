@@ -2,7 +2,9 @@ package com.soradgaming.squidgame.commands;
 
 import com.soradgaming.squidgame.SquidGame;
 import com.soradgaming.squidgame.games.Game1;
+import com.soradgaming.squidgame.games.Game6;
 import com.soradgaming.squidgame.math.Cuboid;
+import com.soradgaming.squidgame.math.Generator;
 import com.soradgaming.squidgame.utils.PlayerWand;
 import com.soradgaming.squidgame.utils.gameManager;
 import com.soradgaming.squidgame.utils.playerManager;
@@ -119,6 +121,7 @@ public class Commands implements CommandExecutor {
         } else if (args.length == 1 && args[0].equalsIgnoreCase("test")) {
             if (sender.isOp()) {
                 //QuickTest
+                Game6.startGame6(gameManager.getAllPlayers());
             } else {
                 sender.sendMessage(ChatColor.RED + "You don't have permission to do that");
                 return true;

@@ -111,7 +111,18 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
     }
 
     public Cuboid(World world, BlockVector firstPoint, BlockVector secondPoint) {
-        this.worldName = world.toString();
+        this.worldName = world.getName();
+        this.x1 = firstPoint.getBlockX();
+        this.y1 = firstPoint.getBlockY();
+        this.z1 = firstPoint.getBlockZ();
+        this.x2 = secondPoint.getBlockX();
+        this.y2 = secondPoint.getBlockY();
+        this.z2 = secondPoint.getBlockZ();
+
+    }
+
+    public Cuboid(World world, Vector firstPoint, Vector secondPoint) {
+        this.worldName = world.getName();
         this.x1 = firstPoint.getBlockX();
         this.y1 = firstPoint.getBlockY();
         this.z1 = firstPoint.getBlockZ();

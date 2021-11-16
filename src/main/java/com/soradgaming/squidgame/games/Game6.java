@@ -16,7 +16,6 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.util.BlockVector;
-import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -32,7 +31,8 @@ public class Game6 implements Listener {
     public static int timeGlobal;
     private static Cuboid glassZone;
     private static Cuboid goalZone;
-    private static final ArrayList<Block> fakeBlocks = new ArrayList<>();
+    private static ArrayList<Block> fakeBlocks = new ArrayList<>();
+    private static ArrayList<Cuboid> fakeCuboids = new ArrayList<>();
 
     public static void startGame6(ArrayList<UUID> input) {
         playerList = input;
@@ -43,8 +43,9 @@ public class Game6 implements Listener {
         bossBar = Bukkit.createBossBar(ChatColor.BOLD + "Game Timer : " + ChatColor.GOLD + minutes + ":" + ChatColor.GOLD + seconds , BarColor.BLUE, BarStyle.SOLID);
         bossBar.setVisible(true);
         bossBar.setProgress(0);
-        //Generate Glass
         Generator.generateTiles(Material.valueOf(plugin.getConfig().getString("Game6.material")));
+        fakeBlocks = Generator.getFakeBlocks();
+        fakeCuboids = Generator.getFakeCuboids();
         for (UUID uuid : playerList) {
             Player p = Bukkit.getPlayer(uuid);
             Objects.requireNonNull(p).teleport(Objects.requireNonNull(plugin.getConfig().getLocation("Game6.spawn")));
@@ -79,6 +80,15 @@ public class Game6 implements Listener {
             bossBar.setVisible(false);
             broadcastTitle("events.game-timeout.title", "events.game-timeout.subtitle", 5);
             Started = false;
+            for (UUID value : gameManager.getAlivePlayers()) {
+                Player player = Bukkit.getPlayer(value);
+                Location location = Objects.requireNonNull(player).getLocation();
+                if (!getGoalZone().contains(location)) { //Player didn't make it to end in time
+                    gameManager.removePlayer(player);
+                    gameManager.killPlayer(player);
+                    player.setGameMode(GameMode.SPECTATOR);
+                }
+            }
             Bukkit.getScheduler().runTaskLater(plugin, () -> {
                 for (final UUID uuid : gameManager.getDeadPlayers()) {
                     Player player = Bukkit.getPlayer(uuid);
@@ -117,19 +127,18 @@ public class Game6 implements Listener {
 
     public static Cuboid getGlassZone() {
         if (glassZone == null) {
-            BlockVector vector1 = gameManager.configToVectors("Game6.barrier.first_point");
-            BlockVector vector2 = gameManager.configToVectors("Game6.barrier.second_point");
+            BlockVector vector1 = gameManager.configToVectors("Game6.glass.first_point");
+            BlockVector vector2 = gameManager.configToVectors("Game6.glass.second_point");
             World world = Bukkit.getWorld(Objects.requireNonNull(plugin.getConfig().getString("Game6.world")));
-            glassZone = new Cuboid(Objects.requireNonNull(world),vector1.getBlockX(),vector1.getBlockY(),vector1.getBlockZ(),vector2.getBlockX(),vector2.getBlockY(),vector2.getBlockZ());
-
+            glassZone = new Cuboid(Objects.requireNonNull(world),vector1.toBlockVector(),vector2.toBlockVector());
         }
         return glassZone;
     }
 
-    public Cuboid getGoalZone() {
+    public static Cuboid getGoalZone() {
         if (goalZone == null) {
-            BlockVector vector1 = gameManager.configToVectors("Game6.barrier.first_point");
-            BlockVector vector2 = gameManager.configToVectors("Game6.barrier.second_point");
+            BlockVector vector1 = gameManager.configToVectors("Game6.goal.first_point");
+            BlockVector vector2 = gameManager.configToVectors("Game6.goal.second_point");
             World world = Bukkit.getWorld(Objects.requireNonNull(plugin.getConfig().getString("Game6.world")));
             goalZone = new Cuboid(Objects.requireNonNull(world),vector1.getBlockX(),vector1.getBlockY(),vector1.getBlockZ(),vector2.getBlockX(),vector2.getBlockY(),vector2.getBlockZ());
         }
@@ -139,22 +148,29 @@ public class Game6 implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void PlayerMoveEvent(@NotNull PlayerMoveEvent e) {
-        if (e.getFrom().distance(Objects.requireNonNull(e.getTo())) <= 0.015) {
+        if (e.getFrom().distance(Objects.requireNonNull(e.getTo())) <= 0.015 || !Started) {
             return;
         }
         Player player = e.getPlayer();
         if (e.getPlayer().getGameMode().equals(GameMode.SPECTATOR) && !playerList.contains(player.getUniqueId())) {
             return;
         }
-        final Location loc = Objects.requireNonNull(e.getTo()).clone().subtract(0, 1, 0);
-        final Block block = loc.getBlock();
+        final Location location = Objects.requireNonNull(e.getTo()).clone().subtract(0, 1, 0);
+        final Block block = location.getBlock();
 
         if (block.getType() == Material.valueOf(plugin.getConfig().getString("Game6.material"))) {
-            if (fakeBlocks.contains(block)) {
+            if (getGlassZone().contains(location) && fakeBlocks.contains(block)) {
+                for (Cuboid cuboid: fakeCuboids) {
+                    for (Block blocks : cuboid.getBlocks()) {
+                        if (blocks.getType() == Material.valueOf(plugin.getConfig().getString("Game6.material")) && cuboid.contains(location)) {
+                            blocks.setType(Material.AIR);
+                        }
+                    }
+                }
+                gameManager.removePlayer(player);
                 gameManager.killPlayer(player);
                 player.setGameMode(GameMode.SPECTATOR);
             }
-            // now we checked that they are in this game
         }
     }
 
