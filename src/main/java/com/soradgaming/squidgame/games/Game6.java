@@ -44,14 +44,18 @@ public class Game6 implements Listener {
         bossBar = Bukkit.createBossBar(ChatColor.BOLD + "Game Timer : " + ChatColor.GOLD + minutes + ":" + ChatColor.GOLD + seconds , BarColor.BLUE, BarStyle.SOLID);
         bossBar.setVisible(true);
         bossBar.setProgress(0);
-        Generator.generateTiles(Material.valueOf(plugin.getConfig().getString("Game6.material")), playerList.size());
-        fakeBlocks = Generator.getFakeBlocks();
-        fakeCuboids = Generator.getFakeCuboids();
-        for (UUID uuid : playerList) {
-            Player p = Bukkit.getPlayer(uuid);
-            Objects.requireNonNull(p).teleport(Objects.requireNonNull(plugin.getConfig().getLocation("Game6.spawn")));
-            bossBar.addPlayer(Objects.requireNonNull(p));
-        }
+        Bukkit.getScheduler().runTaskAsynchronously(plugin,() -> {
+            Generator.generateTiles(Material.valueOf(plugin.getConfig().getString("Game6.material")), playerList.size());
+            fakeBlocks = Generator.getFakeBlocks();
+            fakeCuboids = Generator.getFakeCuboids();
+        });
+        Bukkit.getScheduler().runTaskAsynchronously(plugin,() -> {
+            for (UUID uuid : playerList) {
+                Player p = Bukkit.getPlayer(uuid);
+                Objects.requireNonNull(p).teleport(Objects.requireNonNull(plugin.getConfig().getLocation("Game6.spawn")));
+                bossBar.addPlayer(Objects.requireNonNull(p));
+            }
+        });
         onExplainStart("sixth");
         timerInterval = (1 / (double) timeGlobal);
         // With BukkitScheduler
@@ -111,6 +115,47 @@ public class Game6 implements Listener {
         }
     }
 
+    @EventHandler(ignoreCancelled = true)
+    public void PlayerMoveEvent(@NotNull PlayerMoveEvent e) {
+        if (e.getFrom().distance(Objects.requireNonNull(e.getTo())) <= 0.015) {
+            return;
+        }
+        if (!Started) {
+            return;
+        }
+        Player player = e.getPlayer();
+        if (!playerList.contains(player.getUniqueId())) {
+            return;
+        }
+        if (e.getPlayer().getGameMode().equals(GameMode.SPECTATOR)) {
+            return;
+        }
+
+        final Location location = Objects.requireNonNull(e.getTo()).clone().subtract(0, 1, 0);
+        final Block block = location.getBlock();
+
+        if (block.getType() == Material.valueOf(plugin.getConfig().getString("Game6.material")) && fakeBlocks.contains(block)) {
+            Bukkit.getScheduler().runTaskAsynchronously(plugin,() -> {
+                for (Cuboid cuboid: fakeCuboids) {
+                    if (cuboid.contains(location)) {
+                        for (Block blocks : cuboid.getBlocks()) {
+                            blocks.setType(Material.AIR);
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    @EventHandler
+    public void onPlayerDeath(final PlayerDeathEvent e) {
+        final Player player = e.getEntity();
+        if (!player.getGameMode().equals(GameMode.SPECTATOR) && Started && playerList.contains(player.getUniqueId())) {
+            gameManager.killPlayer(player);
+            player.setGameMode(GameMode.SPECTATOR);
+        }
+    }
+
     public static void broadcastTitle(final String title, final String subtitle , int time) {
         for (final UUID uuid : playerList) {
             Player player = Bukkit.getPlayer(uuid);
@@ -150,67 +195,5 @@ public class Game6 implements Listener {
         }
 
         return goalZone;
-    }
-
-    @EventHandler(ignoreCancelled = true)
-    public void PlayerMoveEvent(@NotNull PlayerMoveEvent e) {
-        if (e.getFrom().distance(Objects.requireNonNull(e.getTo())) <= 0.015 || !Started) {
-            return;
-        }
-        Player player = e.getPlayer();
-        if (e.getPlayer().getGameMode().equals(GameMode.SPECTATOR) && !playerList.contains(player.getUniqueId())) {
-            return;
-        }
-        final Location location = Objects.requireNonNull(e.getTo()).clone().subtract(0, 1, 0);
-        final Block block = location.getBlock();
-
-        //TODO TEMP REMOVE AFTER TESTING
-        fakeBlocks = Generator.getFakeBlocks();
-        fakeCuboids = Generator.getFakeCuboids();
-
-        if (block.getType() == Material.valueOf(plugin.getConfig().getString("Game6.material")) && fakeBlocks.contains(block)) {
-            //Bukkit.getScheduler().runTaskAsynchronously(plugin,() -> {
-                for (Cuboid cuboid: fakeCuboids) {
-                    if (cuboid.contains(location)) {
-                        for (Block blocks : cuboid.getBlocks()) {
-                            blocks.setType(Material.AIR);
-                        }
-                    }
-                }
-            //});
-            //Commands to Run
-            gameManager.killPlayer(player);
-            player.setGameMode(GameMode.SPECTATOR);
-        }
-    }
-
-    @EventHandler(ignoreCancelled = true)
-    public void PlayerMoveEventTest(@NotNull PlayerMoveEvent e) {
-        if (e.getFrom().distance(Objects.requireNonNull(e.getTo())) <= 0.015) {
-            return;
-        }
-        final Location location = Objects.requireNonNull(e.getTo()).clone().subtract(0, 1, 0);
-        final Block block = location.getBlock();
-        //TEMP
-        fakeCuboids = Generator.getFakeCuboids();
-
-        if (block.getType() == Material.LIGHT_GRAY_STAINED_GLASS && getGlassZone().contains(location)) {
-            for (Cuboid cuboid: fakeCuboids) {
-                if (cuboid.getBlocks().contains(block)) {
-                    for (Block cuboidBlocks : cuboid.getBlocks()) {
-                        cuboidBlocks.setType(Material.AIR);
-                    }
-                }
-            }
-        }
-    }
-
-    @EventHandler
-    public void onPlayerDeath(final PlayerDeathEvent e) {
-        final Player player = e.getEntity();
-        if (!player.getGameMode().equals(GameMode.SPECTATOR) && Started && playerList.contains(player.getUniqueId())) {
-            gameManager.killPlayer(player);
-            player.setGameMode(GameMode.SPECTATOR);
-        }
     }
 }

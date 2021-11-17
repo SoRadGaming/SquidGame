@@ -3,10 +3,14 @@ package com.soradgaming.squidgame.games;
 import com.soradgaming.squidgame.SquidGame;
 import com.soradgaming.squidgame.utils.gameManager;
 import org.bukkit.*;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitScheduler;
@@ -23,22 +27,52 @@ public class Game3 implements Listener {
     private static final BukkitScheduler lightsOff = Bukkit.getScheduler();
     private static final BukkitScheduler lightsOn = Bukkit.getScheduler();
     private static final BukkitScheduler delay = Bukkit.getScheduler();
+    private static final BukkitScheduler bossBarProgress = Bukkit.getScheduler();
+    private static BossBar bossBar;
+    private static double timerInterval;
+    public static int timeGlobal;
 
     public static void startGame3(ArrayList<UUID> input) {
         playerList = input;
         Started = true;
         onExplainStart("third");
-        for (UUID uuid:playerList) {
+        timeGlobal = plugin.getConfig().getInt("Game3.timer");
+        int minutes = (timeGlobal/60);
+        int seconds = (timeGlobal - (minutes * 60));
+        bossBar = Bukkit.createBossBar(ChatColor.BOLD + "Game Timer : " + ChatColor.GOLD + minutes + ":" + ChatColor.GOLD + seconds , BarColor.BLUE, BarStyle.SOLID);
+        bossBar.setVisible(true);
+        bossBar.setProgress(0);
+        timerInterval = (1 / (double) timeGlobal);
+        Bukkit.getScheduler().runTaskAsynchronously(plugin,() -> {
+            for (UUID uuid:playerList) {
             Player player = Bukkit.getPlayer(uuid);
-            //TODO give item (wooden sword)
-        }
+            bossBar.addPlayer(Objects.requireNonNull(player));
+            }
+        });
         // With BukkitScheduler
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             gameTimer.runTaskLater(plugin, Game3::endGame3, 20L * (plugin.getConfig().getInt("Game3.timer") + 1));
+            bossBarProgress.runTaskTimer(plugin, Game3::bossBarProgress, 20L, 20L);
             //START
+            for (UUID uuid:playerList) {
+                Player player = Bukkit.getPlayer(uuid);
+                bossBar.addPlayer(Objects.requireNonNull(player));
+                player.getInventory().setItemInMainHand(new ItemStack(Material.WOODEN_SWORD));
+            }
             //TODO Set PVP ON
             flashLights();
         }, 20L * 15);
+    }
+
+    public static void bossBarProgress() {
+        double bossBarProgress = bossBar.getProgress();
+        if (bossBarProgress + timerInterval < 1) {
+            bossBar.setProgress(bossBarProgress + timerInterval);
+        }
+        timeGlobal = timeGlobal - 1;
+        int minutes = (timeGlobal/60);
+        int seconds = (timeGlobal - (minutes * 60));
+        bossBar.setTitle(ChatColor.BOLD + "Game Timer : " + ChatColor.GOLD + minutes + ":" + ChatColor.GOLD + seconds);
     }
 
     public static void endGame3() {
@@ -51,12 +85,13 @@ public class Game3 implements Listener {
             for (UUID uuid : gameManager.getAlivePlayers()) {
                 Player player = Bukkit.getPlayer(uuid);
                 Objects.requireNonNull(player).setHealth(20);
+                player.getInventory().clear();
                 player.setFoodLevel(20);
                 player.getActivePotionEffects().clear();
                 player.sendTitle(gameManager.formatMessage(player,"events.game-pass.title") , gameManager.formatMessage(player,"events.game-pass.subtitle"),10, 30,10);
             }
             //TODO end code
-            Game6.startGame6(gameManager.getAllPlayers());
+            Game4.startGame4(gameManager.getAllPlayers());
         }
     }
 

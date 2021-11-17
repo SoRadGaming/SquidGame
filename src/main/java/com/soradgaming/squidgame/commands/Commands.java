@@ -146,53 +146,83 @@ public class Commands implements CommandExecutor {
                 switch (args[1]) {
                     case "Game1":
                         switch (args[2]) {
-                            case "spawn":
-                                plugin.getConfig().set("Game1.spawn",loc);
+                            case "spawn" -> {
+                                plugin.getConfig().set("Game1.spawn", loc);
                                 plugin.saveConfig();
                                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eFirst game " + "Spawn" + "&a set to your location &7(" + loc.toVector() + ")"));
-                                break;
-                            case "barrier":
+                            }
+                            case "barrier" -> {
                                 Cuboid.setConfigVectors("Game1.barrier", PlayerWand.getFirstPoint(), PlayerWand.getSecondPoint());
                                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eFirst game " + "barrier" + "&a set with your location wand &7("
                                         + PlayerWand.getFirstPoint().toString() + ") (" + PlayerWand.getSecondPoint().toString() + ")"));
                                 plugin.saveConfig();
-                                break;
-                            case "killzone":
+                            }
+                            case "killzone" -> {
                                 Cuboid.setConfigVectors("Game1.killzone", PlayerWand.getFirstPoint(), PlayerWand.getSecondPoint());
                                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eFirst game " + "killzone" + "&a set with your location wand &7("
                                         + PlayerWand.getFirstPoint().toString() + ") (" + PlayerWand.getSecondPoint().toString() + ")"));
                                 plugin.saveConfig();
-                                break;
-                            case "goal":
+                            }
+                            case "goal" -> {
                                 Cuboid.setConfigVectors("Game1.goal", PlayerWand.getFirstPoint(), PlayerWand.getSecondPoint());
                                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eFirst game " + "goal" + "&a set with your location wand &7("
                                         + PlayerWand.getFirstPoint().toString() + ") (" + PlayerWand.getSecondPoint().toString() + ")"));
                                 plugin.saveConfig();
-                                break;
+                            }
                         }
                     case "Game2":
                     case "Game3":
                     case "Game4":
+                        switch (args[2]) {
+                            case "spawn_red" -> {
+                                plugin.getConfig().set("Game4.spawn_red", loc);
+                                plugin.saveConfig();
+                                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eFourth game " + "spawn_red" + "&a set to your location &7(" + loc.toVector() + ")"));
+                            }
+                            case "spawn_blue" -> {
+                                plugin.getConfig().set("Game4.spawn_blue", loc);
+                                plugin.saveConfig();
+                                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eFourth game " + "spawn_blue" + "&a set to your location &7(" + loc.toVector() + ")"));
+                            }
+                            case "goal_blue" -> {
+                                Cuboid.setConfigVectors("Game6.goal_blue", PlayerWand.getFirstPoint(), PlayerWand.getSecondPoint());
+                                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eFourth game " + "goal_blue" + "&a set with your location wand &7("
+                                        + PlayerWand.getFirstPoint().toString() + ") (" + PlayerWand.getSecondPoint().toString() + ")"));
+                                plugin.saveConfig();
+                            }
+                            case "goal_red" -> {
+                                Cuboid.setConfigVectors("Game6.goal_red", PlayerWand.getFirstPoint(), PlayerWand.getSecondPoint());
+                                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eFourth game " + "goal_red" + "&a set with your location wand &7("
+                                        + PlayerWand.getFirstPoint().toString() + ") (" + PlayerWand.getSecondPoint().toString() + ")"));
+                                plugin.saveConfig();
+                            }
+                            case "barrier" -> {
+                                Cuboid.setConfigVectors("Game6.barrier", PlayerWand.getFirstPoint(), PlayerWand.getSecondPoint());
+                                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eFourth game " + "barrier" + "&a set with your location wand &7("
+                                        + PlayerWand.getFirstPoint().toString() + ") (" + PlayerWand.getSecondPoint().toString() + ")"));
+                                plugin.saveConfig();
+                            }
+                        }
                     case "Game5":
                     case "Game6":
                         switch (args[2]) {
-                            case "spawn":
-                                plugin.getConfig().set("Game6.spawn",loc);
+                            case "spawn" -> {
+                                plugin.getConfig().set("Game6.spawn", loc);
                                 plugin.saveConfig();
                                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eSixth game " + "Spawn" + "&a set to your location &7(" + loc.toVector() + ")"));
-                                break;
-                            case "glass":
+                            }
+                            case "glass" -> {
                                 Cuboid.setConfigVectors("Game6.glass", PlayerWand.getFirstPoint(), PlayerWand.getSecondPoint());
                                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eSixth game " + "glass" + "&a set with your location wand &7("
                                         + PlayerWand.getFirstPoint().toString() + ") (" + PlayerWand.getSecondPoint().toString() + ")"));
                                 plugin.saveConfig();
-                                break;
-                            case "goal":
+                            }
+                            case "goal" -> {
                                 Cuboid.setConfigVectors("Game6.goal", PlayerWand.getFirstPoint(), PlayerWand.getSecondPoint());
                                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eSixth game " + "goal" + "&a set with your location wand &7("
                                         + PlayerWand.getFirstPoint().toString() + ") (" + PlayerWand.getSecondPoint().toString() + ")"));
                                 plugin.saveConfig();
-                                break;
+                            }
                         }
                     case "Game7":
                 }

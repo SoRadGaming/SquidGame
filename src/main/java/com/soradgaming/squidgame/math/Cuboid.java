@@ -1,18 +1,5 @@
 package com.soradgaming.squidgame.math;
 
-import com.sk89q.worldedit.EditSession;
-import com.sk89q.worldedit.EmptyClipboardException;
-import com.sk89q.worldedit.LocalSession;
-import com.sk89q.worldedit.WorldEditException;
-import com.sk89q.worldedit.extent.clipboard.BlockArrayClipboard;
-import com.sk89q.worldedit.function.block.BlockReplace;
-import com.sk89q.worldedit.function.mask.Mask;
-import com.sk89q.worldedit.function.operation.ForwardExtentCopy;
-import com.sk89q.worldedit.function.operation.Operations;
-import com.sk89q.worldedit.function.pattern.Pattern;
-import com.sk89q.worldedit.math.transform.AffineTransform;
-import com.sk89q.worldedit.regions.Region;
-import com.sk89q.worldedit.session.ClipboardHolder;
 import com.soradgaming.squidgame.SquidGame;
 import org.bukkit.*;
 import org.bukkit.block.Block;

@@ -81,8 +81,7 @@ public class Generator {
             getRightX();
         }
 
-        Bukkit.getConsoleSender().sendMessage("Right Platforms " + rightBlocks.size());
-        Bukkit.getConsoleSender().sendMessage("Left Platforms " + leftBlocks.size());
+        Bukkit.getConsoleSender().sendMessage("Platforms " + rightBlocks.size());
 
         //Modify Cuboid Size
         for (int i = 0; i < leftBlocks.size(); i++) {
@@ -126,6 +125,7 @@ public class Generator {
                 }
             }
         }
+        Bukkit.getConsoleSender().sendMessage("Fake Platforms " + fakeCuboids.size());
         //Add Random Data to List of block (May not be needed)
         for (Cuboid fakeCuboid : fakeCuboids) {
             fakeBlocks.addAll(fakeCuboid.getBlocks());
@@ -162,7 +162,7 @@ public class Generator {
         }
     }
 
-    public static void getLeftZ() {
+    private static void getLeftZ() {
         Vector lFirstBlock = first;
         Cuboid cuboidInfile = new Cuboid(world,lFirstBlock, lFirstBlock);
         leftBlocks.add(cuboidInfile);
@@ -185,7 +185,7 @@ public class Generator {
         }
     }
 
-    public static void getRightZ() {
+    private static void getRightZ() {
         for (Cuboid leftBlock : leftBlocks) {
             Cuboid newCuboid = moveCubeToRightSide(leftBlock);
             rightBlocks.add(newCuboid);

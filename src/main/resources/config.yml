@@ -159,5 +159,5 @@ Lobby:
   yaw: 0.0
   pitch: 0.0
 rewards:
-    - say {winner} is the winner!
-    - eco give {winner} 10
+    - say %squidgame_arena_winner% is the winner!
+    - eco give %squidgame_arena_winner% 10
