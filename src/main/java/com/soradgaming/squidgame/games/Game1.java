@@ -52,6 +52,7 @@ public class Game1 implements Listener {
         bossBar = Bukkit.createBossBar(ChatColor.BOLD + "Game Timer : " + ChatColor.GOLD + minutes + ":" + ChatColor.GOLD + seconds , BarColor.BLUE, BarStyle.SOLID);
         bossBar.setVisible(true);
         bossBar.setProgress(0);
+        gameManager.setPvPAllowed(false);
         for (Block block : getBarrier().getBlocks()) {
             if (block.getType() == Material.AIR) {
                 block.setType(Material.BARRIER);
@@ -69,6 +70,7 @@ public class Game1 implements Listener {
             gameTimer.runTaskLater(plugin, Game1::endGame1, 20L * (timeGlobal + 1));
             bossBarProgress.runTaskTimer(plugin, Game1::bossBarProgress, 20L, 20L);
             //START
+            gameManager.setPvPAllowed(true);
             for (Block block : getBarrier().getBlocks()) {
                 if (block.getType() == Material.BARRIER) {
                     block.setType(Material.AIR);
@@ -101,6 +103,7 @@ public class Game1 implements Listener {
             broadcastTitle("events.game-timeout.title", "events.game-timeout.subtitle", 5);
             Started = false;
             canWalk = false;
+            gameManager.setPvPAllowed(false);
             for (UUID value : gameManager.getAlivePlayers()) {
                 Player player = Bukkit.getPlayer(value);
                 Location location = Objects.requireNonNull(player).getLocation();

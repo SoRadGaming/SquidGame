@@ -75,7 +75,7 @@ public class Game4 implements Listener {
                 Player player = Bukkit.getPlayer(uuid);
                 player.getInventory().setItemInMainHand(new ItemStack(Material.STICK));
             }
-            //TODO Set PVP ON
+            gameManager.setPvPAllowed(true);
         }, 20L * 15);
     }
 
@@ -123,7 +123,7 @@ public class Game4 implements Listener {
     public static void endGame4() {
         gameTimer.cancelTasks(plugin);
         if (Started) {
-            //TODO Set PVP off
+            gameManager.setPvPAllowed(false);
             team2BlueBukkit.unregister();
             team1RedBukkit.unregister();
             //Set winning team and revive team players

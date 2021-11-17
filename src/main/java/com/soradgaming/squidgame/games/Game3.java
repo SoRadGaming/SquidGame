@@ -59,7 +59,7 @@ public class Game3 implements Listener {
                 bossBar.addPlayer(Objects.requireNonNull(player));
                 player.getInventory().setItemInMainHand(new ItemStack(Material.WOODEN_SWORD));
             }
-            //TODO Set PVP ON
+            gameManager.setPvPAllowed(true);
             flashLights();
         }, 20L * 15);
     }
@@ -81,7 +81,7 @@ public class Game3 implements Listener {
         lightsOff.cancelTasks(plugin);
         delay.cancelTasks(plugin);
         if (Started) {
-            //TODO Set PVP off
+            gameManager.setPvPAllowed(false);
             for (UUID uuid : gameManager.getAlivePlayers()) {
                 Player player = Bukkit.getPlayer(uuid);
                 Objects.requireNonNull(player).setHealth(20);

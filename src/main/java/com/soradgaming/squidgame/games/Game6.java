@@ -63,6 +63,7 @@ public class Game6 implements Listener {
             gameTimer.runTaskLater(plugin, Game6::endGame6, 20L * (timeGlobal + 1));
             bossBarProgress.runTaskTimer(plugin, Game6::bossBarProgress, 20L, 20L);
             //START
+            gameManager.setPvPAllowed(true);
         }, 20L * 15);
     }
 
@@ -85,6 +86,7 @@ public class Game6 implements Listener {
             bossBar.setVisible(false);
             broadcastTitle("events.game-timeout.title", "events.game-timeout.subtitle", 5);
             Started = false;
+            gameManager.setPvPAllowed(false);
             for (UUID value : gameManager.getAlivePlayers()) {
                 Player player = Bukkit.getPlayer(value);
                 Location location = Objects.requireNonNull(player).getLocation();

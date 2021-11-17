@@ -12,13 +12,14 @@ import java.util.*;
 
 public class gameManager {
 
-    public static ArrayList<UUID> playerListAlive = new ArrayList<>();
-    public static ArrayList<UUID> playerListDead = new ArrayList<>();
-    public static ArrayList<UUID> playerListAll = new ArrayList<>();
+    private static ArrayList<UUID> playerListAlive = new ArrayList<>();
+    private static ArrayList<UUID> playerListDead = new ArrayList<>();
+    private static ArrayList<UUID> playerListAll = new ArrayList<>();
+    private static boolean pvp = false;
     private static final SquidGame plugin = SquidGame.plugin;
 
     public static void Initialise() {
-        playerManager.playerBracket(playerListAlive);
+        playerManager.playerBracket(playerListAll);
     }
 
     public static ArrayList<UUID> getAlivePlayers() { return playerListAlive; }
@@ -26,6 +27,10 @@ public class gameManager {
     public static ArrayList<UUID> getDeadPlayers() { return playerListDead; }
 
     public static ArrayList<UUID> getAllPlayers() { return playerListAll; }
+
+    public static boolean isPvPAllowed() { return pvp; }
+
+    public static void setPvPAllowed(boolean TorF) { pvp = TorF; }
 
     public static void updateTotal() {
         playerListAll.clear();
