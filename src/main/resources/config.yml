@@ -148,6 +148,7 @@ Game6:
       z: 751.0
 Game7:
   world: World
+  kill-block: sand
   spawn_1:
     ==: org.bukkit.Location
     world: World
@@ -157,6 +158,14 @@ Game7:
     pitch: -3.265213
     yaw: -179.7325
   spawn_2:
+    ==: org.bukkit.Location
+    world: World
+    x: -227.94925437318383
+    y: 95.0
+    z: 972.1857812621586
+    pitch: -3.265213
+    yaw: -179.7325
+  spawn_spectator:
     ==: org.bukkit.Location
     world: World
     x: -227.94925437318383

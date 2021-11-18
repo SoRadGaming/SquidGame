@@ -29,10 +29,6 @@ public class Game4 implements Listener {
     private static Team team2BlueBukkit;
     private static boolean Started = false;
     private static final BukkitScheduler gameTimer = Bukkit.getScheduler();
-    private static final BukkitScheduler bossBarProgress = Bukkit.getScheduler();
-    private static BossBar bossBar;
-    private static double timerInterval;
-    public static int timeGlobal;
     private static Cuboid goalRed;
     private static Cuboid goalBlue;
     private static Cuboid barrierZone;
@@ -47,24 +43,11 @@ public class Game4 implements Listener {
                 block.setType(Material.BARRIER);
             }
         }
-        timeGlobal = plugin.getConfig().getInt("Game4.timer");
-        int minutes = (timeGlobal/60);
-        int seconds = (timeGlobal - (minutes * 60));
-        bossBar = Bukkit.createBossBar(ChatColor.BOLD + "Game Timer : " + ChatColor.GOLD + minutes + ":" + ChatColor.GOLD + seconds , BarColor.BLUE, BarStyle.SOLID);
-        bossBar.setVisible(true);
-        bossBar.setProgress(0);
-        for (UUID uuid:playerList) {
-            Player player = Bukkit.getPlayer(uuid);
-            bossBar.addPlayer(Objects.requireNonNull(player));
-        }
-        timerInterval = (1 / (double) timeGlobal);
         //team1RedBukkit.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.FOR_OWN_TEAM);
         gameManager.onExplainStart("fourth");
         teamGenerator();
         // With BukkitScheduler
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            gameTimer.runTaskLater(plugin, Game4::endGame4, 20L * (plugin.getConfig().getInt("Game4.timer") + 1));
-            bossBarProgress.runTaskTimer(plugin, Game4::bossBarProgress, 20L, 20L);
             //START
             for (Block block : getBarrier().getBlocks()) {
                 if (block.getType() == Material.BARRIER) {
@@ -76,18 +59,8 @@ public class Game4 implements Listener {
                 player.getInventory().setItemInMainHand(new ItemStack(Material.STICK));
             }
             gameManager.setPvPAllowed(true);
+            Bukkit.getScheduler().runTaskLater(plugin, Game4::endGame4,20L * 10);
         }, 20L * 15);
-    }
-
-    public static void bossBarProgress() {
-        double bossBarProgress = bossBar.getProgress();
-        if (bossBarProgress + timerInterval < 1) {
-            bossBar.setProgress(bossBarProgress + timerInterval);
-        }
-        timeGlobal = timeGlobal - 1;
-        int minutes = (timeGlobal/60);
-        int seconds = (timeGlobal - (minutes * 60));
-        bossBar.setTitle(ChatColor.BOLD + "Game Timer : " + ChatColor.GOLD + minutes + ":" + ChatColor.GOLD + seconds);
     }
 
     private static void teamGenerator() {
@@ -95,8 +68,6 @@ public class Game4 implements Listener {
         Scoreboard board = manager.getNewScoreboard();
         team1RedBukkit = board.registerNewTeam("Red Team");
         team2BlueBukkit = board.registerNewTeam("Blue Team");
-        bossBar.removeAll();
-        bossBar.setVisible(false);
         Collections.shuffle(playerList);
         for (int i = 0;(playerList.size() / 2) > i;i++) {
             UUID uuid = playerList.get(i);

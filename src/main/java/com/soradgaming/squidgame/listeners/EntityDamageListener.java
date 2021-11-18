@@ -14,7 +14,7 @@ public class EntityDamageListener implements Listener {
         final Entity entity = e.getEntity();
         if (entity instanceof Player) {
             final Player player = ((Player) entity).getPlayer();
-            if (player != null && gameManager.getAllPlayers() != null && gameManager.getAllPlayers().contains(player.getUniqueId())) {
+            if (player != null && gameManager.getAllPlayers().contains(player.getUniqueId())) {
                 if (e.getCause() == DamageCause.ENTITY_ATTACK && !gameManager.isPvPAllowed()) {
                     e.setCancelled(true);
                 }

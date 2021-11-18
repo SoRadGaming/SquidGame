@@ -13,7 +13,7 @@ public class FoodLevelChangeListener implements Listener {
         final HumanEntity entity = e.getEntity();
         if (entity instanceof Player) {
             final Player player = entity.getKiller();
-            if (player != null && gameManager.getAllPlayers() != null && gameManager.getAllPlayers().contains(player.getUniqueId())) {
+            if (player != null && gameManager.getAllPlayers().contains(player.getUniqueId())) {
                 e.setCancelled(true);
             }
         }

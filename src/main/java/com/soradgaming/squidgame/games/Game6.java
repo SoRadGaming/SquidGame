@@ -3,8 +3,8 @@ package com.soradgaming.squidgame.games;
 import com.soradgaming.squidgame.SquidGame;
 import com.soradgaming.squidgame.math.Cuboid;
 import com.soradgaming.squidgame.math.Generator;
+import com.soradgaming.squidgame.utils.BlockUtils;
 import com.soradgaming.squidgame.utils.gameManager;
-import com.soradgaming.squidgame.utils.playerManager;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.boss.BarColor;
@@ -32,8 +32,8 @@ public class Game6 implements Listener {
     public static int timeGlobal;
     private static Cuboid glassZone;
     private static Cuboid goalZone;
-    private static ArrayList<Block> fakeBlocks = new ArrayList<>();
-    private static ArrayList<Cuboid> fakeCuboids = new ArrayList<>();
+    private static ArrayList<Block> fakeBlocks;
+    private static ArrayList<Cuboid> fakeCuboids;
 
     public static void startGame6(ArrayList<UUID> input) {
         playerList = input;
@@ -44,11 +44,7 @@ public class Game6 implements Listener {
         bossBar = Bukkit.createBossBar(ChatColor.BOLD + "Game Timer : " + ChatColor.GOLD + minutes + ":" + ChatColor.GOLD + seconds , BarColor.BLUE, BarStyle.SOLID);
         bossBar.setVisible(true);
         bossBar.setProgress(0);
-        //Bukkit.getScheduler().runTaskAsynchronously(plugin,() -> {
-            Generator.generateTiles(Material.valueOf(plugin.getConfig().getString("Game6.material")), playerList.size());
-            fakeBlocks = Generator.getFakeBlocks();
-            fakeCuboids = Generator.getFakeCuboids();
-        //});
+        Generator.generateTiles(Material.valueOf(plugin.getConfig().getString("Game6.material")), playerList.size());
         for (UUID uuid : playerList) {
             Player p = Bukkit.getPlayer(uuid);
             Objects.requireNonNull(p).teleport(Objects.requireNonNull(plugin.getConfig().getLocation("Game6.spawn")));
@@ -114,11 +110,8 @@ public class Game6 implements Listener {
                 }
             }, 40L);
             //TODO end code
-            for (UUID uuid: gameManager.getAllPlayers()) {
-                Player player = Bukkit.getPlayer(uuid);
-                playerManager.playerLeave(player);
-                player.sendMessage("Game Done");
-            }
+            Bukkit.getScheduler().runTaskLater(plugin, () -> gameManager.intermission(Games.Game7), 20L * plugin.getConfig().getInt("endgame-time"));
+
         }
     }
 
@@ -127,30 +120,22 @@ public class Game6 implements Listener {
         if (e.getFrom().distance(Objects.requireNonNull(e.getTo())) <= 0.015) {
             return;
         }
-        if (!Started) {
-            return;
-        }
         Player player = e.getPlayer();
-        if (!playerList.contains(player.getUniqueId())) {
+
+        /*
+        if (!gameManager.getAlivePlayers().contains(player.getUniqueId()) || !Started) {
             return;
         }
-        if (e.getPlayer().getGameMode().equals(GameMode.SPECTATOR)) {
-            return;
-        }
+
+         */
 
         final Location location = Objects.requireNonNull(e.getTo()).clone().subtract(0, 1, 0);
         final Block block = location.getBlock();
 
-        if (block.getType() == Material.valueOf(plugin.getConfig().getString("Game6.material")) && fakeBlocks.contains(block)) {
-            Bukkit.getScheduler().runTaskAsynchronously(plugin,() -> {
-                for (Cuboid cuboid: fakeCuboids) {
-                    if (cuboid.contains(location)) {
-                        for (Block blocks : cuboid.getBlocks()) {
-                            blocks.setType(Material.AIR);
-                        }
-                    }
-                }
-            });
+        if (block != null && block.getType() == Material.valueOf(plugin.getConfig().getString("Game6.material"))) {
+            if (getFakeBlocks().contains(block)) {
+                BlockUtils.destroyBlockGroup(location.getBlock());
+            }
         }
     }
 
@@ -186,7 +171,20 @@ public class Game6 implements Listener {
             World world = Bukkit.getWorld(Objects.requireNonNull(plugin.getConfig().getString("Game6.world")));
             goalZone = new Cuboid(Objects.requireNonNull(world),vector1.getBlockX(),vector1.getBlockY(),vector1.getBlockZ(),vector2.getBlockX(),vector2.getBlockY(),vector2.getBlockZ());
         }
-
         return goalZone;
+    }
+
+    public static ArrayList<Cuboid> getFakeCuboids() {
+        if (fakeCuboids == null) {
+            fakeCuboids = Generator.getFakeCuboids();
+        }
+        return fakeCuboids;
+    }
+
+    public static ArrayList<Block> getFakeBlocks() {
+        if (fakeBlocks == null) {
+            fakeBlocks = Generator.getFakeBlocks();
+        }
+        return fakeBlocks;
     }
 }

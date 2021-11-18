@@ -43,12 +43,10 @@ public class Game3 implements Listener {
         bossBar.setVisible(true);
         bossBar.setProgress(0);
         timerInterval = (1 / (double) timeGlobal);
-        Bukkit.getScheduler().runTaskAsynchronously(plugin,() -> {
-            for (UUID uuid:playerList) {
+        for (UUID uuid:playerList) {
             Player player = Bukkit.getPlayer(uuid);
             bossBar.addPlayer(Objects.requireNonNull(player));
-            }
-        });
+        }
         // With BukkitScheduler
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             gameTimer.runTaskLater(plugin, Game3::endGame3, 20L * (plugin.getConfig().getInt("Game3.timer") + 1));

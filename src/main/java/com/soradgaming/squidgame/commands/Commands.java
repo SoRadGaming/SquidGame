@@ -184,18 +184,6 @@ public class Commands implements CommandExecutor {
                                 plugin.saveConfig();
                                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eFourth game " + "spawn_blue" + "&a set to your location &7(" + loc.toVector() + ")"));
                             }
-                            case "goal_blue" -> {
-                                Cuboid.setConfigVectors("Game6.goal_blue", PlayerWand.getFirstPoint(), PlayerWand.getSecondPoint());
-                                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eFourth game " + "goal_blue" + "&a set with your location wand &7("
-                                        + PlayerWand.getFirstPoint().toString() + ") (" + PlayerWand.getSecondPoint().toString() + ")"));
-                                plugin.saveConfig();
-                            }
-                            case "goal_red" -> {
-                                Cuboid.setConfigVectors("Game6.goal_red", PlayerWand.getFirstPoint(), PlayerWand.getSecondPoint());
-                                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eFourth game " + "goal_red" + "&a set with your location wand &7("
-                                        + PlayerWand.getFirstPoint().toString() + ") (" + PlayerWand.getSecondPoint().toString() + ")"));
-                                plugin.saveConfig();
-                            }
                             case "barrier" -> {
                                 Cuboid.setConfigVectors("Game6.barrier", PlayerWand.getFirstPoint(), PlayerWand.getSecondPoint());
                                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eFourth game " + "barrier" + "&a set with your location wand &7("
@@ -223,8 +211,31 @@ public class Commands implements CommandExecutor {
                                         + PlayerWand.getFirstPoint().toString() + ") (" + PlayerWand.getSecondPoint().toString() + ")"));
                                 plugin.saveConfig();
                             }
+                            case "barrier" -> {
+                                Cuboid.setConfigVectors("Game6.barrier", PlayerWand.getFirstPoint(), PlayerWand.getSecondPoint());
+                                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eFourth game " + "barrier" + "&a set with your location wand &7("
+                                        + PlayerWand.getFirstPoint().toString() + ") (" + PlayerWand.getSecondPoint().toString() + ")"));
+                                plugin.saveConfig();
+                            }
                         }
                     case "game7":
+                        switch (args[2]) {
+                            case "spawn_1" -> {
+                                plugin.getConfig().set("Game6.spawn_1", loc);
+                                plugin.saveConfig();
+                                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eSeventh game " + "spawn_1" + "&a set to your location &7(" + loc.toVector() + ")"));
+                            }
+                            case "spawn_2" -> {
+                                plugin.getConfig().set("Game6.spawn_2", loc);
+                                plugin.saveConfig();
+                                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eSeventh game " + "spawn_2" + "&a set to your location &7(" + loc.toVector() + ")"));
+                            }
+                            case "spawn_spectator" -> {
+                                plugin.getConfig().set("Game6.spawn_spectator", loc);
+                                plugin.saveConfig();
+                                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eSeventh game " + "spawn_spectator" + "&a set to your location &7(" + loc.toVector() + ")"));
+                            }
+                        }
                 }
             } else {
                 sender.sendMessage(ChatColor.RED + "You don't have permission to do that");

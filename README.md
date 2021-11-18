@@ -2,7 +2,8 @@
 SquidGame plugin for Minecraft
 
 **Bugs**:
-- None Know
+- Glass Platforms Fakes not Breaking
+- Game4 End check
 
 **Commands**:
 - /sq

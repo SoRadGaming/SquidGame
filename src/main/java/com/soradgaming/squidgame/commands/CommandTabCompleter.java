@@ -23,7 +23,7 @@ public class CommandTabCompleter implements TabCompleter {
                 completions = getApplicableTabCompletes(args[0], completions);
             } else if (args.length == 2) {
                 if (args[0].equals("set")) {
-                    completions = new ArrayList<>(Arrays.asList("lobby", "game1", "game2", "game3", "game4", "game5", "game6", "game7"));
+                    completions = new ArrayList<>(Arrays.asList("lobby", "game1", "game2", "game4", "game5", "game6", "game7"));
                     completions = getApplicableTabCompletes(args[1], completions);
                 } else if (args[0].equals("test")) {
                     completions = new ArrayList<>(List.of("playerCount"));
@@ -37,16 +37,16 @@ public class CommandTabCompleter implements TabCompleter {
                         completions = new ArrayList<>(Arrays.asList("spawn", "barrier", "killzone", "goal"));
                         completions = getApplicableTabCompletes(args[2], completions);
                     }
-                    case "game2", "game3", "game4" -> {
-                        completions = new ArrayList<>(Arrays.asList("spawn_blue", "spawn_red", "goal_blue", "goal_red", "barrier"));
+                    case "game2", "game4" -> {
+                        completions = new ArrayList<>(Arrays.asList("spawn_blue", "spawn_red", "barrier"));
                         completions = getApplicableTabCompletes(args[2], completions);
                     }
                     case "game5", "game6" -> {
-                        completions = new ArrayList<>(Arrays.asList("spawn", "glass", "goal"));
+                        completions = new ArrayList<>(Arrays.asList("spawn", "glass", "goal", "barrier"));
                         completions = getApplicableTabCompletes(args[2], completions);
                     }
                     case "game7" -> {
-                        completions = new ArrayList<>(Arrays.asList("spawn", "TODO", "TODO", "TODO"));
+                        completions = new ArrayList<>(Arrays.asList("spawn_1", "spawn_2", "spawn_spectator"));
                         completions = getApplicableTabCompletes(args[2], completions);
                     }
                 }

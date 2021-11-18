@@ -48,9 +48,9 @@ public class Generator {
     private static Vector iterateX(Vector FirstBlock) {
         Vector SecondBlock;
         if (xtoPos) {
-            SecondBlock = FirstBlock.add(new Vector(0,0,4));
+            SecondBlock = FirstBlock.add(new Vector(4,0,0));
         } else {
-            SecondBlock = FirstBlock.add(new Vector(0,0,-4));
+            SecondBlock = FirstBlock.add(new Vector(-4,0,0));
         }
         return SecondBlock;
     }
@@ -92,6 +92,7 @@ public class Generator {
             Cuboid newCuboid = moveCubeFromTopRight(rightBlocks.get(i));
             rightBlocks.set(i, newCuboid);
         }
+
 
         //Generate Tiles (cannot run async // to improve performance make this work without API)
         for (Cuboid cuboid : leftBlocks) {
