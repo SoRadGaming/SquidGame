@@ -49,19 +49,19 @@ Game4:
   spawn_red:
     ==: org.bukkit.Location
     world: World
-    x: -227.94925437318383
-    y: 95.0
-    z: 972.1857812621586
-    pitch: -3.265213
-    yaw: -179.7325
+    x: -1119.4612904484902
+    y: 34.0
+    z: 759.526055253015
+    pitch: -0.22597487
+    yaw: -0.13092041
   spawn_blue:
     ==: org.bukkit.Location
     world: World
-    x: -227.94925437318383
-    y: 95.0
-    z: 972.1857812621586
-    pitch: -3.265213
-    yaw: -179.7325
+    x: -1119.4561858823017
+    y: 34.0
+    z: 816.988663666825
+    pitch: -1.9340928
+    yaw: -179.8451
   goal_red:
     first_point:
       x: -258.0
@@ -103,13 +103,13 @@ Game6:
     yaw: -179.7325
   barrier:
     first_point:
-      x: -790.0
-      y: 3.0
-      z: 415.0
+      x: -1123.0
+      y: 33.0
+      z: 794.0
     second_point:
-      x: -850.0
-      y: 7.0
-      z: 415.0
+      x: -1117.0
+      y: 39.0
+      z: 782.0
   glass:
     first_point:
       x: -231.0
@@ -128,6 +128,24 @@ Game6:
       x: -199.0
       y: 109.0
       z: 888.0
+  goal_blue:
+    first_point:
+      x: -1115.0
+      y: 39.0
+      z: 825.0
+    second_point:
+      x: -1123.0
+      y: 33.0
+      z: 794.0
+  goal_red:
+    first_point:
+      x: -1123.0
+      y: 33.0
+      z: 782.0
+    second_point:
+      x: -1115.0
+      y: 39.0
+      z: 751.0
 Game7:
   world: World
   spawn_1:
@@ -158,8 +176,8 @@ Lobby:
   x: -809.0
   y: 4.0
   z: 88.0
-  yaw: 0.0
   pitch: 0.0
+  yaw: 0.0
 rewards:
-    - say %squidgame_arena_winner% is the winner!
-    - eco give %squidgame_arena_winner% 10
+  - say %squidgame_arena_winner% is the winner!
+  - eco give %squidgame_arena_winner% 10
