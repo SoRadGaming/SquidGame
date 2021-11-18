@@ -60,17 +60,6 @@ public class Game3 implements Listener {
         }, 20L * 15);
     }
 
-    public static void bossBarProgress() {
-        double bossBarProgress = bossBar.getProgress();
-        if (bossBarProgress + timerInterval < 1) {
-            bossBar.setProgress(bossBarProgress + timerInterval);
-        }
-        timeGlobal = timeGlobal - 1;
-        int minutes = (timeGlobal/60);
-        int seconds = (timeGlobal - (minutes * 60));
-        bossBar.setTitle(ChatColor.BOLD + "Game Timer : " + ChatColor.GOLD + minutes + ":" + ChatColor.GOLD + seconds);
-    }
-
     public static void endGame3() {
         gameTimer.cancelTasks(plugin);
         lightsOn.cancelTasks(plugin);
@@ -93,6 +82,25 @@ public class Game3 implements Listener {
         }
     }
 
+    @EventHandler
+    private void onPlayerDeath(final PlayerDeathEvent e) {
+        final Player player = e.getEntity();
+
+        if (Started && playerList.contains(player.getUniqueId()) && !player.getGameMode().equals(GameMode.SPECTATOR)) {
+            if (player.getKiller() != null) {
+                plugin.data.set(player.getKiller().getUniqueId() + ".kills", plugin.data.getInt(player.getKiller().getUniqueId() + ".kills") + 1);
+            }
+            if (plugin.getConfig().getBoolean("eliminate-players")) {
+                player.setGameMode(GameMode.SPECTATOR);
+                player.teleport(plugin.getConfig().getLocation("Lobby"));
+                gameManager.killPlayer(player);
+            } else {
+                player.setGameMode(GameMode.SPECTATOR);
+                player.teleport(plugin.getConfig().getLocation("Lobby"));
+            }
+        }
+    }
+
     private static void flashLights() {
         if (!Started) {
             return;
@@ -110,22 +118,14 @@ public class Game3 implements Listener {
         },  timeOn * 20L);
     }
 
-    @EventHandler
-    public void onPlayerDeath(final PlayerDeathEvent e) {
-        final Player player = e.getEntity();
-
-        if (Started && playerList.contains(player.getUniqueId()) && !player.getGameMode().equals(GameMode.SPECTATOR)) {
-            if (player.getKiller() != null) {
-                plugin.data.set(player.getKiller().getUniqueId() + ".kills", plugin.data.getInt(player.getKiller().getUniqueId() + ".kills") + 1);
-            }
-            if (plugin.getConfig().getBoolean("eliminate-players")) {
-                player.setGameMode(GameMode.SPECTATOR);
-                player.teleport(plugin.getConfig().getLocation("Lobby"));
-                gameManager.killPlayer(player);
-            } else {
-                player.setGameMode(GameMode.SPECTATOR);
-                player.teleport(plugin.getConfig().getLocation("Lobby"));
-            }
+    private static void bossBarProgress() {
+        double bossBarProgress = bossBar.getProgress();
+        if (bossBarProgress + timerInterval < 1) {
+            bossBar.setProgress(bossBarProgress + timerInterval);
         }
+        timeGlobal = timeGlobal - 1;
+        int minutes = (timeGlobal/60);
+        int seconds = (timeGlobal - (minutes * 60));
+        bossBar.setTitle(ChatColor.BOLD + "Game Timer : " + ChatColor.GOLD + minutes + ":" + ChatColor.GOLD + seconds);
     }
 }

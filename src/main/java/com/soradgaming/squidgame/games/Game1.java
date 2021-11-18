@@ -80,17 +80,6 @@ public class Game1 implements Listener {
             }, 20L * 15);
     }
 
-    public static void bossBarProgress() {
-        double bossBarProgress = bossBar.getProgress();
-        if (bossBarProgress + timerInterval < 1) {
-            bossBar.setProgress(bossBarProgress + timerInterval);
-        }
-        timeGlobal = timeGlobal - 1;
-        int minutes = (timeGlobal/60);
-        int seconds = (timeGlobal - (minutes * 60));
-        bossBar.setTitle(ChatColor.BOLD + "Game Timer : " + ChatColor.GOLD + minutes + ":" + ChatColor.GOLD + seconds);
-    }
-
     public static void endGame1() {
         bossBarProgress.cancelTasks(plugin);
         gameTimer.cancelTasks(plugin);
@@ -132,13 +121,12 @@ public class Game1 implements Listener {
                     Objects.requireNonNull(player).teleport(Objects.requireNonNull(plugin.getConfig().getLocation("Lobby")));
                 }
             }, 40L);
-            //TODO Next Event
             Bukkit.getScheduler().runTaskLater(plugin, () -> gameManager.intermission(Games.Game3), 20L * plugin.getConfig().getInt("endgame-time"));
         }
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void PlayerMoveEvent(@NotNull PlayerMoveEvent e) {
+    private void PlayerMoveEvent(@NotNull PlayerMoveEvent e) {
         if (e.getFrom().distance(Objects.requireNonNull(e.getTo())) <= 0.015) {
             return;
         } else if (e.getPlayer().getGameMode().equals(GameMode.SPECTATOR)) {
@@ -180,7 +168,18 @@ public class Game1 implements Listener {
         }, time * 20L);
     }
 
-    public static Cuboid getBarrier() {
+    private static void bossBarProgress() {
+        double bossBarProgress = bossBar.getProgress();
+        if (bossBarProgress + timerInterval < 1) {
+            bossBar.setProgress(bossBarProgress + timerInterval);
+        }
+        timeGlobal = timeGlobal - 1;
+        int minutes = (timeGlobal/60);
+        int seconds = (timeGlobal - (minutes * 60));
+        bossBar.setTitle(ChatColor.BOLD + "Game Timer : " + ChatColor.GOLD + minutes + ":" + ChatColor.GOLD + seconds);
+    }
+
+    private static Cuboid getBarrier() {
         if (barrierZone == null) {
             BlockVector vector1 = gameManager.configToVectors("Game1.barrier.first_point");
             BlockVector vector2 = gameManager.configToVectors("Game1.barrier.second_point");
@@ -190,7 +189,7 @@ public class Game1 implements Listener {
         return barrierZone;
     }
 
-    public static Cuboid getKillZone() {
+    private static Cuboid getKillZone() {
         if (killZone == null) {
             BlockVector vector1 = gameManager.configToVectors("Game1.killzone.first_point");
             BlockVector vector2 = gameManager.configToVectors("Game1.killzone.second_point");
@@ -200,7 +199,7 @@ public class Game1 implements Listener {
         return killZone;
     }
 
-    public static Cuboid getGoalZone() {
+    private static Cuboid getGoalZone() {
         if (goalZone == null) {
             BlockVector vector1 = gameManager.configToVectors("Game1.goal.first_point");
             BlockVector vector2 = gameManager.configToVectors("Game1.goal.second_point");
@@ -210,7 +209,7 @@ public class Game1 implements Listener {
         return goalZone;
     }
 
-    public static Cuboid getHead() {
+    private static Cuboid getHead() {
         if (head == null) {
             BlockVector vector1 = gameManager.configToVectors("Game1.head.first_point");
             BlockVector vector2 = gameManager.configToVectors("Game1.head.second_point");

@@ -9,7 +9,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
-import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
@@ -52,8 +51,49 @@ public class Game4 implements Listener {
                 player.getInventory().setItemInMainHand(new ItemStack(Material.STICK));
             }
             gameManager.setPvPAllowed(true);
-            Bukkit.getScheduler().runTaskLater(plugin, Game4::endGame4,20L * 10);
+            //Repeat Till all players dead
+            Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
+                if (team1.size() == 0 || team2.size() == 0) {
+                    endGame4();
+                }
+            }, 20L, 20L);
         }, 20L * 15);
+    }
+
+    public static void endGame4() {
+        if (Started) {
+            Started = false;
+            gameManager.setPvPAllowed(false);
+            team2BlueBukkit.unregister();
+            team1RedBukkit.unregister();
+            //Set winning team and revive team players
+            if (team1.size() > 0) {
+                //Team 1 has won
+                for (UUID uuid: team1) {
+                    Player player = Bukkit.getPlayer(uuid);
+                    gameManager.revivePlayer(player);
+                    player.teleport(plugin.getConfig().getLocation("Game4.spawn_red"));
+                    player.setGameMode(GameMode.ADVENTURE);
+                }
+            } else if (team2.size() > 0) {
+                //Team 2 has won
+                for (UUID uuid: team2) {
+                    Player player = Bukkit.getPlayer(uuid);
+                    gameManager.revivePlayer(player);
+                    player.teleport(plugin.getConfig().getLocation("Game4.spawn_blue"));
+                    player.setGameMode(GameMode.ADVENTURE);
+                }
+            }
+            for (UUID uuid : gameManager.getAlivePlayers()) {
+                Player player = Bukkit.getPlayer(uuid);
+                Objects.requireNonNull(player).setHealth(20);
+                player.setFoodLevel(20);
+                player.getInventory().setArmorContents(null);
+                player.getInventory().clear();
+                player.sendTitle(gameManager.formatMessage(player,"events.game-pass.title") , gameManager.formatMessage(player,"events.game-pass.subtitle"),10, 30,10);
+            }
+            Bukkit.getScheduler().runTaskLater(plugin, () -> gameManager.intermission(Games.Game6), 20L * plugin.getConfig().getInt("endgame-time"));
+        }
     }
 
     private static void teamGenerator() {
@@ -84,26 +124,6 @@ public class Game4 implements Listener {
         team2BlueBukkit.setColor(ChatColor.BLUE);
         team2BlueBukkit.setAllowFriendlyFire(false);
         team2BlueBukkit.setDisplayName(ChatColor.BLUE + "Blue Team");
-    }
-
-    public static void endGame4() {
-        if (Started) {
-            Started = false;
-            gameManager.setPvPAllowed(false);
-            team2BlueBukkit.unregister();
-            team1RedBukkit.unregister();
-            //Set winning team and revive team players
-            for (UUID uuid : gameManager.getAlivePlayers()) {
-                Player player = Bukkit.getPlayer(uuid);
-                Objects.requireNonNull(player).setHealth(20);
-                player.setFoodLevel(20);
-                player.getInventory().setArmorContents(null);
-                player.getInventory().clear();
-                player.sendTitle(gameManager.formatMessage(player,"events.game-pass.title") , gameManager.formatMessage(player,"events.game-pass.subtitle"),10, 30,10);
-            }
-            //TODO end code
-            Bukkit.getScheduler().runTaskLater(plugin, () -> gameManager.intermission(Games.Game6), 20L * plugin.getConfig().getInt("endgame-time"));
-        }
     }
 
     private static ItemStack[] getArmour(Color colour) {

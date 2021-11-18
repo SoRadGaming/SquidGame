@@ -72,17 +72,6 @@ public class Game6 implements Listener {
         }, 20L * 15);
     }
 
-    public static void bossBarProgress() {
-        double bossBarProgress = bossBar.getProgress();
-        if (bossBarProgress + timerInterval < 1) {
-            bossBar.setProgress(bossBarProgress + timerInterval);
-        }
-        timeGlobal = timeGlobal - 1;
-        int minutes = (timeGlobal/60);
-        int seconds = (timeGlobal - (minutes * 60));
-        bossBar.setTitle(ChatColor.BOLD + "Game Timer : " + ChatColor.GOLD + minutes + ":" + ChatColor.GOLD + seconds);
-    }
-
     public static void endGame6() {
         gameTimer.cancelTasks(plugin);
         bossBarProgress.cancelTasks(plugin);
@@ -159,6 +148,17 @@ public class Game6 implements Listener {
         }
     }
 
+    private static void bossBarProgress() {
+        double bossBarProgress = bossBar.getProgress();
+        if (bossBarProgress + timerInterval < 1) {
+            bossBar.setProgress(bossBarProgress + timerInterval);
+        }
+        timeGlobal = timeGlobal - 1;
+        int minutes = (timeGlobal/60);
+        int seconds = (timeGlobal - (minutes * 60));
+        bossBar.setTitle(ChatColor.BOLD + "Game Timer : " + ChatColor.GOLD + minutes + ":" + ChatColor.GOLD + seconds);
+    }
+
     public static Cuboid getGlassZone() {
         if (glassZone == null) {
             BlockVector vector1 = gameManager.configToVectors("Game6.glass.first_point");
@@ -169,7 +169,7 @@ public class Game6 implements Listener {
         return glassZone;
     }
 
-    public static Cuboid getGoalZone() {
+    private static Cuboid getGoalZone() {
         if (goalZone == null) {
             BlockVector vector1 = gameManager.configToVectors("Game6.goal.first_point");
             BlockVector vector2 = gameManager.configToVectors("Game6.goal.second_point");
