@@ -30,23 +30,38 @@ public class Game7 implements Listener {
 
         for (UUID uuid:playerList) {
             Player player = Bukkit.getPlayer(uuid);
-            player.teleport(plugin.getConfig().getLocation("Game7.spawn_spectator"));
+            player.teleport(plugin.getConfig().getLocation("Game7.spawn"));
             player.setGameMode(GameMode.ADVENTURE);
         }
+        gameManager.setPvPAllowed(true);
+        //Repeat Till all players dead
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
+            if (gameManager.getAlivePlayers().size() == 1) {
+                plugin.data.set("winner", gameManager.getAlivePlayers().get(0).toString());
+                endGame7();
+            }
+        }, 20L, 20L);
     }
 
     public static void endGame7() {
-        //WIN Commands
-        List<String> commands =  plugin.getConfig().getStringList("rewards");
-        for (String cmd:commands) {
-           String command = PlaceholderAPI.setPlaceholders(Bukkit.getPlayer(plugin.data.getString("winner")), cmd);
-           Bukkit.getServer().dispatchCommand(Bukkit.getPlayer(plugin.data.getString("winner")),command);
+        if (Started) {
+            gameManager.setPvPAllowed(false);
+            Started = false;
+            //WIN Commands
+            List<String> commands =  plugin.getConfig().getStringList("rewards");
+            for (String cmd:commands) {
+                String command = PlaceholderAPI.setPlaceholders(Bukkit.getPlayer(UUID.fromString(Objects.requireNonNull(plugin.data.getString("winner")))), cmd);
+                Bukkit.getServer().dispatchCommand(Bukkit.getPlayer(UUID.fromString(Objects.requireNonNull(plugin.data.getString("winner")))),command);
+            }
+            for (UUID uuid: gameManager.getAllPlayers()) {
+                Player player = Bukkit.getPlayer(uuid);
+                player.getInventory().clear();
+                player.getInventory().setArmorContents(null);
+                playerManager.playerLeave(player);
+                player.sendMessage("Game Done");
+            }
         }
-        for (UUID uuid: gameManager.getAllPlayers()) {
-            Player player = Bukkit.getPlayer(uuid);
-            playerManager.playerLeave(player);
-            player.sendMessage("Game Done");
-        }
+
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -65,6 +80,25 @@ public class Game7 implements Listener {
         if (location.getBlock() != null && location.getBlock().getType() != null
                 && location.getBlock().getType().toString().equalsIgnoreCase(killBlock)) {
             gameManager.killPlayer(player);
+        }
+    }
+
+    @EventHandler
+    public void onPlayerDeath(final PlayerDeathEvent e) {
+        final Player player = e.getEntity();
+
+        if (Started && playerList.contains(player.getUniqueId()) && !player.getGameMode().equals(GameMode.SPECTATOR)) {
+            if (player.getKiller() != null) {
+                plugin.data.set(player.getKiller().getUniqueId() + ".kills", plugin.data.getInt(player.getKiller().getUniqueId() + ".kills") + 1);
+            }
+            if (plugin.getConfig().getBoolean("eliminate-players")) {
+                player.setGameMode(GameMode.SPECTATOR);
+                player.teleport(plugin.getConfig().getLocation("Lobby"));
+                gameManager.killPlayer(player);
+            } else {
+                player.setGameMode(GameMode.SPECTATOR);
+                player.teleport(plugin.getConfig().getLocation("Lobby"));
+            }
         }
     }
 

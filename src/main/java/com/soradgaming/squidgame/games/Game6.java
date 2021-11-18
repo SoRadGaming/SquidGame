@@ -32,6 +32,7 @@ public class Game6 implements Listener {
     public static int timeGlobal;
     private static Cuboid glassZone;
     private static Cuboid goalZone;
+    private static Cuboid barrierZone;
     private static ArrayList<Block> fakeBlocks;
     private static ArrayList<Cuboid> fakeCuboids;
 
@@ -45,6 +46,11 @@ public class Game6 implements Listener {
         bossBar.setVisible(true);
         bossBar.setProgress(0);
         Generator.generateTiles(Material.valueOf(plugin.getConfig().getString("Game6.material")), playerList.size());
+        for (Block block : getBarrier().getBlocks()) {
+            if (block.getType() == Material.AIR) {
+                block.setType(Material.BARRIER);
+            }
+        }
         for (UUID uuid : playerList) {
             Player p = Bukkit.getPlayer(uuid);
             Objects.requireNonNull(p).teleport(Objects.requireNonNull(plugin.getConfig().getLocation("Game6.spawn")));
@@ -57,6 +63,11 @@ public class Game6 implements Listener {
             gameTimer.runTaskLater(plugin, Game6::endGame6, 20L * (timeGlobal + 1));
             bossBarProgress.runTaskTimer(plugin, Game6::bossBarProgress, 20L, 20L);
             //START
+            for (Block block : getBarrier().getBlocks()) {
+                if (block.getType() == Material.BARRIER) {
+                    block.setType(Material.AIR);
+                }
+            }
             gameManager.setPvPAllowed(true);
         }, 20L * 15);
     }
@@ -101,15 +112,12 @@ public class Game6 implements Listener {
                 for (final UUID uuid : gameManager.getDeadPlayers()) {
                     Player player = Bukkit.getPlayer(uuid);
                     Objects.requireNonNull(player).sendTitle(gameManager.formatMessage(player,"events.game-timeout-died.title") , gameManager.formatMessage(player,"events.game-timeout-died.subtitle"),10, 30,10);
-                    Objects.requireNonNull(player).teleport(Objects.requireNonNull(plugin.getConfig().getLocation("Lobby")));
                 }
                 for (final UUID uuid : gameManager.getAlivePlayers()) {
                     Player player = Bukkit.getPlayer(uuid);
                     Objects.requireNonNull(player).sendTitle(gameManager.formatMessage(player,"events.game-pass.title") , gameManager.formatMessage(player,"events.game-pass.subtitle"),10, 30,10);
-                    Objects.requireNonNull(player).teleport(Objects.requireNonNull(plugin.getConfig().getLocation("Lobby")));
                 }
             }, 40L);
-            //TODO end code
             Bukkit.getScheduler().runTaskLater(plugin, () -> gameManager.intermission(Games.Game7), 20L * plugin.getConfig().getInt("endgame-time"));
 
         }
@@ -122,12 +130,9 @@ public class Game6 implements Listener {
         }
         Player player = e.getPlayer();
 
-        /*
         if (!gameManager.getAlivePlayers().contains(player.getUniqueId()) || !Started) {
             return;
         }
-
-         */
 
         final Location location = Objects.requireNonNull(e.getTo()).clone().subtract(0, 1, 0);
         final Block block = location.getBlock();
@@ -172,6 +177,16 @@ public class Game6 implements Listener {
             goalZone = new Cuboid(Objects.requireNonNull(world),vector1.getBlockX(),vector1.getBlockY(),vector1.getBlockZ(),vector2.getBlockX(),vector2.getBlockY(),vector2.getBlockZ());
         }
         return goalZone;
+    }
+
+    public static Cuboid getBarrier() {
+        if (barrierZone == null) {
+            BlockVector vector1 = gameManager.configToVectors("Game6.barrier.first_point");
+            BlockVector vector2 = gameManager.configToVectors("Game6.barrier.second_point");
+            World world = Bukkit.getWorld(Objects.requireNonNull(plugin.getConfig().getString("Game6.world")));
+            barrierZone = new Cuboid(Objects.requireNonNull(world),vector1.getBlockX(),vector1.getBlockY(),vector1.getBlockZ(),vector2.getBlockX(),vector2.getBlockY(),vector2.getBlockZ());
+        }
+        return barrierZone;
     }
 
     public static ArrayList<Cuboid> getFakeCuboids() {

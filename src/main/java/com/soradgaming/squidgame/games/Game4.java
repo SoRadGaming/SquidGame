@@ -5,9 +5,6 @@ import com.soradgaming.squidgame.math.Cuboid;
 import com.soradgaming.squidgame.utils.gameManager;
 import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarStyle;
-import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
@@ -28,9 +25,6 @@ public class Game4 implements Listener {
     private static Team team1RedBukkit;
     private static Team team2BlueBukkit;
     private static boolean Started = false;
-    private static final BukkitScheduler gameTimer = Bukkit.getScheduler();
-    private static Cuboid goalRed;
-    private static Cuboid goalBlue;
     private static Cuboid barrierZone;
 
     public static void startGame4(ArrayList<UUID> input) {
@@ -43,9 +37,8 @@ public class Game4 implements Listener {
                 block.setType(Material.BARRIER);
             }
         }
-        //team1RedBukkit.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.FOR_OWN_TEAM);
-        gameManager.onExplainStart("fourth");
         teamGenerator();
+        gameManager.onExplainStart("fourth");
         // With BukkitScheduler
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             //START
@@ -94,8 +87,8 @@ public class Game4 implements Listener {
     }
 
     public static void endGame4() {
-        gameTimer.cancelTasks(plugin);
         if (Started) {
+            Started = false;
             gameManager.setPvPAllowed(false);
             team2BlueBukkit.unregister();
             team1RedBukkit.unregister();
@@ -108,16 +101,6 @@ public class Game4 implements Listener {
                 player.getInventory().clear();
                 player.sendTitle(gameManager.formatMessage(player,"events.game-pass.title") , gameManager.formatMessage(player,"events.game-pass.subtitle"),10, 30,10);
             }
-            /*
-            if (plugin.getConfig().getBoolean("eliminate-players")) {
-                player.setGameMode(GameMode.SPECTATOR);
-                player.teleport(plugin.getConfig().getLocation("Game4.spawn"));
-                gameManager.killPlayer(player);
-            } else {
-                player.setGameMode(GameMode.SPECTATOR);
-                player.teleport(plugin.getConfig().getLocation("Game4.spawn"));
-            }
-             */
             //TODO end code
             Bukkit.getScheduler().runTaskLater(plugin, () -> gameManager.intermission(Games.Game6), 20L * plugin.getConfig().getInt("endgame-time"));
         }

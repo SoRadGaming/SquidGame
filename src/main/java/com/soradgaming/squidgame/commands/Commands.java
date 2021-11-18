@@ -219,22 +219,10 @@ public class Commands implements CommandExecutor {
                             }
                         }
                     case "game7":
-                        switch (args[2]) {
-                            case "spawn_1" -> {
-                                plugin.getConfig().set("Game6.spawn_1", loc);
-                                plugin.saveConfig();
-                                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eSeventh game " + "spawn_1" + "&a set to your location &7(" + loc.toVector() + ")"));
-                            }
-                            case "spawn_2" -> {
-                                plugin.getConfig().set("Game6.spawn_2", loc);
-                                plugin.saveConfig();
-                                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eSeventh game " + "spawn_2" + "&a set to your location &7(" + loc.toVector() + ")"));
-                            }
-                            case "spawn_spectator" -> {
-                                plugin.getConfig().set("Game6.spawn_spectator", loc);
-                                plugin.saveConfig();
-                                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eSeventh game " + "spawn_spectator" + "&a set to your location &7(" + loc.toVector() + ")"));
-                            }
+                        if ("spawn".equals(args[2])) {
+                            plugin.getConfig().set("Game6.spawn", loc);
+                            plugin.saveConfig();
+                            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eSeventh game " + "spawn" + "&a set to your location &7(" + loc.toVector() + ")"));
                         }
                 }
             } else {

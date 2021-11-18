@@ -46,7 +46,7 @@ public class CommandTabCompleter implements TabCompleter {
                         completions = getApplicableTabCompletes(args[2], completions);
                     }
                     case "game7" -> {
-                        completions = new ArrayList<>(Arrays.asList("spawn_1", "spawn_2", "spawn_spectator"));
+                        completions = new ArrayList<>(List.of("spawn"));
                         completions = getApplicableTabCompletes(args[2], completions);
                     }
                 }

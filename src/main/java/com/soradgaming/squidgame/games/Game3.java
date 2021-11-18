@@ -43,9 +43,8 @@ public class Game3 implements Listener {
         bossBar.setVisible(true);
         bossBar.setProgress(0);
         timerInterval = (1 / (double) timeGlobal);
-        for (UUID uuid:playerList) {
-            Player player = Bukkit.getPlayer(uuid);
-            bossBar.addPlayer(Objects.requireNonNull(player));
+        for (UUID uuid: playerList) {
+            bossBar.addPlayer(Bukkit.getPlayer(uuid));
         }
         // With BukkitScheduler
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
@@ -54,7 +53,6 @@ public class Game3 implements Listener {
             //START
             for (UUID uuid:playerList) {
                 Player player = Bukkit.getPlayer(uuid);
-                bossBar.addPlayer(Objects.requireNonNull(player));
                 player.getInventory().setItemInMainHand(new ItemStack(Material.WOODEN_SWORD));
             }
             gameManager.setPvPAllowed(true);
@@ -79,6 +77,7 @@ public class Game3 implements Listener {
         lightsOff.cancelTasks(plugin);
         delay.cancelTasks(plugin);
         if (Started) {
+            Started = false;
             bossBar.removeAll();
             bossBar.setVisible(false);
             gameManager.setPvPAllowed(false);
@@ -90,7 +89,6 @@ public class Game3 implements Listener {
                 player.getActivePotionEffects().clear();
                 player.sendTitle(gameManager.formatMessage(player,"events.game-pass.title") , gameManager.formatMessage(player,"events.game-pass.subtitle"),10, 30,10);
             }
-            //TODO end code
             Bukkit.getScheduler().runTaskLater(plugin, () -> gameManager.intermission(Games.Game4), 20L * plugin.getConfig().getInt("endgame-time"));
         }
     }
@@ -122,11 +120,11 @@ public class Game3 implements Listener {
             }
             if (plugin.getConfig().getBoolean("eliminate-players")) {
                 player.setGameMode(GameMode.SPECTATOR);
-                player.teleport(plugin.getConfig().getLocation("Game3.spawn"));
+                player.teleport(plugin.getConfig().getLocation("Lobby"));
                 gameManager.killPlayer(player);
             } else {
                 player.setGameMode(GameMode.SPECTATOR);
-                player.teleport(plugin.getConfig().getLocation("Game3.spawn"));
+                player.teleport(plugin.getConfig().getLocation("Lobby"));
             }
         }
     }

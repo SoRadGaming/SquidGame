@@ -130,7 +130,7 @@ public class gameManager {
     }
 
     public static void intermission(Games games) {
-        if (!games.equals(Games.Game3) && !games.equals(Games.Game1)) {
+        if (!games.equals(Games.Game3) && !games.equals(Games.Game1) && !games.equals(Games.Game4)) {
             for (UUID uuid:gameManager.getAllPlayers()) {
                 Player player = Bukkit.getPlayer(uuid);
                 player.teleport(plugin.getConfig().getLocation("Lobby"));
@@ -138,15 +138,16 @@ public class gameManager {
             }
         }
         if (games.equals(Games.Game1)) {
-            //No Delay on Game 1
+            //No Delay on Game 1 as players already in lobby
             Game1.startGame1(gameManager.getAllPlayers());
         } else if (games.equals(Games.Game2)) {
             Bukkit.getScheduler().runTaskLater(plugin, () -> Game2.startGame2(gameManager.getAllPlayers()), 20L * plugin.getConfig().getInt("intermission-time"));
         } else if (games.equals(Games.Game3)) {
-            //No Delay on Game 3
+            //No Delay on Game 3 as lobby is the arena
             Game3.startGame3(gameManager.getAllPlayers());
         } else if (games.equals(Games.Game4)) {
-            Bukkit.getScheduler().runTaskLater(plugin, () -> Game4.startGame4(gameManager.getAllPlayers()), 20L * plugin.getConfig().getInt("intermission-time"));
+            //No Delay on Game 4 as players just finished fighting in lobby
+            Game4.startGame4(gameManager.getAllPlayers());
         } else if (games.equals(Games.Game5)) {
             Bukkit.getScheduler().runTaskLater(plugin, () -> Game5.startGame5(gameManager.getAllPlayers()), 20L * plugin.getConfig().getInt("intermission-time"));
         } else if (games.equals(Games.Game6)) {

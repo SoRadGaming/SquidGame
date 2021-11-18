@@ -62,24 +62,6 @@ Game4:
     z: 816.988663666825
     pitch: -1.9340928
     yaw: -179.8451
-  goal_red:
-    first_point:
-      x: -258.0
-      y: 94.0
-      z: 900.0
-    second_point:
-      x: -199.0
-      y: 109.0
-      z: 888.0
-  goal_blue:
-    first_point:
-      x: -258.0
-      y: 94.0
-      z: 900.0
-    second_point:
-      x: -199.0
-      y: 109.0
-      z: 888.0
   barrier:
     first_point:
       x: -790.0
@@ -149,23 +131,7 @@ Game6:
 Game7:
   world: World
   kill-block: sand
-  spawn_1:
-    ==: org.bukkit.Location
-    world: World
-    x: -227.94925437318383
-    y: 95.0
-    z: 972.1857812621586
-    pitch: -3.265213
-    yaw: -179.7325
-  spawn_2:
-    ==: org.bukkit.Location
-    world: World
-    x: -227.94925437318383
-    y: 95.0
-    z: 972.1857812621586
-    pitch: -3.265213
-    yaw: -179.7325
-  spawn_spectator:
+  spawn:
     ==: org.bukkit.Location
     world: World
     x: -227.94925437318383
