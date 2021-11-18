@@ -27,20 +27,22 @@ public class Game7 implements Listener {
     public static void startGame7(ArrayList<UUID> input) {
         playerList = input;
         Started = true;
-
+        gameManager.onExplainStart("seventh");
         for (UUID uuid:playerList) {
             Player player = Bukkit.getPlayer(uuid);
             player.teleport(plugin.getConfig().getLocation("Game7.spawn"));
-            player.setGameMode(GameMode.ADVENTURE);
         }
         gameManager.setPvPAllowed(true);
-        //Repeat Till all players dead
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
-            if (gameManager.getAlivePlayers().size() == 1) {
-                plugin.data.set("winner", gameManager.getAlivePlayers().get(0).toString());
-                endGame7();
-            }
-        }, 20L, 20L);
+        // With BukkitScheduler
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            //Repeat Till all players dead
+            Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
+                if (gameManager.getAlivePlayers().size() == 1) {
+                    plugin.data.set("winner", gameManager.getAlivePlayers().get(0).toString());
+                    endGame7();
+                }
+            }, 20L, 20L);
+        },20L * 15);
     }
 
     public static void endGame7() {
