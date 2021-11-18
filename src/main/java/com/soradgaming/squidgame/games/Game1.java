@@ -63,7 +63,7 @@ public class Game1 implements Listener {
             Objects.requireNonNull(p).teleport(Objects.requireNonNull(plugin.getConfig().getLocation("Game1.spawn")));
             bossBar.addPlayer(Objects.requireNonNull(p));
         }
-        onExplainStart("first");
+        gameManager.onExplainStart("first");
         timerInterval = (1 / (double) timeGlobal);
         // With BukkitScheduler
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
@@ -100,7 +100,7 @@ public class Game1 implements Listener {
         if (Started) {
             bossBar.removeAll();
             bossBar.setVisible(false);
-            broadcastTitle("events.game-timeout.title", "events.game-timeout.subtitle", 5);
+            gameManager.broadcastTitle("events.game-timeout.title", "events.game-timeout.subtitle", 5);
             Started = false;
             canWalk = false;
             gameManager.setPvPAllowed(false);
@@ -108,9 +108,16 @@ public class Game1 implements Listener {
                 Player player = Bukkit.getPlayer(value);
                 Location location = Objects.requireNonNull(player).getLocation();
                 if (!getGoalZone().contains(location)) { //Player didn't make it to end in time
-                    gameManager.removePlayer(player);
-                    gameManager.killPlayer(player);
-                    player.setGameMode(GameMode.SPECTATOR);
+                    if (plugin.getConfig().getBoolean("eliminate-players")) {
+                        player.setGameMode(GameMode.SPECTATOR);
+                        player.teleport(plugin.getConfig().getLocation("Game1.spawn"));
+                        gameManager.killPlayer(player);
+                    } else {
+                        player.setGameMode(GameMode.SPECTATOR);
+                        player.teleport(plugin.getConfig().getLocation("Game1.spawn"));
+                    }
+                } else {
+                    plugin.data.set(player.getUniqueId() + ".points", plugin.data.getInt(player.getUniqueId() + ".points") + 1);
                 }
             }
             Bukkit.getScheduler().runTaskLater(plugin, () -> {
@@ -126,7 +133,7 @@ public class Game1 implements Listener {
                 }
             }, 40L);
             //TODO Next Event
-            Game3.startGame3(gameManager.getAllPlayers());
+            Bukkit.getScheduler().runTaskLater(plugin, () -> gameManager.intermission(Games.Game3), 20L * plugin.getConfig().getInt("endgame-time"));
         }
     }
 
@@ -138,13 +145,19 @@ public class Game1 implements Listener {
             return;
         }
         Player player = e.getPlayer();
+        plugin.data.set(player.getUniqueId() + ".points", plugin.data.getInt(player.getUniqueId() + ".points") + 1);
         if (Started && gameManager.getAlivePlayers().contains(player.getUniqueId())) {
             if (!canWalk) {
                 final Location location = e.getPlayer().getLocation();
                 if (getKillZone().contains(location)) {
-                    gameManager.removePlayer(player);
-                    gameManager.killPlayer(player);
-                    player.setGameMode(GameMode.SPECTATOR);
+                    if (plugin.getConfig().getBoolean("eliminate-players")) {
+                        player.setGameMode(GameMode.SPECTATOR);
+                        player.teleport(plugin.getConfig().getLocation("Game1.spawn"));
+                        gameManager.killPlayer(player);
+                    } else {
+                        player.setGameMode(GameMode.SPECTATOR);
+                        player.teleport(plugin.getConfig().getLocation("Game1.spawn"));
+                    }
                 }
             }
         }
@@ -155,23 +168,16 @@ public class Game1 implements Listener {
             return;
         }
         final int time = (int) Math.floor(Math.random()*(max-min+1)+min);
-        broadcastTitle("games.first.green-light.title", "games.first.green-light.subtitle",time);
+        gameManager.broadcastTitle("games.first.green-light.title", "games.first.green-light.subtitle",time);
         canWalk = true;
         redLight.runTaskLater(plugin, () -> {
             final int waitTime = (int) Math.floor(Math.random()*(max-min+1)+min);
-            broadcastTitle("games.first.red-light.title", "games.first.red-light.subtitle", waitTime);
+            gameManager.broadcastTitle("games.first.red-light.title", "games.first.red-light.subtitle", waitTime);
             delay.runTaskLater(plugin, () -> {
                 canWalk = false;
                 greenLight.runTaskLater(plugin, Game1::singDoll, waitTime * 20L);
             }, 20);
         }, time * 20L);
-    }
-
-    public static void broadcastTitle(final String title, final String subtitle , int time) {
-        for (final UUID uuid : playerList) {
-            Player player = Bukkit.getPlayer(uuid);
-            Objects.requireNonNull(player).sendTitle(gameManager.formatMessage(player,title) , gameManager.formatMessage(player,subtitle),10, time * 20,10);
-        }
     }
 
     public static Cuboid getBarrier() {
@@ -212,18 +218,5 @@ public class Game1 implements Listener {
             head = new Cuboid(Objects.requireNonNull(world),vector1.getBlockX(),vector1.getBlockY(),vector1.getBlockZ(),vector2.getBlockX(),vector2.getBlockY(),vector2.getBlockZ());
         }
         return head;
-    }
-
-    public static void onExplainStart(String input) {
-        final String key = "games." + input + ".tutorial";
-        broadcastTitleAfterSeconds(3, key + ".1.title", key + ".1.subtitle");
-        broadcastTitleAfterSeconds(6, key + ".2.title", key + ".2.subtitle");
-        broadcastTitleAfterSeconds(9, key + ".3.title", key + ".3.subtitle");
-        broadcastTitleAfterSeconds(12, key + ".4.title", key + ".4.subtitle");
-        broadcastTitleAfterSeconds(15, "events.game-start.title", "events.game-start.subtitle");
-    }
-
-    public static void broadcastTitleAfterSeconds(int seconds, final String title, final String subtitle) {
-        Bukkit.getScheduler().runTaskLater(plugin, () -> broadcastTitle(title, subtitle, 2), seconds * 20L);
     }
 }

@@ -2,6 +2,7 @@ package com.soradgaming.squidgame.utils;
 
 import com.soradgaming.squidgame.SquidGame;
 import com.soradgaming.squidgame.games.Game1;
+import com.soradgaming.squidgame.games.Games;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -39,6 +40,8 @@ public class playerManager implements Listener {
             if (!plugin.data.contains(uuid + ".wins")) {
                 plugin.data.set(uuid + ".wins", 0);
             }
+            plugin.data.set(uuid + ".points", 0);
+            plugin.data.set(uuid + ".kills", 0);
             //Save Data
             plugin.saveFile();
         }
@@ -112,18 +115,19 @@ public class playerManager implements Listener {
         if (gameManager.getAlivePlayers().size() >= min && !gameStarted) {
             gameStartTask.runTaskLater(plugin, () -> {
                 gameManager.Initialise();
-                Game1.startGame1(gameManager.getAllPlayers());
+                gameManager.intermission(Games.Game1);
                 for (UUID uuid : gameManager.getAllPlayers()) {
                     Player player = Bukkit.getPlayer(uuid);
                     Objects.requireNonNull(player).sendMessage(gameManager.formatMessage(player, "arena.started"));
                 }
                 gameStarted = true;
                 }, 20L * plugin.getConfig().getInt("start-time"));
-                //Message Starting
+            //Message Starting
             for (UUID uuid : gameManager.getAllPlayers()) {
                 Player player = Bukkit.getPlayer(uuid);
                 Objects.requireNonNull(player).sendMessage(gameManager.formatMessage(player, "arena.starting"));
             }
+            gameManager.setPvPAllowed(false);
             return true;
         } else {
             gameStartTask.cancelTasks(plugin);

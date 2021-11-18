@@ -40,8 +40,11 @@ public class placeholder extends PlaceholderExpansion {
     @Override
     public String onRequest(OfflinePlayer player, @NotNull String params)  {
         {
-            Set<UUID> leadBoardSet = scoreboard.grabData().keySet();
-            List<UUID> leadBoard = new ArrayList<>(leadBoardSet);
+            Set<UUID> leadBoardSetWins = scoreboard.grabData(PlayerDataType.Wins).keySet();
+            List<UUID> leadBoardWins = new ArrayList<>(leadBoardSetWins);
+
+            Set<UUID> leadBoardSetPoints = scoreboard.grabData(PlayerDataType.Points).keySet();
+            List<UUID> leadBoardPoints = new ArrayList<>(leadBoardSetPoints);
             String[] args = params.split("_");
             if(args[0].equalsIgnoreCase("arena")){
                 if (args[1].equalsIgnoreCase("joined")) {
@@ -70,32 +73,66 @@ public class placeholder extends PlaceholderExpansion {
             }
 
             if(params.equalsIgnoreCase("first")) {
-                if (leadBoard.size() > 0) {
-                    return Objects.requireNonNull(Bukkit.getPlayer(leadBoard.get(leadBoard.size() - 1))).getName();
+                if (leadBoardWins.size() > 0) {
+                    return Objects.requireNonNull(Bukkit.getPlayer(leadBoardWins.get(leadBoardWins.size() - 1))).getName();
                 } else return null;
             }
 
             if(params.equalsIgnoreCase("second")) {
-                if (leadBoard.size() > 1) {
-                    return Objects.requireNonNull(Bukkit.getPlayer(leadBoard.get(leadBoard.size() - 2))).getName();
+                if (leadBoardWins.size() > 1) {
+                    return Objects.requireNonNull(Bukkit.getPlayer(leadBoardWins.get(leadBoardWins.size() - 2))).getName();
                 } else return null;
             }
 
             if(params.equalsIgnoreCase("third")) {
-                if (leadBoard.size() > 2) {
-                    return Objects.requireNonNull(Bukkit.getPlayer(leadBoard.get(leadBoard.size() - 3))).getName();
+                if (leadBoardWins.size() > 2) {
+                    return Objects.requireNonNull(Bukkit.getPlayer(leadBoardWins.get(leadBoardWins.size() - 3))).getName();
                 } else return null;
             }
 
             if(params.equalsIgnoreCase("fourth")) {
-                if (leadBoard.size() > 3) {
-                    return Objects.requireNonNull(Bukkit.getPlayer(leadBoard.get(leadBoard.size() - 4))).getName();
+                if (leadBoardWins.size() > 3) {
+                    return Objects.requireNonNull(Bukkit.getPlayer(leadBoardWins.get(leadBoardWins.size() - 4))).getName();
                 } else return null;
             }
 
             if(params.equalsIgnoreCase("fifth")) {
-                if (leadBoard.size() > 4) {
-                    return Objects.requireNonNull(Bukkit.getPlayer(leadBoard.get(leadBoard.size() - 5))).getName();
+                if (leadBoardWins.size() > 4) {
+                    return Objects.requireNonNull(Bukkit.getPlayer(leadBoardWins.get(leadBoardWins.size() - 5))).getName();
+                } else return null;
+            }
+
+            if(params.equalsIgnoreCase("points")){
+                return String.valueOf(plugin.data.getInt(player.getUniqueId() + ".points"));
+            }
+
+            if(params.equalsIgnoreCase("points1")) {
+                if (leadBoardPoints.size() > 0) {
+                    return Objects.requireNonNull(Bukkit.getPlayer(leadBoardPoints.get(leadBoardPoints.size() - 1))).getName();
+                } else return null;
+            }
+
+            if(params.equalsIgnoreCase("points2")) {
+                if (leadBoardPoints.size() > 1) {
+                    return Objects.requireNonNull(Bukkit.getPlayer(leadBoardPoints.get(leadBoardPoints.size() - 2))).getName();
+                } else return null;
+            }
+
+            if(params.equalsIgnoreCase("points3")) {
+                if (leadBoardPoints.size() > 2) {
+                    return Objects.requireNonNull(Bukkit.getPlayer(leadBoardPoints.get(leadBoardPoints.size() - 3))).getName();
+                } else return null;
+            }
+
+            if(params.equalsIgnoreCase("points4")) {
+                if (leadBoardPoints.size() > 3) {
+                    return Objects.requireNonNull(Bukkit.getPlayer(leadBoardPoints.get(leadBoardPoints.size() - 4))).getName();
+                } else return null;
+            }
+
+            if(params.equalsIgnoreCase("points5")) {
+                if (leadBoardPoints.size() > 4) {
+                    return Objects.requireNonNull(Bukkit.getPlayer(leadBoardPoints.get(leadBoardPoints.size() - 5))).getName();
                 } else return null;
             }
 

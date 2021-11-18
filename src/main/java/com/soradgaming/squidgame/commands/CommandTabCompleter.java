@@ -23,7 +23,7 @@ public class CommandTabCompleter implements TabCompleter {
                 completions = getApplicableTabCompletes(args[0], completions);
             } else if (args.length == 2) {
                 if (args[0].equals("set")) {
-                    completions = new ArrayList<>(Arrays.asList("lobby", "Game1", "Game2", "Game3", "Game4", "Game5", "Game6", "Game7"));
+                    completions = new ArrayList<>(Arrays.asList("lobby", "game1", "game2", "game3", "game4", "game5", "game6", "game7"));
                     completions = getApplicableTabCompletes(args[1], completions);
                 } else if (args[0].equals("test")) {
                     completions = new ArrayList<>(List.of("playerCount"));
@@ -33,25 +33,22 @@ public class CommandTabCompleter implements TabCompleter {
                 }
             } else if (args.length == 3) {
                 switch (args[1]) {
-                    case "Game1":
-                        completions = new ArrayList<>(Arrays.asList("spawn","barrier","killzone","goal"));
+                    case "game1" -> {
+                        completions = new ArrayList<>(Arrays.asList("spawn", "barrier", "killzone", "goal"));
                         completions = getApplicableTabCompletes(args[2], completions);
-                        break;
-                    case "Game2":
-                    case "Game3":
-                    case "Game4":
-                        completions = new ArrayList<>(Arrays.asList("spawn_blue","spawn_red","goal_blue","goal_red", "barrier"));
+                    }
+                    case "game2", "game3", "game4" -> {
+                        completions = new ArrayList<>(Arrays.asList("spawn_blue", "spawn_red", "goal_blue", "goal_red", "barrier"));
                         completions = getApplicableTabCompletes(args[2], completions);
-                        break;
-                    case "Game5":
-                    case "Game6":
-                        completions = new ArrayList<>(Arrays.asList("spawn","glass","goal"));
+                    }
+                    case "game5", "game6" -> {
+                        completions = new ArrayList<>(Arrays.asList("spawn", "glass", "goal"));
                         completions = getApplicableTabCompletes(args[2], completions);
-                        break;
-                    case "Game7":
-                        completions = new ArrayList<>(Arrays.asList("spawn","TODO","TODO","TODO"));
+                    }
+                    case "game7" -> {
+                        completions = new ArrayList<>(Arrays.asList("spawn", "TODO", "TODO", "TODO"));
                         completions = getApplicableTabCompletes(args[2], completions);
-                        break;
+                    }
                 }
             }
             Collections.sort(completions);

@@ -148,8 +148,10 @@ Game7:
     yaw: -179.7325
 min-players: 2
 max-players: 12
-intermission-time: 10
+intermission-time: 30
+endgame-time: 5
 start-time: 30
+eliminate-players: true
 Lobby:
   ==: org.bukkit.Location
   world: World

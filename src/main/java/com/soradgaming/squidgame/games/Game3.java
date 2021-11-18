@@ -35,7 +35,7 @@ public class Game3 implements Listener {
     public static void startGame3(ArrayList<UUID> input) {
         playerList = input;
         Started = true;
-        onExplainStart("third");
+        gameManager.onExplainStart("third");
         timeGlobal = plugin.getConfig().getInt("Game3.timer");
         int minutes = (timeGlobal/60);
         int seconds = (timeGlobal - (minutes * 60));
@@ -81,6 +81,8 @@ public class Game3 implements Listener {
         lightsOff.cancelTasks(plugin);
         delay.cancelTasks(plugin);
         if (Started) {
+            bossBar.removeAll();
+            bossBar.setVisible(false);
             gameManager.setPvPAllowed(false);
             for (UUID uuid : gameManager.getAlivePlayers()) {
                 Player player = Bukkit.getPlayer(uuid);
@@ -91,7 +93,7 @@ public class Game3 implements Listener {
                 player.sendTitle(gameManager.formatMessage(player,"events.game-pass.title") , gameManager.formatMessage(player,"events.game-pass.subtitle"),10, 30,10);
             }
             //TODO end code
-            Game4.startGame4(gameManager.getAllPlayers());
+            Bukkit.getScheduler().runTaskLater(plugin, () -> gameManager.intermission(Games.Game4), 20L * plugin.getConfig().getInt("endgame-time"));
         }
     }
 
@@ -112,34 +114,22 @@ public class Game3 implements Listener {
         },  timeOn * 20L);
     }
 
-    public static void broadcastTitle(final String title, final String subtitle , int time) {
-        for (final UUID uuid : playerList) {
-            Player player = Bukkit.getPlayer(uuid);
-            Objects.requireNonNull(player).sendTitle(gameManager.formatMessage(player,title) , gameManager.formatMessage(player,subtitle),10, time * 20,10);
-        }
-    }
-
-    public static void broadcastTitleAfterSeconds(int seconds, final String title, final String subtitle) {
-        Bukkit.getScheduler().runTaskLater(plugin, () -> broadcastTitle(title, subtitle, 2), seconds * 20L);
-    }
-
     @EventHandler
     public void onPlayerDeath(final PlayerDeathEvent e) {
         final Player player = e.getEntity();
 
         if (Started && playerList.contains(player.getUniqueId()) && !player.getGameMode().equals(GameMode.SPECTATOR)) {
-            gameManager.killPlayer(player);
-            player.setGameMode(GameMode.SPECTATOR);
+            if (player.getKiller() != null) {
+                plugin.data.set(player.getKiller().getUniqueId() + ".kills", plugin.data.getInt(player.getKiller().getUniqueId() + ".kills") + 1);
+            }
+            if (plugin.getConfig().getBoolean("eliminate-players")) {
+                player.setGameMode(GameMode.SPECTATOR);
+                player.teleport(plugin.getConfig().getLocation("Game3.spawn"));
+                gameManager.killPlayer(player);
+            } else {
+                player.setGameMode(GameMode.SPECTATOR);
+                player.teleport(plugin.getConfig().getLocation("Game3.spawn"));
+            }
         }
     }
-
-    public static void onExplainStart(String input) {
-        final String key = "games." + input + ".tutorial";
-        broadcastTitleAfterSeconds(3, key + ".1.title", key + ".1.subtitle");
-        broadcastTitleAfterSeconds(6, key + ".2.title", key + ".2.subtitle");
-        broadcastTitleAfterSeconds(9, key + ".3.title", key + ".3.subtitle");
-        broadcastTitleAfterSeconds(12, key + ".4.title", key + ".4.subtitle");
-        broadcastTitleAfterSeconds(15, "events.game-start.title", "events.game-start.subtitle");
-    }
-
 }

@@ -144,7 +144,7 @@ public class Commands implements CommandExecutor {
                     return false;
                 }
                 switch (args[1]) {
-                    case "Game1":
+                    case "game1":
                         switch (args[2]) {
                             case "spawn" -> {
                                 plugin.getConfig().set("Game1.spawn", loc);
@@ -170,9 +170,9 @@ public class Commands implements CommandExecutor {
                                 plugin.saveConfig();
                             }
                         }
-                    case "Game2":
-                    case "Game3":
-                    case "Game4":
+                    case "game2":
+                    case "game3":
+                    case "game4":
                         switch (args[2]) {
                             case "spawn_red" -> {
                                 plugin.getConfig().set("Game4.spawn_red", loc);
@@ -203,8 +203,8 @@ public class Commands implements CommandExecutor {
                                 plugin.saveConfig();
                             }
                         }
-                    case "Game5":
-                    case "Game6":
+                    case "game5":
+                    case "game6":
                         switch (args[2]) {
                             case "spawn" -> {
                                 plugin.getConfig().set("Game6.spawn", loc);
@@ -224,7 +224,7 @@ public class Commands implements CommandExecutor {
                                 plugin.saveConfig();
                             }
                         }
-                    case "Game7":
+                    case "game7":
                 }
             } else {
                 sender.sendMessage(ChatColor.RED + "You don't have permission to do that");

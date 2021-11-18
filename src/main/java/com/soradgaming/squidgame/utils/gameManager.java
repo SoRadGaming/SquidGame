@@ -1,6 +1,7 @@
 package com.soradgaming.squidgame.utils;
 
 import com.soradgaming.squidgame.SquidGame;
+import com.soradgaming.squidgame.games.*;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -51,6 +52,7 @@ public class gameManager {
     public static synchronized boolean revivePlayer(Player player) {
         if(playerListDead.contains(player.getUniqueId())) {
             playerListDead.remove(player.getUniqueId());
+            addPlayer(player);
             updateTotal();
             return true;
         } else {
@@ -62,9 +64,12 @@ public class gameManager {
         if(!playerListDead.contains(player.getUniqueId())) {
             playerListDead.add(player.getUniqueId());
             plugin.data.set("dead",player.getUniqueId().toString());
-            for (UUID uuid : gameManager.getAlivePlayers()) {
-                Objects.requireNonNull(Bukkit.getPlayer(uuid)).sendMessage(gameManager.formatMessage(player,"arena.death"));
+            if (!plugin.getConfig().getBoolean("eliminate-players")) {
+                for (UUID uuid : gameManager.getAlivePlayers()) {
+                    Objects.requireNonNull(Bukkit.getPlayer(uuid)).sendMessage(gameManager.formatMessage(player,"arena.death"));
+                }
             }
+            removePlayer(player);
             updateTotal();
             return true;
         } else {
@@ -102,5 +107,52 @@ public class gameManager {
                         ? "§6§lWARNING: §eMissing translation key §7" + message + " §ein message.yml file"
                         : translatedMessage);
         return PlaceholderAPI.setPlaceholders(player,formatColor);
+    }
+
+    public static void broadcastTitle(final String title, final String subtitle , int time) {
+        for (final UUID uuid : gameManager.getAllPlayers()) {
+            Player player = Bukkit.getPlayer(uuid);
+            Objects.requireNonNull(player).sendTitle(gameManager.formatMessage(player,title) , gameManager.formatMessage(player,subtitle),10, time * 20,10);
+        }
+    }
+
+    public static void broadcastTitleAfterSeconds(int seconds, final String title, final String subtitle) {
+        Bukkit.getScheduler().runTaskLater(plugin, () -> broadcastTitle(title, subtitle, 2), seconds * 20L);
+    }
+
+    public static void onExplainStart(String input) {
+        final String key = "games." + input + ".tutorial";
+        broadcastTitleAfterSeconds(3, key + ".1.title", key + ".1.subtitle");
+        broadcastTitleAfterSeconds(6, key + ".2.title", key + ".2.subtitle");
+        broadcastTitleAfterSeconds(9, key + ".3.title", key + ".3.subtitle");
+        broadcastTitleAfterSeconds(12, key + ".4.title", key + ".4.subtitle");
+        broadcastTitleAfterSeconds(15, "events.game-start.title", "events.game-start.subtitle");
+    }
+
+    public static void intermission(Games games) {
+        if (!games.equals(Games.Game3) && !games.equals(Games.Game1)) {
+            for (UUID uuid:gameManager.getAllPlayers()) {
+                Player player = Bukkit.getPlayer(uuid);
+                player.teleport(plugin.getConfig().getLocation("Lobby"));
+                broadcastTitle("events.intermission.title", "events.intermission.subtitle" , 3);
+            }
+        }
+        if (games.equals(Games.Game1)) {
+            //No Delay on Game 1
+            Game1.startGame1(gameManager.getAllPlayers());
+        } else if (games.equals(Games.Game2)) {
+            Bukkit.getScheduler().runTaskLater(plugin, () -> Game2.startGame2(gameManager.getAllPlayers()), 20L * plugin.getConfig().getInt("intermission-time"));
+        } else if (games.equals(Games.Game3)) {
+            //No Delay on Game 3
+            Game3.startGame3(gameManager.getAllPlayers());
+        } else if (games.equals(Games.Game4)) {
+            Bukkit.getScheduler().runTaskLater(plugin, () -> Game4.startGame4(gameManager.getAllPlayers()), 20L * plugin.getConfig().getInt("intermission-time"));
+        } else if (games.equals(Games.Game5)) {
+            Bukkit.getScheduler().runTaskLater(plugin, () -> Game5.startGame5(gameManager.getAllPlayers()), 20L * plugin.getConfig().getInt("intermission-time"));
+        } else if (games.equals(Games.Game6)) {
+            Bukkit.getScheduler().runTaskLater(plugin, () -> Game6.startGame6(gameManager.getAllPlayers()), 20L * plugin.getConfig().getInt("intermission-time"));
+        } else if (games.equals(Games.Game7)) {
+            Bukkit.getScheduler().runTaskLater(plugin, () -> Game7.startGame7(gameManager.getAllPlayers()), 20L * plugin.getConfig().getInt("intermission-time"));
+        }
     }
 }

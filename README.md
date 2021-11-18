@@ -15,15 +15,17 @@ SquidGame plugin for Minecraft
 - /sq wand
 - /sq end
 - /sq set lobby
-- /sq set Game1-7 Variable
+- /sq set game1-7 Variable
 
-Glass Selection for Game6
+**Glass Selection for Game 6:**
 - Tiles need to be 2x2
 - gaped 2x2 in both directions
 - min platforms 3
+- select bottom left of first platform (left platforms)
+- select top right of last platform (right platforms)
 
 **Placeholders**:
-- `%squidgame_wins%` Return Player Point Count
+- `%squidgame_wins%` Return Player Win Count
 - `%squidgame_first%`  Get First Position Player
 - `%squidgame_second%`  Get Second Position Player
 - `%squidgame_third%`  Get Third Position Player
@@ -37,3 +39,9 @@ Glass Selection for Game6
 - `%squidgame_arena_death%`  Get Player who most recently died in Game
 - `%squidgame_arena_required%`  Get Min amount of players
 - `%squidgame_arena_winner%`  Get Player who most recently won
+- `%squidgame_points%`  // Return Player Point Count
+- `%squidgame_points1%` // Get First Position Player
+- `%squidgame_points2%` // Get Second Position Player
+- `%squidgame_points3%` // Get Third Position Player
+- `%squidgame_points4%` // Get Fourth Position Player
+- `%squidgame_points5%` // Get Fifth Position Player

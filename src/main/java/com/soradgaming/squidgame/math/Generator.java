@@ -93,7 +93,7 @@ public class Generator {
             rightBlocks.set(i, newCuboid);
         }
 
-        //Generate Tiles
+        //Generate Tiles (cannot run async // to improve performance make this work without API)
         for (Cuboid cuboid : leftBlocks) {
             for (Block block : cuboid.getBlocks()) {
                 block.setType(material);

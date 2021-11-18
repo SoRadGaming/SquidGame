@@ -12,6 +12,9 @@ setup:
   set-lobby: "&aYou have defined the lobby in your current position."
 
 events:
+  intermission:
+    title: "&b&lIntermission"
+    subtitle: "&dNext game starts in %squidgame_arena_time% seconds"
   game-start:
     title: "&6Go Ahead!"
     subtitle: "&aGood Luck"
@@ -54,6 +57,21 @@ games:
     red-light:
       title: "&4&lRed Light"
       subtitle: "&cDO NOT MOVE"
+  second:
+    name: "&cSpeedBuild"
+    tutorial:
+      "1":
+        title: "&6&l1"
+        subtitle: "&eIt is enough to survive to win"
+      "2":
+        title: "&6&l2"
+        subtitle: "&eWhen the game starts the PvP will be activated"
+      "3":
+        title: "&6&l3"
+        subtitle: "&eAny player who dies at the hands of another will be eliminated"
+      "4":
+        title: "&6&l4"
+        subtitle: "&eGood luck surviving"
   third:
     name: "&cBattle"
     tutorial:
@@ -70,7 +88,7 @@ games:
         title: "&6&l4"
         subtitle: "&eGood luck surviving"
   fourth:
-    name: "&cBattle"
+    name: "&cTug of War"
     tutorial:
       "1":
         title: "&6&l1"
@@ -84,6 +102,21 @@ games:
       "4":
         title: "&6&l4"
         subtitle: "&eGood luck surviving"
+  fifth:
+    name: "&dMarbles"
+    tutorial:
+      "1":
+        title: "&6&l1"
+        subtitle: "&eYou must push your enemies out of the arena"
+      "2":
+        title: "&6&l2"
+        subtitle: "&eIf a player is out, they will be eliminated"
+      "3":
+        title: "&6&l3"
+        subtitle: "&eIf a player dies, they will also be eliminated"
+      "4":
+        title: "&6&l4"
+        subtitle: "&eYou will win if you are the last one standing"
   sixth:
     name: "&bGlasses"
     tutorial:
@@ -100,7 +133,7 @@ games:
         title: "&6&l4"
         subtitle: "&eTo win you must get to the other side of the arena"
   seventh:
-    name: "&dSquid&fGame"
+    name: "&dPVP"
     tutorial:
       "1":
         title: "&6&l1"

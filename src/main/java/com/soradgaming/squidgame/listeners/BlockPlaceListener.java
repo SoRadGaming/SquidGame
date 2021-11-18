@@ -10,7 +10,7 @@ public class BlockPlaceListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onBlockPlace(final BlockPlaceEvent e) {
         final Player player = e.getPlayer();
-        if (gameManager.getAllPlayers() != null && gameManager.getAllPlayers().contains(player.getUniqueId())) {
+        if (gameManager.getAllPlayers().contains(player.getUniqueId())) {
             e.setCancelled(true);
         }
     }

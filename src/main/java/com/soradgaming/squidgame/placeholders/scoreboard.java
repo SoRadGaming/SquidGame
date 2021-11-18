@@ -10,11 +10,18 @@ public class scoreboard {
     private static final SquidGame plugin = SquidGame.plugin;
     public static final HashMap<UUID, Integer> playerList = new HashMap<>();
 
-    public static @NotNull LinkedHashMap<UUID, Integer> grabData() {
+    public static @NotNull LinkedHashMap<UUID, Integer> grabData(PlayerDataType type) {
         ArrayList<UUID> uuidList = gameManager.getAlivePlayers();
-        for (UUID uuid : uuidList) {
-            int points = plugin.data.getInt(uuid + ".wins");
-            playerList.put(uuid, points);
+        if (type.equals(PlayerDataType.Points)) {
+            for (UUID uuid : uuidList) {
+                int points = plugin.data.getInt(uuid + ".points");
+                playerList.put(uuid, points);
+            }
+        } else {
+            for (UUID uuid : uuidList) {
+                int points = plugin.data.getInt(uuid + ".wins");
+                playerList.put(uuid, points);
+            }
         }
         return sortHashMapByValues(playerList);
     }
