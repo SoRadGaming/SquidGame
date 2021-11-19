@@ -1,4 +1,4 @@
-package com.soradgaming.squidgame.utils;
+package com.soradgaming.squidgame.math;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;

@@ -1,6 +1,6 @@
 package com.soradgaming.squidgame.listeners;
 
-import com.soradgaming.squidgame.utils.PlayerWand;
+import com.soradgaming.squidgame.utils.playerWand;
 import com.soradgaming.squidgame.utils.gameManager;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -17,13 +17,13 @@ public class PlayerInteractListener implements Listener {
         Player player = e.getPlayer();
         if (gameManager.getAllPlayers().contains(player.getUniqueId())) {
             e.setCancelled(true);
-        } else if (PlayerWand.getWand() != null && e.getItem() != null && e.getItem().isSimilar(PlayerWand.getWand())) {
+        } else if (playerWand.getWand() != null && e.getItem() != null && e.getItem().isSimilar(playerWand.getWand())) {
             if (e.getAction() == Action.LEFT_CLICK_BLOCK) {
-                PlayerWand.setFirstPoint(Objects.requireNonNull(e.getClickedBlock()).getLocation());
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&aSet &dfirst &apoint &7(&e" + PlayerWand.getFirstPoint().toString() + "&7)"));
+                playerWand.setFirstPoint(Objects.requireNonNull(e.getClickedBlock()).getLocation());
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&aSet &dfirst &apoint &7(&e" + playerWand.getFirstPoint().toString() + "&7)"));
             } else if (e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                PlayerWand.setSecondPoint(Objects.requireNonNull(e.getClickedBlock()).getLocation());
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&aSet &bsecond &apoint &7(&e" + PlayerWand.getSecondPoint().toString() + "&7)"));
+                playerWand.setSecondPoint(Objects.requireNonNull(e.getClickedBlock()).getLocation());
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&aSet &bsecond &apoint &7(&e" + playerWand.getSecondPoint().toString() + "&7)"));
             }
             e.setCancelled(true);
         }

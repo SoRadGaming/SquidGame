@@ -5,11 +5,14 @@ import com.soradgaming.squidgame.math.Cuboid;
 import com.soradgaming.squidgame.utils.gameManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import java.util.ArrayList;
@@ -23,6 +26,7 @@ public class Game2 implements Listener {
     private static boolean Started = false;
     private static final BukkitScheduler gameTimer = Bukkit.getScheduler();
     private static final BukkitScheduler bossBarProgress = Bukkit.getScheduler();
+    private static final BukkitScheduler checkWin = Bukkit.getScheduler();
     private static BossBar bossBar;
     private static double timerInterval;
     public static int timeGlobal;
@@ -55,11 +59,45 @@ public class Game2 implements Listener {
         gameManager.onExplainStart("first");
         // With BukkitScheduler
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            gameTimer.runTaskLater(plugin, Game1::endGame1, 20L * (timeGlobal + 1));
+            gameTimer.runTaskLater(plugin, Game2::endGame2, 20L * (timeGlobal + 1));
             bossBarProgress.runTaskTimer(plugin, Game2::bossBarProgress, 20L, 20L);
+            checkWin.runTaskTimer(plugin, Game2::checkWinLoop, 20L, 20L);
             //START
             gameManager.setPvPAllowed(true);
         }, 20L * 15);
+    }
+
+    public static void endGame2() {
+        bossBarProgress.cancelTasks(plugin);
+        gameTimer.cancelTasks(plugin);
+        if (Started) {
+            gameManager.setPvPAllowed(false);
+            //End Code
+            Bukkit.getScheduler().runTaskLater(plugin, () -> gameManager.intermission(Games.Game3), 20L * plugin.getConfig().getInt("endgame-time"));
+        }
+    }
+
+    //TODO Override Death
+    @EventHandler
+    private void onPlayerDeath(final PlayerDeathEvent e) {
+        final Player player = e.getEntity();
+
+        if (Started && playerList.contains(player.getUniqueId()) && !player.getGameMode().equals(GameMode.SPECTATOR)) {
+            if (player.getKiller() != null) {
+                plugin.data.set(player.getKiller().getUniqueId() + ".kills", plugin.data.getInt(player.getKiller().getUniqueId() + ".kills") + 1);
+            }
+            if (plugin.getConfig().getBoolean("eliminate-players")) {
+                player.setGameMode(GameMode.SPECTATOR);
+                player.teleport(plugin.getConfig().getLocation("Lobby"));
+                gameManager.killPlayer(player);
+            } else {
+                player.setGameMode(GameMode.SPECTATOR);
+                player.teleport(plugin.getConfig().getLocation("Lobby"));
+            }
+        }
+    }
+
+    private static void checkWinLoop() {
     }
 
     private static void bossBarProgress() {

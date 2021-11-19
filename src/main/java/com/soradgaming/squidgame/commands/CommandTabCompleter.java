@@ -25,9 +25,6 @@ public class CommandTabCompleter implements TabCompleter {
                 if (args[0].equals("set")) {
                     completions = new ArrayList<>(Arrays.asList("lobby", "game1", "game2", "game4", "game5", "game6", "game7"));
                     completions = getApplicableTabCompletes(args[1], completions);
-                } else if (args[0].equals("test")) {
-                    completions = new ArrayList<>(List.of("playerCount"));
-                    completions = getApplicableTabCompletes(args[1], completions);
                 } else {
                     return null;
                 }
@@ -37,7 +34,11 @@ public class CommandTabCompleter implements TabCompleter {
                         completions = new ArrayList<>(Arrays.asList("spawn", "barrier", "killzone", "goal"));
                         completions = getApplicableTabCompletes(args[2], completions);
                     }
-                    case "game2", "game4" -> {
+                    case "game2" -> {
+                        completions = new ArrayList<>(Arrays.asList("spawn", "cuboid"));
+                        completions = getApplicableTabCompletes(args[2], completions);
+                    }
+                    case "game4" -> {
                         completions = new ArrayList<>(Arrays.asList("spawn_blue", "spawn_red", "barrier"));
                         completions = getApplicableTabCompletes(args[2], completions);
                     }

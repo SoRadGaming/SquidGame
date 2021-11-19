@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class PlayerWand {
+public class playerWand {
     private static BlockVector firstPoint;
     private static BlockVector secondPoint;
     private static ItemStack wand = null;

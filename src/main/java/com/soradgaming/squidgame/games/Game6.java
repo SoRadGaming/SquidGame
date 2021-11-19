@@ -3,7 +3,7 @@ package com.soradgaming.squidgame.games;
 import com.soradgaming.squidgame.SquidGame;
 import com.soradgaming.squidgame.math.Cuboid;
 import com.soradgaming.squidgame.math.Generator;
-import com.soradgaming.squidgame.utils.BlockUtils;
+import com.soradgaming.squidgame.math.BlockUtils;
 import com.soradgaming.squidgame.utils.gameManager;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -108,7 +108,6 @@ public class Game6 implements Listener {
                 }
             }, 40L);
             Bukkit.getScheduler().runTaskLater(plugin, () -> gameManager.intermission(Games.Game7), 20L * plugin.getConfig().getInt("endgame-time"));
-
         }
     }
 
@@ -128,11 +127,12 @@ public class Game6 implements Listener {
 
         if (block != null && block.getType() == Material.valueOf(plugin.getConfig().getString("Game6.material"))) {
             if (getFakeBlocks().contains(block)) {
-                BlockUtils.destroyBlockGroup(location.getBlock());
+                BlockUtils.destroyBlockGroup(location.getBlock(), true);
             }
         }
     }
 
+    //TODO Override Death
     @EventHandler
     public void onPlayerDeath(final PlayerDeathEvent e) {
         final Player player = e.getEntity();

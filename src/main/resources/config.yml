@@ -38,6 +38,26 @@ Game1:
       x: -789.0
       y: 22.0
       z: 537.0
+Game2:
+  world: World
+  timer: 60
+  spawn:
+    ==: org.bukkit.Location
+    world: World
+    x: -819.1051015526494
+    y: 4.0
+    z: 405.0058338699251
+    pitch: -3.5609317
+    yaw: 3.9092407
+  cuboid:
+    first_point:
+      x: -790.0
+      y: 3.0
+      z: 415.0
+    second_point:
+      x: -850.0
+      y: 7.0
+      z: 415.0
 Game3:
   world: World
   timer: 60
