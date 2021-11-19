@@ -14,6 +14,7 @@ import com.sk89q.worldedit.function.operation.ForwardExtentCopy;
 import com.sk89q.worldedit.function.operation.Operation;
 import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.math.transform.Transform;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.session.ClipboardHolder;
 import com.sk89q.worldedit.world.World;
@@ -35,13 +36,14 @@ public class WorldEditHook {
     private static Clipboard clipboard;
     private static Cuboid cuboid;
 
-    public static void cuboidToBlockVector3(Cuboid cuboid) throws IOException {
+    public static void cuboidToBlockVector3(Cuboid cuboid, String key) throws IOException {
         Location loc1 = cuboid.getFirstPoint().toLocation(cuboid.getWorld());
         Location loc2 = cuboid.getSecondPoint().toLocation(cuboid.getWorld());
         pos1 = BukkitAdapter.asBlockVector(loc1);
         pos2 = BukkitAdapter.asBlockVector(loc2);
         world = BukkitAdapter.adapt(cuboid.getWorld());
-        File schematic = new File("plugins/SquidGame/theglasstower.schem");
+        //TODO REMOVE AFTER TEST
+        File schematic = new File("plugins/SquidGame/schematics/" + key);
         load(schematic);
     }
 
@@ -59,13 +61,27 @@ public class WorldEditHook {
         //Paste (Load before this)
         try (EditSession editSession = WorldEdit.getInstance().newEditSession(world)) {
             Operation operation = new ClipboardHolder(clipboard).createPaste(editSession)
-                    .to(pos1)
+                    .to(BlockVector3.at(pos1.getBlockX(),pos1.getBlockY(),pos1.getBlockZ()))
                     // configure here
                     .build();
             Operations.complete(operation);
         } catch (WorldEditException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void verifyBuild() {
+        EditSession editSession = WorldEdit.getInstance().newEditSession(world);
+        CuboidRegion region = new ClipboardHolder(clipboard).getClipboard().getRegion().getBoundingBox();
+        //turn region into cuboid
+        BlockVector3 pos1 = region.getPos1();
+        BlockVector3 pos2 = region.getPos2();
+        Cuboid displayCube =  BlockVector3ToCuboid(pos1,pos2);
+        //now you can compare display cuboid to build one using own code
+    }
+
+    private static Cuboid BlockVector3ToCuboid(BlockVector3 pos1, BlockVector3 pos2) {
+        return new Cuboid(BukkitAdapter.adapt(world),pos1.getBlockX(),pos1.getBlockY(),pos1.getBlockZ(),pos2.getBlockX(),pos2.getBlockY(),pos2.getBlockZ());
     }
 
     public static void copy() throws WorldEditException {
@@ -85,8 +101,6 @@ public class WorldEditHook {
 
     public static void save(File file) {
         //Save
-        //file = figure out where to save the clipboard
-
         try (ClipboardWriter writer = BuiltInClipboardFormat.SPONGE_SCHEMATIC.getWriter(new FileOutputStream(file))) {
             writer.write(clipboard);
         } catch (IOException e) {
@@ -102,6 +116,10 @@ public class WorldEditHook {
             cuboid = new Cuboid(Objects.requireNonNull(world),vector1.getBlockX(),vector1.getBlockY(),vector1.getBlockZ(),vector2.getBlockX(),vector2.getBlockY(),vector2.getBlockZ());
         }
         return cuboid;
+    }
+
+    public static void reloadCuboids() {
+        cuboid = null;
     }
 
 }

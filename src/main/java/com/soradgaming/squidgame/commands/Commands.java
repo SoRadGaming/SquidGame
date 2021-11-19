@@ -62,6 +62,7 @@ public class Commands implements CommandExecutor {
             if (sender.isOp()) {
                 plugin.reloadConfig();
                 plugin.reloadMessages();
+                WorldEditHook.reloadCuboids();
                 plugin.getLogger().info("Reloaded");
                 sender.sendMessage(ChatColor.GREEN + "Reloaded");
             } else {
@@ -119,11 +120,11 @@ public class Commands implements CommandExecutor {
                 sender.sendMessage(ChatColor.RED + "You don't have permission to do that");
                 return true;
             }
-        } else if (args.length == 1 && args[0].equalsIgnoreCase("test")) {
+        } else if (args.length == 2 && args[0].equalsIgnoreCase("test")) {
             if (sender.isOp()) {
                 //QuickTest
                 try {
-                    WorldEditHook.cuboidToBlockVector3(WorldEditHook.getCuboid());
+                    WorldEditHook.cuboidToBlockVector3(WorldEditHook.getCuboid(), args[1]);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.util.*;
 
 public class CommandTabCompleter implements TabCompleter {
@@ -24,6 +25,14 @@ public class CommandTabCompleter implements TabCompleter {
             } else if (args.length == 2) {
                 if (args[0].equals("set")) {
                     completions = new ArrayList<>(Arrays.asList("lobby", "game1", "game2", "game4", "game5", "game6", "game7"));
+                    completions = getApplicableTabCompletes(args[1], completions);
+                } else if (args[0].equals("test")) {
+                    File folder = new File("plugins/SquidGame/schematics/");
+                    File[] listOfFiles = folder.listFiles();
+                    completions = new ArrayList<>();
+                    for (File listOfFile : listOfFiles) {
+                        completions.add(listOfFile.getName());
+                    }
                     completions = getApplicableTabCompletes(args[1], completions);
                 } else {
                     return null;

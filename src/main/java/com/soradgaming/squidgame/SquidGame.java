@@ -23,6 +23,7 @@ import java.util.UUID;
 
 public final class SquidGame extends JavaPlugin {
     public static SquidGame plugin;
+    public File schematics = new File(getDataFolder() + "/schematics");
     public File dataFile = new File(getDataFolder() + "/data/players.yml");
     public File messageFile = new File(getDataFolder(), "messages.yml");
     public FileConfiguration data = YamlConfiguration.loadConfiguration(dataFile); //IllegalArgumentException
@@ -39,12 +40,19 @@ public final class SquidGame extends JavaPlugin {
             getLogger().info("Hooked into PlaceholderAPI");
         }
 
+        if (Bukkit.getPluginManager().isPluginEnabled("WorldEdit")) {
+            getLogger().info("Hooked into WorldEdit");
+        } else {
+            getLogger().info("Could not Find WorldEdit, Game2 Wont Work Without it");
+        }
+
         //Load EventHandler and Commands
         loadMethod();
 
         //Load Files
         loadFile();
         loadMessage();
+        createSchematicsDir();
 
         //Config
         registerConfig();
@@ -130,6 +138,12 @@ public final class SquidGame extends JavaPlugin {
                 e.printStackTrace();
             }
         }
+    }
+
+    //Load the data file
+    public void createSchematicsDir() {
+        if(!schematics.exists())
+            schematics.mkdir();
     }
 
     //Load the Message
