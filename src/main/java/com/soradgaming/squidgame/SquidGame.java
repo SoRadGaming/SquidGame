@@ -1,5 +1,6 @@
 package com.soradgaming.squidgame;
 
+import com.soradgaming.squidgame.bStats.Metrics;
 import com.soradgaming.squidgame.commands.CommandTabCompleter;
 import com.soradgaming.squidgame.commands.Commands;
 import com.soradgaming.squidgame.games.*;
@@ -56,6 +57,13 @@ public final class SquidGame extends JavaPlugin {
 
         //Config
         registerConfig();
+
+        //bStats
+        int pluginId = 13361;
+        Metrics metrics = new Metrics(this, pluginId);
+
+        // Optional: Add custom charts
+        metrics.addCustomChart(new Metrics.SimplePie("chart_id", () -> "My value"));
     }
 
     @Override
