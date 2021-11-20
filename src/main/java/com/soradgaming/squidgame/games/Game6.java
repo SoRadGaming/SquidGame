@@ -202,4 +202,8 @@ public class Game6 implements Listener {
         }
         return fakeBlocks;
     }
+
+    public static boolean isStarted() {
+        return Started;
+    }
 }

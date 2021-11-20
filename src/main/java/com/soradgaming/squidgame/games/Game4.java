@@ -5,8 +5,11 @@ import com.soradgaming.squidgame.math.Cuboid;
 import com.soradgaming.squidgame.utils.gameManager;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.scoreboard.Scoreboard;
@@ -46,9 +49,11 @@ public class Game4 implements Listener {
                     block.setType(Material.AIR);
                 }
             }
+            ItemStack stickItem =  new ItemStack(Material.STICK);
+            stickItem.addUnsafeEnchantment(Enchantment.KNOCKBACK, 3);
             for (UUID uuid:playerList) {
                 Player player = Bukkit.getPlayer(uuid);
-                player.getInventory().setItemInMainHand(new ItemStack(Material.STICK));
+                player.getInventory().setItemInMainHand(stickItem);
             }
             gameManager.setPvPAllowed(true);
             //Repeat Till all players dead
@@ -95,6 +100,7 @@ public class Game4 implements Listener {
             Bukkit.getScheduler().runTaskLater(plugin, () -> gameManager.intermission(Games.Game6), 20L * plugin.getConfig().getInt("endgame-time"));
         }
     }
+
 
     private static void teamGenerator() {
         ScoreboardManager manager = Bukkit.getScoreboardManager();
@@ -161,5 +167,17 @@ public class Game4 implements Listener {
             barrierZone = new Cuboid(Objects.requireNonNull(world),vector1.getBlockX(),vector1.getBlockY(),vector1.getBlockZ(),vector2.getBlockX(),vector2.getBlockY(),vector2.getBlockZ());
         }
         return barrierZone;
+    }
+
+    public static ArrayList<UUID> getTeam1() {
+        return team1;
+    }
+
+    public static ArrayList<UUID> getTeam2() {
+        return team2;
+    }
+
+    public static boolean isStarted() {
+        return Started;
     }
 }
