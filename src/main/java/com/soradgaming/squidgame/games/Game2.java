@@ -2,22 +2,12 @@ package com.soradgaming.squidgame.games;
 
 import com.soradgaming.squidgame.SquidGame;
 import com.soradgaming.squidgame.math.CalculateCuboid;
-import com.soradgaming.squidgame.math.Cuboid;
-import com.soradgaming.squidgame.math.WorldEditHook;
 import com.soradgaming.squidgame.utils.gameManager;
-import com.soradgaming.squidgame.games.Zones;
 import org.bukkit.*;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarStyle;
-import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
-import org.bukkit.scheduler.BukkitScheduler;
-import org.bukkit.util.BlockVector;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -164,10 +154,10 @@ public class Game2 implements Listener {
     }
 
     public static void completeTeam1() {
+        winTeam1 = true;
         for (Player player: team1) {
             player.setGameMode(GameMode.SPECTATOR);
             player.sendTitle(gameManager.formatMessage(player,"events.game-pass.title") , gameManager.formatMessage(player,"events.game-pass.subtitle"),10, 30,10);
-            Bukkit.getConsoleSender().sendMessage("Team1 Complete");
             //send message saying team 1 finished
         }
         checkGameComplete();
@@ -178,27 +168,26 @@ public class Game2 implements Listener {
         for (Player player: team2) {
             player.setGameMode(GameMode.SPECTATOR);
             player.sendTitle(gameManager.formatMessage(player,"events.game-pass.title") , gameManager.formatMessage(player,"events.game-pass.subtitle"),10, 30,10);
-            Bukkit.getConsoleSender().sendMessage("Team2 Complete");
             //send message saying team 1 finished
         }
         checkGameComplete();
     }
 
     public static void completeTeam3() {
+        winTeam3 = true;
         for (Player player: team3) {
             player.setGameMode(GameMode.SPECTATOR);
             player.sendTitle(gameManager.formatMessage(player,"events.game-pass.title") , gameManager.formatMessage(player,"events.game-pass.subtitle"),10, 30,10);
-            Bukkit.getConsoleSender().sendMessage("Team3 Complete");
             //send message saying team 1 finished
         }
         checkGameComplete();
     }
 
     public static void completeTeam4() {
+        winTeam4 = true;
         for (Player player: team4) {
             player.setGameMode(GameMode.SPECTATOR);
             player.sendTitle(gameManager.formatMessage(player,"events.game-pass.title") , gameManager.formatMessage(player,"events.game-pass.subtitle"),10, 30,10);
-            Bukkit.getConsoleSender().sendMessage("Team4 Complete");
             //send message saying team 1 finished
         }
         checkGameComplete();
@@ -218,5 +207,21 @@ public class Game2 implements Listener {
 
     public static boolean getWinTeam4() {
         return winTeam4;
+    }
+
+    public static ArrayList<Player> getTeam1() {
+        return team1;
+    }
+
+    public static ArrayList<Player> getTeam2() {
+        return team2;
+    }
+
+    public static ArrayList<Player> getTeam3() {
+        return team3;
+    }
+
+    public static ArrayList<Player> getTeam4() {
+        return team4;
     }
 }

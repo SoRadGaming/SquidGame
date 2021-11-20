@@ -5,8 +5,10 @@ import com.soradgaming.squidgame.games.Game2;
 import com.soradgaming.squidgame.games.Zones;
 import com.soradgaming.squidgame.utils.gameManager;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -93,11 +95,41 @@ public class CalculateCuboid implements Listener {
 
     @EventHandler
     private static void onBlockBreak(BlockPlaceEvent e) {
+        Player player = e.getPlayer();
+        Location loc = e.getBlock().getLocation();
+        if (Game2.getTeam1().contains(player) && getZones(Zones.BuildZone1).contains(loc)) {
+            //Allow Build
+            e.setCancelled(false);
+        } else if (Game2.getTeam2().contains(player) && getZones(Zones.BuildZone2).contains(loc)) {
+            //Allow Build
+            e.setCancelled(false);
+        } else if (Game2.getTeam3().contains(player) && getZones(Zones.BuildZone3).contains(loc)) {
+            //Allow Build
+            e.setCancelled(false);
+        } else if (Game2.getTeam4().contains(player) && getZones(Zones.BuildZone4).contains(loc)) {
+            //Allow Build
+            e.setCancelled(false);
+        }
         loop();
     }
 
     @EventHandler
     private static void BlockPlaceEvent(BlockBreakEvent e) {
+        Player player = e.getPlayer();
+        Location loc = e.getBlock().getLocation();
+        if (Game2.getTeam1().contains(player) && getZones(Zones.BuildZone1).contains(loc)) {
+            //Allow Build
+            e.setCancelled(false);
+        } else if (Game2.getTeam2().contains(player) && getZones(Zones.BuildZone2).contains(loc)) {
+            //Allow Build
+            e.setCancelled(false);
+        } else if (Game2.getTeam3().contains(player) && getZones(Zones.BuildZone3).contains(loc)) {
+            //Allow Build
+            e.setCancelled(false);
+        } else if (Game2.getTeam4().contains(player) && getZones(Zones.BuildZone4).contains(loc)) {
+            //Allow Build
+            e.setCancelled(false);
+        }
         loop();
     }
 
