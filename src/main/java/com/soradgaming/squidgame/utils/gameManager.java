@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.BlockVector;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.util.*;
 
 public class gameManager {
@@ -16,7 +17,8 @@ public class gameManager {
     private static ArrayList<UUID> playerListAlive = new ArrayList<>();
     private static ArrayList<UUID> playerListDead = new ArrayList<>();
     private static ArrayList<UUID> playerListAll = new ArrayList<>();
-    private static boolean pvp = false;
+    private static boolean pvp;
+    private static boolean block;
     private static final SquidGame plugin = SquidGame.plugin;
 
     public static void Initialise() {
@@ -32,6 +34,10 @@ public class gameManager {
     public static boolean isPvPAllowed() { return pvp; }
 
     public static void setPvPAllowed(boolean TorF) { pvp = TorF; }
+
+    public static boolean isBlockAllowed() { return block; }
+
+    public static void setBlockAllowed(boolean TorF) { block = TorF; }
 
     public static void updateTotal() {
         playerListAll.clear();
@@ -141,7 +147,13 @@ public class gameManager {
             //No Delay on Game 1 as players already in lobby
             Game1.startGame1(gameManager.getAllPlayers());
         } else if (games.equals(Games.Game2)) {
-            Bukkit.getScheduler().runTaskLater(plugin, () -> Game2.startGame2(gameManager.getAllPlayers()), 20L * plugin.getConfig().getInt("intermission-time"));
+            Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                try {
+                    Game2.startGame2(gameManager.getAllPlayers());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }, 20L * plugin.getConfig().getInt("intermission-time"));
         } else if (games.equals(Games.Game3)) {
             //No Delay on Game 3 as lobby is the arena
             Game3.startGame3(gameManager.getAllPlayers());

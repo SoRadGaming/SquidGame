@@ -40,7 +40,6 @@ Game1:
       z: 537.0
 Game2:
   world: World
-  timer: 60
   spawn:
     ==: org.bukkit.Location
     world: World

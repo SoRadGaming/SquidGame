@@ -18,11 +18,12 @@ SquidGame plugin for Minecraft
 - /sq set game1-7 Variable
 
 **Build Selection for Game 2:**
-- BuildPlate needs to be 10x10 (same as display plate)
+- BuildPlate needs to be 10x5x10 XYZ (same as display plate)
 - first point of schematic must be same as build plate relative to build (not cords but direction)
 - schematic should have no offset
 - schematic should first and second position should be same relative to build plate
 - build plate selection can be 2d (pos1 at base + 1)
+- red = 1 // blue = 2 // green = 3 // yellow = 4
 
 **Glass Selection for Game 6:**
 - Tiles need to be 2x2

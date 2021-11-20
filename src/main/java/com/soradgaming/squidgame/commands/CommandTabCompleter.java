@@ -44,7 +44,8 @@ public class CommandTabCompleter implements TabCompleter {
                         completions = getApplicableTabCompletes(args[2], completions);
                     }
                     case "game2" -> {
-                        completions = new ArrayList<>(Arrays.asList("spawn", "cuboid"));
+                        completions = new ArrayList<>(Arrays.asList("spawn_red", "spawn_blue", "spawn_green", "spawn_yellow",
+                                "BuildZone1", "BuildZone2", "BuildZone3", "BuildZone4","DisplayZone1", "DisplayZone2", "DisplayZone3", "DisplayZone4"));
                         completions = getApplicableTabCompletes(args[2], completions);
                     }
                     case "game4" -> {

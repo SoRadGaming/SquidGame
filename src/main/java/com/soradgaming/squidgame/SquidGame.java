@@ -5,6 +5,7 @@ import com.soradgaming.squidgame.commands.CommandTabCompleter;
 import com.soradgaming.squidgame.commands.Commands;
 import com.soradgaming.squidgame.games.*;
 import com.soradgaming.squidgame.listeners.*;
+import com.soradgaming.squidgame.math.CalculateCuboid;
 import com.soradgaming.squidgame.placeholders.placeholder;
 import com.soradgaming.squidgame.utils.gameManager;
 import com.soradgaming.squidgame.utils.playerManager;
@@ -101,6 +102,7 @@ public final class SquidGame extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(new Game5(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new Game6(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new Game7(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new CalculateCuboid(), this);
         //PAPI
         new placeholder().register();
     }

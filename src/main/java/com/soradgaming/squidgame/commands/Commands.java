@@ -62,7 +62,6 @@ public class Commands implements CommandExecutor {
             if (sender.isOp()) {
                 plugin.reloadConfig();
                 plugin.reloadMessages();
-                WorldEditHook.reloadCuboids();
                 plugin.getLogger().info("Reloaded");
                 sender.sendMessage(ChatColor.GREEN + "Reloaded");
             } else {
@@ -123,11 +122,6 @@ public class Commands implements CommandExecutor {
         } else if (args.length == 2 && args[0].equalsIgnoreCase("test")) {
             if (sender.isOp()) {
                 //QuickTest
-                try {
-                    WorldEditHook.cuboidToBlockVector3(WorldEditHook.getCuboid(), args[1]);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
             } else {
                 sender.sendMessage(ChatColor.RED + "You don't have permission to do that");
                 return true;
@@ -180,16 +174,79 @@ public class Commands implements CommandExecutor {
                         }
                     case "game2":
                         switch (args[2]) {
-                            case "spawn" -> {
+                            case "spawn_red" -> {
                                 if (args[1].equalsIgnoreCase("game2")) {
-                                    plugin.getConfig().set("Game2.spawn", loc);
+                                    plugin.getConfig().set("Game2.spawn_red", loc);
                                     plugin.saveConfig();
-                                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eSecond game " + "Spawn" + "&a set to your location &7(" + loc.toVector() + ")"));
+                                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eSecond game " + "spawn_red" + "&a set to your location &7(" + loc.toVector() + ")"));
                                 }
                             }
-                            case "cuboid" -> {
-                                Cuboid.setConfigVectors("Game2.cuboid", playerWand.getFirstPoint(), playerWand.getSecondPoint());
-                                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eSecond game " + "cuboid" + "&a set with your location wand &7("
+                            case "spawn_blue" -> {
+                                if (args[1].equalsIgnoreCase("game2")) {
+                                    plugin.getConfig().set("Game2.spawn_blue", loc);
+                                    plugin.saveConfig();
+                                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eSecond game " + "spawn_blue" + "&a set to your location &7(" + loc.toVector() + ")"));
+                                }
+                            }
+                            case "spawn_green" -> {
+                                if (args[1].equalsIgnoreCase("game2")) {
+                                    plugin.getConfig().set("Game2.spawn_green", loc);
+                                    plugin.saveConfig();
+                                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eSecond game " + "spawn_green" + "&a set to your location &7(" + loc.toVector() + ")"));
+                                }
+                            }
+                            case "spawn_yellow" -> {
+                                if (args[1].equalsIgnoreCase("game2")) {
+                                    plugin.getConfig().set("Game2.spawn_yellow", loc);
+                                    plugin.saveConfig();
+                                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eSecond game " + "spawn_yellow" + "&a set to your location &7(" + loc.toVector() + ")"));
+                                }
+                            }
+                            case "BuildZone1" -> {
+                                Cuboid.setConfigVectors("Game2.BuildZone1", playerWand.getFirstPoint(), playerWand.getSecondPoint());
+                                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eSecond game " + "BuildZone1" + "&a set with your location wand &7("
+                                        + playerWand.getFirstPoint().toString() + ") (" + playerWand.getSecondPoint().toString() + ")"));
+                                plugin.saveConfig();
+                            }
+                            case "BuildZone2" -> {
+                                Cuboid.setConfigVectors("Game2.BuildZone2", playerWand.getFirstPoint(), playerWand.getSecondPoint());
+                                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eSecond game " + "BuildZone2" + "&a set with your location wand &7("
+                                        + playerWand.getFirstPoint().toString() + ") (" + playerWand.getSecondPoint().toString() + ")"));
+                                plugin.saveConfig();
+                            }
+                            case "BuildZone3" -> {
+                                Cuboid.setConfigVectors("Game2.BuildZone3", playerWand.getFirstPoint(), playerWand.getSecondPoint());
+                                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eSecond game " + "BuildZone3" + "&a set with your location wand &7("
+                                        + playerWand.getFirstPoint().toString() + ") (" + playerWand.getSecondPoint().toString() + ")"));
+                                plugin.saveConfig();
+                            }
+                            case "BuildZone4" -> {
+                                Cuboid.setConfigVectors("Game2.BuildZone4", playerWand.getFirstPoint(), playerWand.getSecondPoint());
+                                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eSecond game " + "BuildZone4" + "&a set with your location wand &7("
+                                        + playerWand.getFirstPoint().toString() + ") (" + playerWand.getSecondPoint().toString() + ")"));
+                                plugin.saveConfig();
+                            }
+                            case "DisplayZone1" -> {
+                                Cuboid.setConfigVectors("Game2.DisplayZone1", playerWand.getFirstPoint(), playerWand.getSecondPoint());
+                                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eSecond game " + "DisplayZone1" + "&a set with your location wand &7("
+                                        + playerWand.getFirstPoint().toString() + ") (" + playerWand.getSecondPoint().toString() + ")"));
+                                plugin.saveConfig();
+                            }
+                            case "DisplayZone2" -> {
+                                Cuboid.setConfigVectors("Game2.DisplayZone2", playerWand.getFirstPoint(), playerWand.getSecondPoint());
+                                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eSecond game " + "DisplayZone2" + "&a set with your location wand &7("
+                                        + playerWand.getFirstPoint().toString() + ") (" + playerWand.getSecondPoint().toString() + ")"));
+                                plugin.saveConfig();
+                            }
+                            case "DisplayZone3" -> {
+                                Cuboid.setConfigVectors("Game2.DisplayZone3", playerWand.getFirstPoint(), playerWand.getSecondPoint());
+                                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eSecond game " + "DisplayZone3" + "&a set with your location wand &7("
+                                        + playerWand.getFirstPoint().toString() + ") (" + playerWand.getSecondPoint().toString() + ")"));
+                                plugin.saveConfig();
+                            }
+                            case "DisplayZone4" -> {
+                                Cuboid.setConfigVectors("Game2.DisplayZone4", playerWand.getFirstPoint(), playerWand.getSecondPoint());
+                                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eSecond game " + "DisplayZone4" + "&a set with your location wand &7("
                                         + playerWand.getFirstPoint().toString() + ") (" + playerWand.getSecondPoint().toString() + ")"));
                                 plugin.saveConfig();
                             }

@@ -10,7 +10,7 @@ public class BlockBreakListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onBlockBreak(final BlockBreakEvent e) {
         final Player player = e.getPlayer();
-        if (gameManager.getAllPlayers().contains(player.getUniqueId())) {
+        if (gameManager.getAllPlayers().contains(player.getUniqueId()) && !gameManager.isBlockAllowed()) {
             e.setCancelled(true);
         }
     }

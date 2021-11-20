@@ -22,29 +22,27 @@ import com.soradgaming.squidgame.SquidGame;
 import com.soradgaming.squidgame.utils.gameManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.bukkit.util.BlockVector;
 import org.bukkit.util.Vector;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class WorldEditHook {
-    private static SquidGame plugin = SquidGame.plugin;
     private static BlockVector3 pos1;
     private static BlockVector3 pos2;
     private static World world;
     private static Clipboard clipboard;
-    private static Cuboid cuboid;
 
-    public static void cuboidToBlockVector3(Cuboid cuboid, String key) throws IOException {
+
+    public static void cuboidToBlockVector3(Cuboid cuboid) {
         Location loc1 = cuboid.getFirstPoint().toLocation(cuboid.getWorld());
         Location loc2 = cuboid.getSecondPoint().toLocation(cuboid.getWorld());
         pos1 = BukkitAdapter.asBlockVector(loc1);
         pos2 = BukkitAdapter.asBlockVector(loc2);
         world = BukkitAdapter.adapt(cuboid.getWorld());
-        //TODO REMOVE AFTER TEST
-        File schematic = new File("plugins/SquidGame/schematics/" + key);
-        load(schematic);
     }
 
     public static void load(File file) throws IOException {
@@ -57,7 +55,7 @@ public class WorldEditHook {
         paste();
     }
 
-    public static void paste() {
+    private static void paste() {
         //Paste (Load before this)
         try (EditSession editSession = WorldEdit.getInstance().newEditSession(world)) {
             Operation operation = new ClipboardHolder(clipboard).createPaste(editSession)
@@ -70,14 +68,11 @@ public class WorldEditHook {
         }
     }
 
-    public static void verifyBuild() {
-        EditSession editSession = WorldEdit.getInstance().newEditSession(world);
+    public static Cuboid getClipboardCuboid() {
         CuboidRegion region = new ClipboardHolder(clipboard).getClipboard().getRegion().getBoundingBox();
-        //turn region into cuboid
         BlockVector3 pos1 = region.getPos1();
         BlockVector3 pos2 = region.getPos2();
-        Cuboid displayCube =  BlockVector3ToCuboid(pos1,pos2);
-        //now you can compare display cuboid to build one using own code
+        return BlockVector3ToCuboid(pos1,pos2);
     }
 
     private static Cuboid BlockVector3ToCuboid(BlockVector3 pos1, BlockVector3 pos2) {
@@ -101,25 +96,11 @@ public class WorldEditHook {
 
     public static void save(File file) {
         //Save
-        try (ClipboardWriter writer = BuiltInClipboardFormat.SPONGE_SCHEMATIC.getWriter(new FileOutputStream(file))) {
+        try (ClipboardWriter writer = BuiltInClipboardFormat.MCEDIT_SCHEMATIC.getWriter(new FileOutputStream(file))) {
             writer.write(clipboard);
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public static Cuboid getCuboid() {
-        if (cuboid == null) {
-            BlockVector vector1 = gameManager.configToVectors("Game2.cuboid.first_point");
-            BlockVector vector2 = gameManager.configToVectors("Game2.cuboid.second_point");
-            org.bukkit.World world = Bukkit.getWorld(Objects.requireNonNull(plugin.getConfig().getString("Game2.world")));
-            cuboid = new Cuboid(Objects.requireNonNull(world),vector1.getBlockX(),vector1.getBlockY(),vector1.getBlockZ(),vector2.getBlockX(),vector2.getBlockY(),vector2.getBlockZ());
-        }
-        return cuboid;
-    }
-
-    public static void reloadCuboids() {
-        cuboid = null;
     }
 
 }

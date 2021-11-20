@@ -53,6 +53,7 @@ public class Game1 implements Listener {
         bossBar.setVisible(true);
         bossBar.setProgress(0);
         gameManager.setPvPAllowed(false);
+        gameManager.setBlockAllowed(false);
         for (Block block : getBarrier().getBlocks()) {
             if (block.getType() == Material.AIR) {
                 block.setType(Material.BARRIER);
@@ -113,15 +114,13 @@ public class Game1 implements Listener {
                 for (final UUID uuid : gameManager.getDeadPlayers()) {
                     Player player = Bukkit.getPlayer(uuid);
                     Objects.requireNonNull(player).sendTitle(gameManager.formatMessage(player,"events.game-timeout-died.title") , gameManager.formatMessage(player,"events.game-timeout-died.subtitle"),10, 30,10);
-                    Objects.requireNonNull(player).teleport(Objects.requireNonNull(plugin.getConfig().getLocation("Lobby")));
                 }
                 for (final UUID uuid : gameManager.getAlivePlayers()) {
                     Player player = Bukkit.getPlayer(uuid);
                     Objects.requireNonNull(player).sendTitle(gameManager.formatMessage(player,"events.game-pass.title") , gameManager.formatMessage(player,"events.game-pass.subtitle"),10, 30,10);
-                    Objects.requireNonNull(player).teleport(Objects.requireNonNull(plugin.getConfig().getLocation("Lobby")));
                 }
             }, 40L);
-            Bukkit.getScheduler().runTaskLater(plugin, () -> gameManager.intermission(Games.Game3), 20L * plugin.getConfig().getInt("endgame-time"));
+            Bukkit.getScheduler().runTaskLater(plugin, () -> gameManager.intermission(Games.Game2), 20L * plugin.getConfig().getInt("endgame-time"));
         }
     }
 
