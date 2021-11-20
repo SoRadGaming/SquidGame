@@ -340,37 +340,26 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
         return outset(dir, -amount);
     }
 
-    /*
-    public boolean contains(int x, int y, int z) {
-        return x >= x1 && x <= x2 && y >= y1 && y <= y2 && z >= z1 && z <= z2;
-    }
-     */
-
     /**
-     * Return true if the point at (x,z) is contained within this Cuboid.
+     * Return true if the point at (x,y,z) is contained within this Cuboid.
      *
-     * @param xP	the X co-ordinate
-     * @param zP	the Z co-ordinate
+     * @param x	the X co-ordinate
+     * @param y	the Y co-ordinate
+     * @param z)	the Z co-ordinate
      * @return	true if the given point is within this Cuboid, false otherwise
      */
-    public boolean isBetween(final double xP, final double zP) {
-        double x1 = this.x1;
-        double z1 = this.z1;
-
-        double x2 = this.x2;
-        double z2 = this.z2;
-
-        return ((x1 < xP && xP < x2) || (x1 > xP && xP > x2)) && ((z1 < zP && zP < z2) || (z1 > zP && zP > z2));
+    public boolean contains(int x, int y, int z) {
+        return x >= x1 && x <= x2 && y >= y1 && y <= y2 && z >= z1 && z <= z2;
     }
 
     /**
      * Check if the given Location is contained within this Cuboid.
      *
-     * @param l	the Location to check for
+     * @param location	the Location to check for
      * @return	true if the Location is within this Cuboid, false otherwise
      */
-    public boolean contains(Location l) {
-        return worldName.equals(Objects.requireNonNull(l.getWorld()).getName()) && isBetween(l.getBlockX(), l.getBlockZ());
+    public boolean contains(Location location) {
+        return contains(location.getBlockX(),location.getBlockY(),location.getBlockZ());
     }
 
     /**

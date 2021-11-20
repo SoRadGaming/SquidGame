@@ -44,7 +44,13 @@ public class Game3 implements Listener {
         bossBar.setProgress(0);
         timerInterval = (1 / (double) timeGlobal);
         for (UUID uuid: playerList) {
-            bossBar.addPlayer(Bukkit.getPlayer(uuid));
+            Player player = Bukkit.getPlayer(uuid);
+            player.teleport(plugin.getConfig().getLocation("Lobby"));
+            bossBar.addPlayer(player);
+        }
+        for (UUID uuid:gameManager.getAlivePlayers()) {
+            Player player = Bukkit.getPlayer(uuid);
+            player.setGameMode(GameMode.ADVENTURE);
         }
         // With BukkitScheduler
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
@@ -93,7 +99,7 @@ public class Game3 implements Listener {
             }
             if (plugin.getConfig().getBoolean("eliminate-players")) {
                 player.setGameMode(GameMode.SPECTATOR);
-                player.teleport(plugin.getConfig().getLocation("Lobby"));
+                player.setBedSpawnLocation(plugin.getConfig().getLocation("Lobby"), true);
                 gameManager.killPlayer(player);
             } else {
                 player.setGameMode(GameMode.SPECTATOR);

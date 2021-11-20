@@ -18,6 +18,7 @@ import java.util.*;
 public class playerManager implements Listener {
     private static final SquidGame plugin = SquidGame.plugin;
     public static boolean gameStarted = false;
+    public static boolean gameStarting = false;
     //Store Player Stats
     public static HashMap<Player, ItemStack[]> playerInv = new HashMap<>();
     public static HashMap<Player, ItemStack[]> playerArmour = new HashMap<>();
@@ -112,22 +113,28 @@ public class playerManager implements Listener {
     public static boolean checkStart() {
         int min = plugin.getConfig().getInt("min-players");
         BukkitScheduler gameStartTask = Bukkit.getScheduler();
-        if (gameManager.getAlivePlayers().size() >= min && !gameStarted) {
-            gameStartTask.runTaskLater(plugin, () -> {
-                gameManager.Initialise();
-                gameManager.intermission(Games.Game1);
+        if (gameManager.getAlivePlayers().size() >= min) {
+            if (!gameStarted && !gameStarting) {
+                gameStartTask.runTaskLater(plugin, () -> {
+                    gameManager.Initialise();
+                    gameManager.intermission(Games.Game1);
+                    for (UUID uuid : gameManager.getAllPlayers()) {
+                        Player player = Bukkit.getPlayer(uuid);
+                        Objects.requireNonNull(player).sendMessage(gameManager.formatMessage(player, "arena.started"));
+                    }
+                    gameStarted = true; //TODO Make False after
+                    gameStarting = false;
+                }, 20L * plugin.getConfig().getInt("start-time"));
+                //Message Starting
                 for (UUID uuid : gameManager.getAllPlayers()) {
                     Player player = Bukkit.getPlayer(uuid);
-                    Objects.requireNonNull(player).sendMessage(gameManager.formatMessage(player, "arena.started"));
+                    Objects.requireNonNull(player).sendMessage(gameManager.formatMessage(player, "arena.starting"));
                 }
-                gameStarted = true;
-                }, 20L * plugin.getConfig().getInt("start-time"));
-            //Message Starting
-            for (UUID uuid : gameManager.getAllPlayers()) {
-                Player player = Bukkit.getPlayer(uuid);
-                Objects.requireNonNull(player).sendMessage(gameManager.formatMessage(player, "arena.starting"));
+                gameStarting = true;
+                gameManager.setPvPAllowed(false);
+                gameManager.setBlockAllowed(false);
+                return true;
             }
-            gameManager.setPvPAllowed(false);
             return true;
         } else {
             gameStartTask.cancelTasks(plugin);

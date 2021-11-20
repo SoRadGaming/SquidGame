@@ -15,7 +15,7 @@ public class PlayerInteractListener implements Listener {
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent e) {
         Player player = e.getPlayer();
-        if (gameManager.getAllPlayers().contains(player.getUniqueId())) {
+        if (gameManager.getAllPlayers().contains(player.getUniqueId()) && !gameManager.isBlockAllowed()) {
             e.setCancelled(true);
         } else if (playerWand.getWand() != null && e.getItem() != null && e.getItem().isSimilar(playerWand.getWand())) {
             if (e.getAction() == Action.LEFT_CLICK_BLOCK) {

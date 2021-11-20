@@ -254,14 +254,18 @@ public class Commands implements CommandExecutor {
                     case "game4":
                         switch (args[2]) {
                             case "spawn_red" -> {
-                                plugin.getConfig().set("Game4.spawn_red", loc);
-                                plugin.saveConfig();
-                                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eFourth game " + "spawn_red" + "&a set to your location &7(" + loc.toVector() + ")"));
+                                if (args[1].equalsIgnoreCase("game4")) {
+                                    plugin.getConfig().set("Game4.spawn_red", loc);
+                                    plugin.saveConfig();
+                                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eFourth game " + "spawn_red" + "&a set to your location &7(" + loc.toVector() + ")"));
+                                }
                             }
                             case "spawn_blue" -> {
-                                plugin.getConfig().set("Game4.spawn_blue", loc);
-                                plugin.saveConfig();
-                                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eFourth game " + "spawn_blue" + "&a set to your location &7(" + loc.toVector() + ")"));
+                                if (args[1].equalsIgnoreCase("game4")) {
+                                    plugin.getConfig().set("Game4.spawn_blue", loc);
+                                    plugin.saveConfig();
+                                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eFourth game " + "spawn_blue" + "&a set to your location &7(" + loc.toVector() + ")"));
+                                }
                             }
                             case "barrier" -> {
                                 Cuboid.setConfigVectors("Game4.barrier", playerWand.getFirstPoint(), playerWand.getSecondPoint());

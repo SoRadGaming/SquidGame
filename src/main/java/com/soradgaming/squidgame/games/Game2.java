@@ -43,8 +43,11 @@ public class Game2 implements Listener {
         // With BukkitScheduler
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             //START
+            for (UUID uuid:gameManager.getAlivePlayers()) {
+                Bukkit.getPlayer(uuid).setGameMode(GameMode.CREATIVE);
+            }
             gameManager.setBlockAllowed(true);
-            gameManager.setPvPAllowed(true);// No PVP
+            gameManager.setPvPAllowed(false);
         }, 20L * 15);
     }
 
@@ -57,6 +60,8 @@ public class Game2 implements Listener {
                     player.sendTitle(gameManager.formatMessage(player,"events.game-timeout-died.title") ,
                             gameManager.formatMessage(player,"events.game-timeout-died.subtitle"),10, 30,10);
                     gameManager.killPlayer(player);
+                    player.getInventory().clear();
+                    player.getInventory().setArmorContents(null);
                     player.setGameMode(GameMode.SPECTATOR);
                 }
             } else if (!winTeam2) {
@@ -64,6 +69,8 @@ public class Game2 implements Listener {
                     player.sendTitle(gameManager.formatMessage(player,"events.game-timeout-died.title") ,
                             gameManager.formatMessage(player,"events.game-timeout-died.subtitle"),10, 30,10);
                     gameManager.killPlayer(player);
+                    player.getInventory().clear();
+                    player.getInventory().setArmorContents(null);
                     player.setGameMode(GameMode.SPECTATOR);
                 }
             } else if (!winTeam3) {
@@ -71,6 +78,8 @@ public class Game2 implements Listener {
                     player.sendTitle(gameManager.formatMessage(player,"events.game-timeout-died.title") ,
                             gameManager.formatMessage(player,"events.game-timeout-died.subtitle"),10, 30,10);
                     gameManager.killPlayer(player);
+                    player.getInventory().clear();
+                    player.getInventory().setArmorContents(null);
                     player.setGameMode(GameMode.SPECTATOR);
                 }
             } else if (!winTeam4) {
@@ -78,6 +87,8 @@ public class Game2 implements Listener {
                     player.sendTitle(gameManager.formatMessage(player,"events.game-timeout-died.title") ,
                             gameManager.formatMessage(player,"events.game-timeout-died.subtitle"),10, 30,10);
                     gameManager.killPlayer(player);
+                    player.getInventory().clear();
+                    player.getInventory().setArmorContents(null);
                     player.setGameMode(GameMode.SPECTATOR);
                 }
             }
@@ -156,6 +167,8 @@ public class Game2 implements Listener {
     public static void completeTeam1() {
         winTeam1 = true;
         for (Player player: team1) {
+            player.getInventory().clear();
+            player.getInventory().setArmorContents(null);
             player.setGameMode(GameMode.SPECTATOR);
             player.sendTitle(gameManager.formatMessage(player,"events.game-pass.title") , gameManager.formatMessage(player,"events.game-pass.subtitle"),10, 30,10);
             //send message saying team 1 finished
@@ -166,6 +179,8 @@ public class Game2 implements Listener {
     public static void completeTeam2() {
         winTeam2 = true;
         for (Player player: team2) {
+            player.getInventory().clear();
+            player.getInventory().setArmorContents(null);
             player.setGameMode(GameMode.SPECTATOR);
             player.sendTitle(gameManager.formatMessage(player,"events.game-pass.title") , gameManager.formatMessage(player,"events.game-pass.subtitle"),10, 30,10);
             //send message saying team 1 finished
@@ -176,6 +191,8 @@ public class Game2 implements Listener {
     public static void completeTeam3() {
         winTeam3 = true;
         for (Player player: team3) {
+            player.getInventory().clear();
+            player.getInventory().setArmorContents(null);
             player.setGameMode(GameMode.SPECTATOR);
             player.sendTitle(gameManager.formatMessage(player,"events.game-pass.title") , gameManager.formatMessage(player,"events.game-pass.subtitle"),10, 30,10);
             //send message saying team 1 finished
@@ -186,6 +203,8 @@ public class Game2 implements Listener {
     public static void completeTeam4() {
         winTeam4 = true;
         for (Player player: team4) {
+            player.getInventory().clear();
+            player.getInventory().setArmorContents(null);
             player.setGameMode(GameMode.SPECTATOR);
             player.sendTitle(gameManager.formatMessage(player,"events.game-pass.title") , gameManager.formatMessage(player,"events.game-pass.subtitle"),10, 30,10);
             //send message saying team 1 finished
@@ -223,5 +242,9 @@ public class Game2 implements Listener {
 
     public static ArrayList<Player> getTeam4() {
         return team4;
+    }
+
+    public static boolean isStarted() {
+        return Started;
     }
 }
