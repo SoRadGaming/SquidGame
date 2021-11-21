@@ -40,6 +40,15 @@ public class Game4 implements Listener {
             }
         }
         teamGenerator();
+        for (UUID uuid:gameManager.getDeadPlayers()) {
+            Random random = new Random();
+            boolean isFirstFake = random.nextBoolean();
+            if (isFirstFake) {
+                Bukkit.getPlayer(uuid).teleport(plugin.getConfig().getLocation("spawn_red"));
+            } else {
+                Bukkit.getPlayer(uuid).teleport(plugin.getConfig().getLocation("spawn_blue"));
+            }
+        }
         gameManager.onExplainStart("fourth");
         // With BukkitScheduler
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
@@ -89,12 +98,15 @@ public class Game4 implements Listener {
                     player.setGameMode(GameMode.ADVENTURE);
                 }
             }
+            for (UUID uuid : gameManager.getAllPlayers()) {
+                Player player = Bukkit.getPlayer(uuid);
+                player.getInventory().setArmorContents(null);
+                player.getInventory().clear();
+            }
             for (UUID uuid : gameManager.getAlivePlayers()) {
                 Player player = Bukkit.getPlayer(uuid);
                 Objects.requireNonNull(player).setHealth(20);
                 player.setFoodLevel(20);
-                player.getInventory().setArmorContents(null);
-                player.getInventory().clear();
                 player.sendTitle(gameManager.formatMessage(player,"events.game-pass.title") , gameManager.formatMessage(player,"events.game-pass.subtitle"),10, 30,10);
             }
             Bukkit.getScheduler().runTaskLater(plugin, () -> gameManager.intermission(Games.Game6), 20L * plugin.getConfig().getInt("endgame-time"));

@@ -49,7 +49,7 @@ public class gameManager {
     public static void checkEnoughPlayersLeft() {
         if (playerListAlive.size() < 2 && playerManager.gameStarted && !Game7.isStarted()) {
             //End Game as not enough players left
-            for (UUID uuid: gameManager.getAllPlayers()) {
+            for (UUID uuid: playerListAll) {
                 Game1.endGame1();
                 Game2.endGame2();
                 Game3.endGame3();
