@@ -21,7 +21,6 @@ import java.util.UUID;
 
 public class Game3 implements Listener {
     private static final SquidGame plugin = SquidGame.plugin;
-    private static ArrayList<UUID> playerList;
     private static boolean Started = false;
     private static final BukkitScheduler gameTimer = Bukkit.getScheduler();
     private static final BukkitScheduler lightsOff = Bukkit.getScheduler();
@@ -32,8 +31,7 @@ public class Game3 implements Listener {
     private static double timerInterval;
     public static int timeGlobal;
 
-    public static void startGame3(ArrayList<UUID> input) {
-        playerList = input;
+    public static void startGame3() {
         Started = true;
         gameManager.onExplainStart("third");
         timeGlobal = plugin.getConfig().getInt("Game3.timer");
@@ -43,7 +41,7 @@ public class Game3 implements Listener {
         bossBar.setVisible(true);
         bossBar.setProgress(0);
         timerInterval = (1 / (double) timeGlobal);
-        for (UUID uuid: playerList) {
+        for (UUID uuid: gameManager.getAllPlayers()) {
             Player player = Bukkit.getPlayer(uuid);
             player.teleport(plugin.getConfig().getLocation("Lobby"));
             bossBar.addPlayer(player);
@@ -57,7 +55,7 @@ public class Game3 implements Listener {
             gameTimer.runTaskLater(plugin, Game3::endGame3, 20L * (plugin.getConfig().getInt("Game3.timer") + 1));
             bossBarProgress.runTaskTimer(plugin, Game3::bossBarProgress, 20L, 20L);
             //START
-            for (UUID uuid:playerList) {
+            for (UUID uuid:gameManager.getAllPlayers()) {
                 Player player = Bukkit.getPlayer(uuid);
                 player.getInventory().setItemInMainHand(new ItemStack(Material.WOODEN_SWORD));
             }
@@ -88,18 +86,14 @@ public class Game3 implements Listener {
         }
     }
 
-    //TODO Override Death
-    @EventHandler
-    private void onPlayerDeath(final PlayerDeathEvent e) {
-        final Player player = e.getEntity();
-
-        if (Started && playerList.contains(player.getUniqueId()) && !player.getGameMode().equals(GameMode.SPECTATOR)) {
+    public static void onPlayerDeathKilled(Player player) {
+        if (Started && gameManager.getAllPlayers().contains(player.getUniqueId()) && !player.getGameMode().equals(GameMode.SPECTATOR)) {
             if (player.getKiller() != null) {
                 plugin.data.set(player.getKiller().getUniqueId() + ".kills", plugin.data.getInt(player.getKiller().getUniqueId() + ".kills") + 1);
             }
             if (plugin.getConfig().getBoolean("eliminate-players")) {
                 player.setGameMode(GameMode.SPECTATOR);
-                player.setBedSpawnLocation(plugin.getConfig().getLocation("Lobby"), true);
+                player.teleport(plugin.getConfig().getLocation("Lobby"));
                 gameManager.killPlayer(player);
             } else {
                 player.setGameMode(GameMode.SPECTATOR);
@@ -114,11 +108,11 @@ public class Game3 implements Listener {
         }
         int timeOn = plugin.getConfig().getInt("Game3.lightSwitchOn");
         int timeOff = plugin.getConfig().getInt("Game3.lightSwitchOff");
-        for (UUID uuid: playerList) {
+        for (UUID uuid: gameManager.getAllPlayers()) {
             Objects.requireNonNull(Bukkit.getPlayer(uuid)).addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, timeOff * 20, 1, false, false));
         }
         lightsOff.runTaskLater(plugin, () -> {
-            for (UUID uuid: playerList) {
+            for (UUID uuid: gameManager.getAllPlayers()) {
                 Objects.requireNonNull(Bukkit.getPlayer(uuid)).addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, timeOn * 20, 1, false, false));
             }
             lightsOn.runTaskLater(plugin, Game3::flashLights, timeOff * 20L);
@@ -134,5 +128,9 @@ public class Game3 implements Listener {
         int minutes = (timeGlobal/60);
         int seconds = (timeGlobal - (minutes * 60));
         bossBar.setTitle(ChatColor.BOLD + "Game Timer : " + ChatColor.GOLD + minutes + ":" + ChatColor.GOLD + seconds);
+    }
+
+    public static boolean isStarted() {
+        return Started;
     }
 }

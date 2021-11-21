@@ -6,6 +6,6 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 public class Game5 implements Listener {
-    public static void startGame5(ArrayList<UUID> input) {
+    public static void startGame5() {
     }
 }

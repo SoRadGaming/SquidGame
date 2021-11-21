@@ -23,7 +23,6 @@ import java.util.*;
 
 public class Game6 implements Listener {
     private static final SquidGame plugin = SquidGame.plugin;
-    private static ArrayList<UUID> playerList;
     private static boolean Started = false;
     private static final BukkitScheduler gameTimer = Bukkit.getScheduler();
     private static final BukkitScheduler bossBarProgress = Bukkit.getScheduler();
@@ -36,8 +35,7 @@ public class Game6 implements Listener {
     private static ArrayList<Block> fakeBlocks;
     private static ArrayList<Cuboid> fakeCuboids;
 
-    public static void startGame6(ArrayList<UUID> input) {
-        playerList = input;
+    public static void startGame6() {
         Started = true;
         timeGlobal = plugin.getConfig().getInt("Game6.timer");
         int minutes = (timeGlobal/60);
@@ -45,13 +43,13 @@ public class Game6 implements Listener {
         bossBar = Bukkit.createBossBar(ChatColor.BOLD + "Game Timer : " + ChatColor.GOLD + minutes + ":" + ChatColor.GOLD + seconds , BarColor.BLUE, BarStyle.SOLID);
         bossBar.setVisible(true);
         bossBar.setProgress(0);
-        Generator.generateTiles(Material.valueOf(plugin.getConfig().getString("Game6.material")), playerList.size());
+        Generator.generateTiles(Material.valueOf(plugin.getConfig().getString("Game6.material")), gameManager.getAllPlayers().size());
         for (Block block : getBarrier().getBlocks()) {
             if (block.getType() == Material.AIR) {
                 block.setType(Material.BARRIER);
             }
         }
-        for (UUID uuid : playerList) {
+        for (UUID uuid : gameManager.getAllPlayers()) {
             Player p = Bukkit.getPlayer(uuid);
             Objects.requireNonNull(p).teleport(Objects.requireNonNull(plugin.getConfig().getLocation("Game6.spawn")));
             bossBar.addPlayer(Objects.requireNonNull(p));
@@ -132,11 +130,8 @@ public class Game6 implements Listener {
         }
     }
 
-    //TODO Override Death
-    @EventHandler
-    public void onPlayerDeath(final PlayerDeathEvent e) {
-        final Player player = e.getEntity();
-        if (!player.getGameMode().equals(GameMode.SPECTATOR) && Started && playerList.contains(player.getUniqueId())) {
+    public static void onPlayerDeathFall(Player player) {
+        if (!player.getGameMode().equals(GameMode.SPECTATOR) && Started && gameManager.getAllPlayers().contains(player.getUniqueId())) {
             if (plugin.getConfig().getBoolean("eliminate-players")) {
                 player.setGameMode(GameMode.SPECTATOR);
                 player.teleport(plugin.getConfig().getLocation("Game6.spawn"));

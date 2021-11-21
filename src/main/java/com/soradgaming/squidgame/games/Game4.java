@@ -21,16 +21,16 @@ import java.util.*;
 
 public class Game4 implements Listener {
     private static final SquidGame plugin = SquidGame.plugin;
-    private static ArrayList<UUID> playerList;
     private static ArrayList<UUID> team1 = new ArrayList<>(); //Red
     private static ArrayList<UUID> team2 = new ArrayList<>(); //Blue
+    private static ArrayList<UUID> team1Clone = new ArrayList<>(); //Red
+    private static ArrayList<UUID> team2Clone = new ArrayList<>(); //Blue
     private static Team team1RedBukkit;
     private static Team team2BlueBukkit;
     private static boolean Started = false;
     private static Cuboid barrierZone;
 
-    public static void startGame4(ArrayList<UUID> input) {
-        playerList = input;
+    public static void startGame4() {
         Started = true;
         team1.clear();
         team2.clear();
@@ -51,7 +51,7 @@ public class Game4 implements Listener {
             }
             ItemStack stickItem =  new ItemStack(Material.STICK);
             stickItem.addUnsafeEnchantment(Enchantment.KNOCKBACK, 3);
-            for (UUID uuid:playerList) {
+            for (UUID uuid:gameManager.getAllPlayers()) {
                 Player player = Bukkit.getPlayer(uuid);
                 player.getInventory().setItemInMainHand(stickItem);
             }
@@ -74,7 +74,7 @@ public class Game4 implements Listener {
             //Set winning team and revive team players
             if (team1.size() > 0) {
                 //Team 1 has won
-                for (UUID uuid: team1) {
+                for (UUID uuid: team1Clone) {
                     Player player = Bukkit.getPlayer(uuid);
                     gameManager.revivePlayer(player);
                     player.teleport(plugin.getConfig().getLocation("Game4.spawn_red"));
@@ -82,7 +82,7 @@ public class Game4 implements Listener {
                 }
             } else if (team2.size() > 0) {
                 //Team 2 has won
-                for (UUID uuid: team2) {
+                for (UUID uuid: team2Clone) {
                     Player player = Bukkit.getPlayer(uuid);
                     gameManager.revivePlayer(player);
                     player.teleport(plugin.getConfig().getLocation("Game4.spawn_blue"));
@@ -101,23 +101,35 @@ public class Game4 implements Listener {
         }
     }
 
+    public static void onPlayerDeathFall(Player player) {
+        if (!player.getGameMode().equals(GameMode.SPECTATOR) && Started && gameManager.getAllPlayers().contains(player.getUniqueId())) {
+            if (team1.contains(player.getUniqueId())) {
+                team1.remove(player.getUniqueId());
+            } else {
+                team2.remove(player.getUniqueId());
+            }
+            player.setGameMode(GameMode.SPECTATOR);
+            player.teleport(plugin.getConfig().getLocation("Game6.spawn"));
+            gameManager.killPlayer(player);
+        }
+    }
 
     private static void teamGenerator() {
         ScoreboardManager manager = Bukkit.getScoreboardManager();
         Scoreboard board = manager.getNewScoreboard();
         team1RedBukkit = board.registerNewTeam("Red Team");
         team2BlueBukkit = board.registerNewTeam("Blue Team");
-        Collections.shuffle(playerList);
-        for (int i = 0;(playerList.size() / 2) > i;i++) {
-            UUID uuid = playerList.get(i);
+        Collections.shuffle(gameManager.getAllPlayers());
+        for (int i = 0;(gameManager.getAllPlayers().size() / 2) > i;i++) {
+            UUID uuid = gameManager.getAllPlayers().get(i);
             Player player = Bukkit.getPlayer(uuid);
             team1.add(uuid);
             team1RedBukkit.addEntry(player.getName());
             player.getInventory().setArmorContents(getArmour(Color.RED));
             player.teleport(Objects.requireNonNull(plugin.getConfig().getLocation("Game4.spawn_red")));
         }
-        for (int i = team1.size();playerList.size() > i;i++) {
-            UUID uuid = playerList.get(i);
+        for (int i = team1.size();gameManager.getAllPlayers().size() > i;i++) {
+            UUID uuid = gameManager.getAllPlayers().get(i);
             Player player = Bukkit.getPlayer(uuid);
             team2.add(uuid);
             team2BlueBukkit.addEntry(player.getName());
@@ -130,6 +142,8 @@ public class Game4 implements Listener {
         team2BlueBukkit.setColor(ChatColor.BLUE);
         team2BlueBukkit.setAllowFriendlyFire(false);
         team2BlueBukkit.setDisplayName(ChatColor.BLUE + "Blue Team");
+        team1Clone = team1;
+        team2Clone = team2;
     }
 
     private static ItemStack[] getArmour(Color colour) {

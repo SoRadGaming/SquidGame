@@ -122,7 +122,7 @@ public class playerManager implements Listener {
                         Player player = Bukkit.getPlayer(uuid);
                         Objects.requireNonNull(player).sendMessage(gameManager.formatMessage(player, "arena.started"));
                     }
-                    gameStarted = true; //TODO Make False after
+                    gameStarted = true;
                     gameStarting = false;
                 }, 20L * plugin.getConfig().getInt("start-time"));
                 //Message Starting

@@ -43,6 +43,25 @@ public class gameManager {
         playerListAll.clear();
         playerListAll.addAll(playerListAlive);
         playerListAll.addAll(playerListDead);
+        checkEnoughPlayersLeft();
+    }
+
+    public static void checkEnoughPlayersLeft() {
+        if (playerListAlive.size() < 2 && playerManager.gameStarted && !Game7.isStarted()) {
+            //End Game as not enough players left
+            for (UUID uuid: gameManager.getAllPlayers()) {
+                Game1.endGame1();
+                Game2.endGame2();
+                Game3.endGame3();
+                Game4.endGame4();
+                Game6.endGame6();
+                playerManager.gameStarted = false;
+                Player player = Bukkit.getPlayer(uuid);
+                playerManager.playerLeave(player);
+                gameManager.revivePlayer(player);
+                player.sendTitle(gameManager.formatMessage(player,"events.finish.draw.title"),gameManager.formatMessage(player,"events.finish.draw.subtitle"),10,30,10);
+            }
+        }
     }
 
     public static synchronized boolean removePlayer(Player player) {
@@ -145,27 +164,27 @@ public class gameManager {
         }
         if (games.equals(Games.Game1)) {
             //No Delay on Game 1 as players already in lobby
-            Game1.startGame1(gameManager.getAllPlayers());
+            Game1.startGame1();
         } else if (games.equals(Games.Game2)) {
             Bukkit.getScheduler().runTaskLater(plugin, () -> {
                 try {
-                    Game2.startGame2(gameManager.getAllPlayers());
+                    Game2.startGame2();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }, 20L * plugin.getConfig().getInt("intermission-time"));
         } else if (games.equals(Games.Game3)) {
             //No Delay on Game 3 as lobby is the arena
-            Game3.startGame3(gameManager.getAllPlayers());
+            Game3.startGame3();
         } else if (games.equals(Games.Game4)) {
             //No Delay on Game 4 as players just finished fighting in lobby
-            Game4.startGame4(gameManager.getAllPlayers());
+            Game4.startGame4();
         } else if (games.equals(Games.Game5)) {
-            Bukkit.getScheduler().runTaskLater(plugin, () -> Game5.startGame5(gameManager.getAllPlayers()), 20L * plugin.getConfig().getInt("intermission-time"));
+            Bukkit.getScheduler().runTaskLater(plugin, Game5::startGame5, 20L * plugin.getConfig().getInt("intermission-time"));
         } else if (games.equals(Games.Game6)) {
-            Bukkit.getScheduler().runTaskLater(plugin, () -> Game6.startGame6(gameManager.getAllPlayers()), 20L * plugin.getConfig().getInt("intermission-time"));
+            Bukkit.getScheduler().runTaskLater(plugin, Game6::startGame6, 20L * plugin.getConfig().getInt("intermission-time"));
         } else if (games.equals(Games.Game7)) {
-            Bukkit.getScheduler().runTaskLater(plugin, () -> Game7.startGame7(gameManager.getAllPlayers()), 20L * plugin.getConfig().getInt("intermission-time"));
+            Bukkit.getScheduler().runTaskLater(plugin, Game7::startGame7, 20L * plugin.getConfig().getInt("intermission-time"));
         }
     }
 }

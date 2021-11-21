@@ -1,5 +1,6 @@
 package com.soradgaming.squidgame.listeners;
 
+import com.soradgaming.squidgame.games.Game3;
 import com.soradgaming.squidgame.games.Game4;
 import com.soradgaming.squidgame.games.Game6;
 import com.soradgaming.squidgame.utils.gameManager;
@@ -24,14 +25,23 @@ public class EntityDamageListener implements Listener {
                                 ||Game4.getTeam2().contains(e.getEntity().getUniqueId()) && Game4.getTeam1().contains(player.getUniqueId()) ) {
                             e.setCancelled(true);
                         }
+                    } else if (Game3.isStarted()) {
+                        Game3.onPlayerDeathKilled(player);
                     } else {
                         e.setCancelled(true);
                     }
+
                 }
                 if (e.getCause() == DamageCause.FALL && (Game4.isStarted()|| Game6.isStarted())) {
+                    if (Game4.isStarted()) {
+                        Game4.onPlayerDeathFall(player);
+                    } else if (Game6.isStarted()) {
+                        Game6.onPlayerDeathFall(player);
+                    }
                     e.setCancelled(true);
                 }
                 if (!e.isCancelled() && player.getHealth() - e.getDamage() <= 0) {
+                    //player dies
                     gameManager.killPlayer(player);
                     e.setCancelled(true);
                 }

@@ -22,7 +22,6 @@ import java.util.UUID;
 
 public class Game1 implements Listener {
     private static final SquidGame plugin = SquidGame.plugin;
-    private static ArrayList<UUID> playerList;
     private static boolean Started = false;
     private static boolean canWalk = true;
     private static final BukkitScheduler gameTimer = Bukkit.getScheduler();
@@ -40,8 +39,7 @@ public class Game1 implements Listener {
     private static Cuboid barrierZone;
     private static Cuboid head;
 
-    public static void startGame1(ArrayList<UUID> input) {
-        playerList = input;
+    public static void startGame1() {
         Started = true;
         canWalk = true;
         max = plugin.getConfig().getInt("Game1.lightSwitchMax");
@@ -59,7 +57,7 @@ public class Game1 implements Listener {
                 block.setType(Material.BARRIER);
             }
         }
-        for (UUID uuid : playerList) {
+        for (UUID uuid : gameManager.getAllPlayers()) {
             Player p = Bukkit.getPlayer(uuid);
             Objects.requireNonNull(p).teleport(Objects.requireNonNull(plugin.getConfig().getLocation("Game1.spawn")));
             bossBar.addPlayer(Objects.requireNonNull(p));

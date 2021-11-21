@@ -18,7 +18,6 @@ import java.util.UUID;
 
 public class Game2 implements Listener {
     private static final SquidGame plugin = SquidGame.plugin;
-    private static ArrayList<UUID> playerList;
     private static boolean Started = false;
     private static ArrayList<Player> team1 = new ArrayList<>();
     private static ArrayList<Player> team2 = new ArrayList<>();
@@ -29,8 +28,7 @@ public class Game2 implements Listener {
     private static boolean winTeam3 = false;
     private static boolean winTeam4 = false;
 
-    public static void startGame2(ArrayList<UUID> input) throws IOException {
-        playerList = input;
+    public static void startGame2() throws IOException {
         winTeam1 = false;
         winTeam2 = false;
         winTeam3 = false;
@@ -64,7 +62,8 @@ public class Game2 implements Listener {
                     player.getInventory().setArmorContents(null);
                     player.setGameMode(GameMode.SPECTATOR);
                 }
-            } else if (!winTeam2) {
+            }
+            if (!winTeam2) {
                 for (Player player:team2) {
                     player.sendTitle(gameManager.formatMessage(player,"events.game-timeout-died.title") ,
                             gameManager.formatMessage(player,"events.game-timeout-died.subtitle"),10, 30,10);
@@ -73,7 +72,8 @@ public class Game2 implements Listener {
                     player.getInventory().setArmorContents(null);
                     player.setGameMode(GameMode.SPECTATOR);
                 }
-            } else if (!winTeam3) {
+            }
+            if (!winTeam3) {
                 for (Player player:team3) {
                     player.sendTitle(gameManager.formatMessage(player,"events.game-timeout-died.title") ,
                             gameManager.formatMessage(player,"events.game-timeout-died.subtitle"),10, 30,10);
@@ -82,7 +82,8 @@ public class Game2 implements Listener {
                     player.getInventory().setArmorContents(null);
                     player.setGameMode(GameMode.SPECTATOR);
                 }
-            } else if (!winTeam4) {
+            }
+            if (!winTeam4) {
                 for (Player player:team4) {
                     player.sendTitle(gameManager.formatMessage(player,"events.game-timeout-died.title") ,
                             gameManager.formatMessage(player,"events.game-timeout-died.subtitle"),10, 30,10);
@@ -98,16 +99,16 @@ public class Game2 implements Listener {
     }
 
     private static void generateTeams() {
-        Collections.shuffle(playerList);
-        for (int i = 0;(playerList.size() / 2) > i;i++) {
-            UUID uuid = playerList.get(i);
+        Collections.shuffle(gameManager.getAllPlayers());
+        for (int i = 0;(gameManager.getAllPlayers().size() / 2) > i;i++) {
+            UUID uuid = gameManager.getAllPlayers().get(i);
             Player player = Bukkit.getPlayer(uuid);
             team1.add(player);
             player.getInventory().setArmorContents(getArmour(Color.RED));
             player.teleport(Objects.requireNonNull(plugin.getConfig().getLocation("Game2.spawn_red")));
         }
-        for (int i = team1.size();playerList.size() > i;i++) {
-            UUID uuid = playerList.get(i);
+        for (int i = team1.size();gameManager.getAllPlayers().size() > i;i++) {
+            UUID uuid = gameManager.getAllPlayers().get(i);
             Player player = Bukkit.getPlayer(uuid);
             team2.add(player);
             player.getInventory().setArmorContents(getArmour(Color.BLUE));
@@ -159,8 +160,18 @@ public class Game2 implements Listener {
     }
 
     private static void checkGameComplete() {
-        if ((winTeam1?1:0) + (winTeam2?1:0) + (winTeam3?1:0) + (winTeam4?1:0) == 3) {
-            endGame2();
+        if ((team1.size() > 0?1:0) + (team2.size() > 0?1:0) + (team3.size() > 0?1:0) + (team4.size() > 0?1:0) == 4) {
+            if ((winTeam1?1:0) + (winTeam2?1:0) + (winTeam3?1:0) + (winTeam4?1:0) == 3) {
+                endGame2();
+            }
+        } else if ((team1.size() > 0?1:0) + (team2.size() > 0?1:0) + (team3.size() > 0?1:0) + (team4.size() > 0?1:0) == 3) {
+            if ((winTeam1?1:0) + (winTeam2?1:0) + (winTeam3?1:0) + (winTeam4?1:0) == 2) {
+                endGame2();
+            }
+        } else if ((team1.size() > 0?1:0) + (team2.size() > 0?1:0) + (team3.size() > 0?1:0) + (team4.size() > 0?1:0) == 2) {
+            if ((winTeam1?1:0) + (winTeam2?1:0) + (winTeam3?1:0) + (winTeam4?1:0) == 1) {
+                endGame2();
+            }
         }
     }
 

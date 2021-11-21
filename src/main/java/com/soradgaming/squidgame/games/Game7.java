@@ -21,14 +21,12 @@ import java.util.*;
 
 public class Game7 implements Listener {
     private static final SquidGame plugin = SquidGame.plugin;
-    private static ArrayList<UUID> playerList;
     private static boolean Started = false;
 
-    public static void startGame7(ArrayList<UUID> input) {
-        playerList = input;
+    public static void startGame7() {
         Started = true;
         gameManager.onExplainStart("seventh");
-        for (UUID uuid:playerList) {
+        for (UUID uuid:gameManager.getAllPlayers()) {
             Player player = Bukkit.getPlayer(uuid);
             player.teleport(plugin.getConfig().getLocation("Game7.spawn"));
         }
@@ -59,8 +57,9 @@ public class Game7 implements Listener {
                 Player player = Bukkit.getPlayer(uuid);
                 player.getInventory().clear();
                 player.getInventory().setArmorContents(null);
+                playerManager.gameStarted = false;
                 playerManager.playerLeave(player);
-                player.sendMessage("Game Done");
+                player.sendTitle(gameManager.formatMessage(player,"events.finish.winner.title"),gameManager.formatMessage(player,"events.finish.winner.subtitle"),10,30,10);
             }
         }
 
@@ -85,11 +84,12 @@ public class Game7 implements Listener {
         }
     }
 
+    //TODO Override Death
     @EventHandler
     public void onPlayerDeath(final PlayerDeathEvent e) {
         final Player player = e.getEntity();
 
-        if (Started && playerList.contains(player.getUniqueId()) && !player.getGameMode().equals(GameMode.SPECTATOR)) {
+        if (Started && gameManager.getAllPlayers().contains(player.getUniqueId()) && !player.getGameMode().equals(GameMode.SPECTATOR)) {
             if (player.getKiller() != null) {
                 plugin.data.set(player.getKiller().getUniqueId() + ".kills", plugin.data.getInt(player.getKiller().getUniqueId() + ".kills") + 1);
             }
@@ -116,6 +116,10 @@ public class Game7 implements Listener {
         list.add(chest);
         list.add(helmet);
         return list.toArray(new ItemStack[0]);
+    }
+
+    public static boolean isStarted() {
+        return Started;
     }
 
 }
