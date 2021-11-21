@@ -99,16 +99,16 @@ public class Game2 implements Listener {
     }
 
     private static void generateTeams() {
-        Collections.shuffle(gameManager.getAllPlayers());
-        for (int i = 0;(gameManager.getAllPlayers().size() / 2) > i;i++) {
-            UUID uuid = gameManager.getAllPlayers().get(i);
+        Collections.shuffle(gameManager.getAlivePlayers());
+        for (int i = 0;(gameManager.getAlivePlayers().size() / 2) > i;i++) {
+            UUID uuid = gameManager.getAlivePlayers().get(i);
             Player player = Bukkit.getPlayer(uuid);
             team1.add(player);
             player.getInventory().setArmorContents(getArmour(Color.RED));
             player.teleport(Objects.requireNonNull(plugin.getConfig().getLocation("Game2.spawn_red")));
         }
-        for (int i = team1.size();gameManager.getAllPlayers().size() > i;i++) {
-            UUID uuid = gameManager.getAllPlayers().get(i);
+        for (int i = team1.size();gameManager.getAlivePlayers().size() > i;i++) {
+            UUID uuid = gameManager.getAlivePlayers().get(i);
             Player player = Bukkit.getPlayer(uuid);
             team2.add(player);
             player.getInventory().setArmorContents(getArmour(Color.BLUE));

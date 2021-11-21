@@ -22,6 +22,7 @@ import java.util.*;
 public class Game7 implements Listener {
     private static final SquidGame plugin = SquidGame.plugin;
     private static boolean Started = false;
+    private static ArrayList<UUID> playersList = new ArrayList<>();
 
     public static void startGame7() {
         Started = true;
@@ -53,7 +54,8 @@ public class Game7 implements Listener {
                 String command = PlaceholderAPI.setPlaceholders(Bukkit.getPlayer(UUID.fromString(Objects.requireNonNull(plugin.data.getString("winner")))), cmd);
                 Bukkit.getServer().dispatchCommand(Bukkit.getPlayer(UUID.fromString(Objects.requireNonNull(plugin.data.getString("winner")))),command);
             }
-            for (UUID uuid: gameManager.getAllPlayers()) {
+            playersList = gameManager.getAllPlayers();
+            for (UUID uuid: playersList) {
                 Player player = Bukkit.getPlayer(uuid);
                 player.getInventory().clear();
                 player.getInventory().setArmorContents(null);

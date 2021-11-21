@@ -44,9 +44,9 @@ public class Game4 implements Listener {
             Random random = new Random();
             boolean isFirstFake = random.nextBoolean();
             if (isFirstFake) {
-                Bukkit.getPlayer(uuid).teleport(plugin.getConfig().getLocation("spawn_red"));
+                Bukkit.getPlayer(uuid).teleport(plugin.getConfig().getLocation("Game4.spawn_red"));
             } else {
-                Bukkit.getPlayer(uuid).teleport(plugin.getConfig().getLocation("spawn_blue"));
+                Bukkit.getPlayer(uuid).teleport(plugin.getConfig().getLocation("Game4.spawn_blue"));
             }
         }
         gameManager.onExplainStart("fourth");
@@ -117,11 +117,13 @@ public class Game4 implements Listener {
         if (!player.getGameMode().equals(GameMode.SPECTATOR) && Started && gameManager.getAllPlayers().contains(player.getUniqueId())) {
             if (team1.contains(player.getUniqueId())) {
                 team1.remove(player.getUniqueId());
+                player.setGameMode(GameMode.SPECTATOR);
+                player.teleport(plugin.getConfig().getLocation("Game4.spawn_red"));
             } else {
                 team2.remove(player.getUniqueId());
+                player.setGameMode(GameMode.SPECTATOR);
+                player.teleport(plugin.getConfig().getLocation("Game4.spawn_blue"));
             }
-            player.setGameMode(GameMode.SPECTATOR);
-            player.teleport(plugin.getConfig().getLocation("Game6.spawn"));
             gameManager.killPlayer(player);
         }
     }

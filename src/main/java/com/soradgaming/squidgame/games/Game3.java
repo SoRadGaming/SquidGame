@@ -86,8 +86,8 @@ public class Game3 implements Listener {
         }
     }
 
-    public static void onPlayerDeathKilled(Player player) {
-        if (Started && gameManager.getAllPlayers().contains(player.getUniqueId()) && !player.getGameMode().equals(GameMode.SPECTATOR)) {
+    public static void onPlayerDeathKilledOLD(Player player) {
+        if (gameManager.getAllPlayers().contains(player.getUniqueId()) && !player.getGameMode().equals(GameMode.SPECTATOR)) {
             if (player.getKiller() != null) {
                 plugin.data.set(player.getKiller().getUniqueId() + ".kills", plugin.data.getInt(player.getKiller().getUniqueId() + ".kills") + 1);
             }
@@ -99,6 +99,14 @@ public class Game3 implements Listener {
                 player.setGameMode(GameMode.SPECTATOR);
                 player.teleport(plugin.getConfig().getLocation("Lobby"));
             }
+        }
+    }
+
+    public static void onPlayerDeathKilled(Player player) {
+        if (!player.getGameMode().equals(GameMode.SPECTATOR) && Started && gameManager.getAllPlayers().contains(player.getUniqueId())) {
+            player.setGameMode(GameMode.SPECTATOR);
+            player.teleport(plugin.getConfig().getLocation("Lobby"));
+            gameManager.killPlayer(player);
         }
     }
 

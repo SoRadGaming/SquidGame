@@ -1,10 +1,8 @@
 package com.soradgaming.squidgame.listeners;
 
-import com.soradgaming.squidgame.games.Game3;
-import com.soradgaming.squidgame.games.Game4;
-import com.soradgaming.squidgame.games.Game6;
-import com.soradgaming.squidgame.games.Game7;
+import com.soradgaming.squidgame.games.*;
 import com.soradgaming.squidgame.utils.gameManager;
+import com.soradgaming.squidgame.utils.playerManager;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -26,27 +24,47 @@ public class EntityDamageListener implements Listener {
                                 ||Game4.getTeam2().contains(e.getEntity().getUniqueId()) && Game4.getTeam1().contains(player.getUniqueId()) ) {
                             e.setCancelled(true);
                         }
-                    } else if (Game3.isStarted()) {
-                        Game3.onPlayerDeathKilled(player);
-                    } else if (Game7.isStarted()) {
-                        Game7.onPlayerDeath(player);
-                    } else {
+                    }
+                    if (Game4.isStarted()) {
+                        player.setHealth(20);
+                        e.setCancelled(true);
+                        return;
+                    }  else if (Game6.isStarted()) {
+                        player.setHealth(20);
+                        e.setCancelled(true);
+                        return;
+                    }  else if (Game1.isStarted()) {
+                        player.setHealth(20);
+                        e.setCancelled(true);
+                        return;
+                    }  else {
                         e.setCancelled(true);
                     }
-
                 }
-                if (e.getCause() == DamageCause.FALL && (Game4.isStarted()|| Game6.isStarted())) {
-                    if (Game4.isStarted()) {
-                        Game4.onPlayerDeathFall(player);
-                    } else if (Game6.isStarted()) {
-                        Game6.onPlayerDeathFall(player);
-                    }
-                    e.setCancelled(true);
-                }
-                if (!e.isCancelled() && player.getHealth() - e.getDamage() <= 0) {
+                if (player.getHealth() - e.getDamage() <= 0) {
                     //player dies
-                    gameManager.killPlayer(player);
-                    e.setCancelled(true);
+                    if (e.getCause() == DamageCause.ENTITY_ATTACK && !gameManager.isPvPAllowed()) {
+                        if (Game3.isStarted()) {
+                            Game3.onPlayerDeathKilled(player);
+                            e.setCancelled(true);
+                            return;
+                        } else if (Game7.isStarted()) {
+                            Game7.onPlayerDeath(player);
+                            e.setCancelled(true);
+                            return;
+                        }
+                    }
+                    if (e.getCause() == DamageCause.FALL && (Game4.isStarted()|| Game6.isStarted())) {
+                        if (Game4.isStarted()) {
+                            Game4.onPlayerDeathFall(player);
+                            e.setCancelled(true);
+                            return;
+                        } else if (Game6.isStarted()) {
+                            Game6.onPlayerDeathFall(player);
+                            e.setCancelled(true);
+                            return;
+                        }
+                    }
                 }
             }
         }

@@ -34,6 +34,7 @@ public class Game6 implements Listener {
     private static Cuboid barrierZone;
     private static ArrayList<Block> fakeBlocks;
     private static ArrayList<Cuboid> fakeCuboids;
+    private static ArrayList<UUID> playersList = new ArrayList<>();
 
     public static void startGame6() {
         Started = true;
@@ -76,13 +77,14 @@ public class Game6 implements Listener {
         if (Started) {
             bossBar.removeAll();
             bossBar.setVisible(false);
+            playersList = gameManager.getAlivePlayers();
             gameManager.broadcastTitle("events.game-timeout.title", "events.game-timeout.subtitle", 5);
             Started = false;
             gameManager.setPvPAllowed(false);
-            for (UUID value : gameManager.getAlivePlayers()) {
+            for (UUID value : playersList) {
                 Player player = Bukkit.getPlayer(value);
                 Location location = Objects.requireNonNull(player).getLocation();
-                if (!getGoalZone().contains(location)) { //Player didn't make it to end in time
+                if (!getGoalZone().isBetween(location)) { //Player didn't make it to end in time
                     if (plugin.getConfig().getBoolean("eliminate-players")) {
                         player.setGameMode(GameMode.SPECTATOR);
                         player.teleport(plugin.getConfig().getLocation("Game6.spawn"));
@@ -132,14 +134,9 @@ public class Game6 implements Listener {
 
     public static void onPlayerDeathFall(Player player) {
         if (!player.getGameMode().equals(GameMode.SPECTATOR) && Started && gameManager.getAllPlayers().contains(player.getUniqueId())) {
-            if (plugin.getConfig().getBoolean("eliminate-players")) {
-                player.setGameMode(GameMode.SPECTATOR);
-                player.teleport(plugin.getConfig().getLocation("Game6.spawn"));
-                gameManager.killPlayer(player);
-            } else {
-                player.setGameMode(GameMode.SPECTATOR);
-                player.teleport(plugin.getConfig().getLocation("Game6.spawn"));
-            }
+            player.setGameMode(GameMode.SPECTATOR);
+            player.teleport(plugin.getConfig().getLocation("Game6.spawn"));
+            gameManager.killPlayer(player);
         }
     }
 

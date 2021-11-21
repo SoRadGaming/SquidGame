@@ -362,6 +362,30 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
         return contains(location.getBlockX(),location.getBlockY(),location.getBlockZ());
     }
 
+    public boolean isBetween(final double xP, final double zP) {
+        double x1 = this.x1;
+        double z1 = this.z1;
+
+        double x2 = this.x2;
+        double z2 = this.z2;
+
+        return ((x1 < xP && xP < x2) || (x1 > xP && xP > x2)) && ((z1 < zP && zP < z2) || (z1 > zP && zP > z2));
+    }
+
+    public boolean isBetween(final Location target) {
+        double xP = target.getX();
+        double zP = target.getZ();
+
+        return this.isBetween(xP, zP);
+    }
+
+    public boolean isBetween(final Block target) {
+        double xP = target.getX();
+        double zP = target.getZ();
+
+        return this.isBetween(xP, zP);
+    }
+
     /**
      * Get the volume of this Cuboid.
      *

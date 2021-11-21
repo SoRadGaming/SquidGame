@@ -38,6 +38,7 @@ public class Game1 implements Listener {
     private static Cuboid goalZone;
     private static Cuboid barrierZone;
     private static Cuboid head;
+    private static ArrayList<UUID> playersList = new ArrayList<>();
 
     public static void startGame1() {
         Started = true;
@@ -88,14 +89,15 @@ public class Game1 implements Listener {
         if (Started) {
             bossBar.removeAll();
             bossBar.setVisible(false);
+            playersList = gameManager.getAlivePlayers();
             gameManager.broadcastTitle("events.game-timeout.title", "events.game-timeout.subtitle", 5);
             Started = false;
             canWalk = false;
             gameManager.setPvPAllowed(false);
-            for (UUID value : gameManager.getAlivePlayers()) {
+            for (UUID value : playersList) {
                 Player player = Bukkit.getPlayer(value);
                 Location location = Objects.requireNonNull(player).getLocation();
-                if (!getGoalZone().contains(location)) { //Player didn't make it to end in time
+                if (!getGoalZone().isBetween(location)) { //Player didn't make it to end in time
                     if (plugin.getConfig().getBoolean("eliminate-players")) {
                         player.setGameMode(GameMode.SPECTATOR);
                         player.teleport(plugin.getConfig().getLocation("Game1.spawn"));
@@ -122,6 +124,10 @@ public class Game1 implements Listener {
         }
     }
 
+    public static boolean isStarted() {
+        return Started;
+    }
+
     @EventHandler(ignoreCancelled = true)
     private void PlayerMoveEvent(@NotNull PlayerMoveEvent e) {
         if (e.getFrom().distance(Objects.requireNonNull(e.getTo())) <= 0.015) {
@@ -130,11 +136,10 @@ public class Game1 implements Listener {
             return;
         }
         Player player = e.getPlayer();
-        plugin.data.set(player.getUniqueId() + ".points", plugin.data.getInt(player.getUniqueId() + ".points") + 1);
         if (Started && gameManager.getAlivePlayers().contains(player.getUniqueId())) {
             if (!canWalk) {
                 final Location location = e.getPlayer().getLocation();
-                if (getKillZone().contains(location)) {
+                if (getKillZone().isBetween(location)) {
                     if (plugin.getConfig().getBoolean("eliminate-players")) {
                         player.setGameMode(GameMode.SPECTATOR);
                         player.teleport(plugin.getConfig().getLocation("Game1.spawn"));
