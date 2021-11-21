@@ -31,9 +31,9 @@ public class Game7 implements Listener {
             Player player = Bukkit.getPlayer(uuid);
             player.teleport(plugin.getConfig().getLocation("Game7.spawn"));
         }
-        gameManager.setPvPAllowed(true);
         // With BukkitScheduler
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            gameManager.setPvPAllowed(true);
             //Repeat Till all players dead
             Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
                 if (gameManager.getAlivePlayers().size() == 1) {
@@ -48,14 +48,14 @@ public class Game7 implements Listener {
         if (Started) {
             gameManager.setPvPAllowed(false);
             Started = false;
+            playersList = gameManager.getAllPlayers();
             //WIN Commands
             List<String> commands =  plugin.getConfig().getStringList("rewards");
             for (String cmd:commands) {
                 String command = PlaceholderAPI.setPlaceholders(Bukkit.getPlayer(UUID.fromString(Objects.requireNonNull(plugin.data.getString("winner")))), cmd);
                 Bukkit.getServer().dispatchCommand(Bukkit.getPlayer(UUID.fromString(Objects.requireNonNull(plugin.data.getString("winner")))),command);
             }
-            playersList = gameManager.getAllPlayers();
-            for (UUID uuid: playersList) {
+            for (UUID uuid: playersList) { //TODO FIX java.util.ConcurrentModificationException: null
                 Player player = Bukkit.getPlayer(uuid);
                 player.getInventory().clear();
                 player.getInventory().setArmorContents(null);

@@ -85,6 +85,7 @@ public final class SquidGame extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(new BlockPlaceListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new EntityDamageListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new FoodLevelChangeListener(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new InventoryClickListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerDropEvent(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerInteractListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);

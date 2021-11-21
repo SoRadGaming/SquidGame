@@ -6,9 +6,11 @@ import org.bukkit.*;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -98,6 +100,31 @@ public class Game3 implements Listener {
             } else {
                 player.setGameMode(GameMode.SPECTATOR);
                 player.teleport(plugin.getConfig().getLocation("Lobby"));
+            }
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    private void onEntityDamage(final EntityDamageEvent e) {
+        final Entity entity = e.getEntity();
+        if (entity instanceof Player) {
+            final Player player = ((Player) entity).getPlayer();
+            if (player != null && gameManager.getAllPlayers().contains(player.getUniqueId())) {
+                if (player.getHealth() - e.getDamage() <= 0) {
+                    //player dies
+                    if (e.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK && !gameManager.isPvPAllowed()) {
+                        if (Started) {
+                            e.setDamage(0);
+                            e.setCancelled(true);
+                        }
+                    } else if (e.getCause() == EntityDamageEvent.DamageCause.FALL && !gameManager.isPvPAllowed()) {
+                        if (Started) {
+                            e.setDamage(0);
+                            onPlayerDeathKilled(player);
+                            e.setCancelled(true);
+                        }
+                    }
+                }
             }
         }
     }

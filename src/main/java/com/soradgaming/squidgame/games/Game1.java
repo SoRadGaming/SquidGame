@@ -8,9 +8,11 @@ import org.bukkit.block.Block;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.util.BlockVector;
@@ -126,6 +128,19 @@ public class Game1 implements Listener {
 
     public static boolean isStarted() {
         return Started;
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    private void onEntityDamage(final EntityDamageEvent e) {
+        final Entity entity = e.getEntity();
+        if (entity instanceof Player) {
+            final Player player = ((Player) entity).getPlayer();
+            if (player != null && gameManager.getAllPlayers().contains(player.getUniqueId())) {
+                if (Started) {
+                    e.setDamage(0);
+                }
+            }
+        }
     }
 
     @EventHandler(ignoreCancelled = true)

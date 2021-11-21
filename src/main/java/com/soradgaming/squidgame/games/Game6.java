@@ -10,9 +10,11 @@ import org.bukkit.block.Block;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.scheduler.BukkitScheduler;
@@ -108,6 +110,27 @@ public class Game6 implements Listener {
                 }
             }, 40L);
             Bukkit.getScheduler().runTaskLater(plugin, () -> gameManager.intermission(Games.Game7), 20L * plugin.getConfig().getInt("endgame-time"));
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    private void onEntityDamage(final EntityDamageEvent e) {
+        final Entity entity = e.getEntity();
+        if (entity instanceof Player) {
+            final Player player = ((Player) entity).getPlayer();
+            if (player != null && gameManager.getAllPlayers().contains(player.getUniqueId())) {
+                if (Started) {
+                    //player dies
+                    if (e.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK && !gameManager.isPvPAllowed()) {
+                        e.setDamage(0);
+                        e.setCancelled(true);
+                    } else if (e.getCause() == EntityDamageEvent.DamageCause.FALL && !gameManager.isPvPAllowed()) {
+                        e.setDamage(0);
+                        onPlayerDeathFall(player);
+                        e.setCancelled(true);
+                    }
+                }
+            }
         }
     }
 

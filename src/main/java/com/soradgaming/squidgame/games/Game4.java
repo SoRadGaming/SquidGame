@@ -6,9 +6,11 @@ import com.soradgaming.squidgame.utils.gameManager;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
@@ -110,6 +112,19 @@ public class Game4 implements Listener {
                 player.sendTitle(gameManager.formatMessage(player,"events.game-pass.title") , gameManager.formatMessage(player,"events.game-pass.subtitle"),10, 30,10);
             }
             Bukkit.getScheduler().runTaskLater(plugin, () -> gameManager.intermission(Games.Game6), 20L * plugin.getConfig().getInt("endgame-time"));
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    private void onEntityDamage(final EntityDamageEvent e) {
+        final Entity entity = e.getEntity();
+        if (entity instanceof Player) {
+            final Player player = ((Player) entity).getPlayer();
+            if (player != null && gameManager.getAllPlayers().contains(player.getUniqueId())) {
+                if (Started) {
+                    e.setDamage(0);
+                }
+            }
         }
     }
 
