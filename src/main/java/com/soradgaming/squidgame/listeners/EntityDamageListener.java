@@ -3,6 +3,7 @@ package com.soradgaming.squidgame.listeners;
 import com.soradgaming.squidgame.games.Game3;
 import com.soradgaming.squidgame.games.Game4;
 import com.soradgaming.squidgame.games.Game6;
+import com.soradgaming.squidgame.games.Game7;
 import com.soradgaming.squidgame.utils.gameManager;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Entity;
@@ -27,6 +28,8 @@ public class EntityDamageListener implements Listener {
                         }
                     } else if (Game3.isStarted()) {
                         Game3.onPlayerDeathKilled(player);
+                    } else if (Game7.isStarted()) {
+                        Game7.onPlayerDeath(player);
                     } else {
                         e.setCancelled(true);
                     }

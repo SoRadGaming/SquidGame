@@ -51,7 +51,7 @@ public class Game4 implements Listener {
             }
             ItemStack stickItem =  new ItemStack(Material.STICK);
             stickItem.addUnsafeEnchantment(Enchantment.KNOCKBACK, 3);
-            for (UUID uuid:gameManager.getAllPlayers()) {
+            for (UUID uuid:gameManager.getAlivePlayers()) {
                 Player player = Bukkit.getPlayer(uuid);
                 player.getInventory().setItemInMainHand(stickItem);
             }
@@ -119,17 +119,17 @@ public class Game4 implements Listener {
         Scoreboard board = manager.getNewScoreboard();
         team1RedBukkit = board.registerNewTeam("Red Team");
         team2BlueBukkit = board.registerNewTeam("Blue Team");
-        Collections.shuffle(gameManager.getAllPlayers());
-        for (int i = 0;(gameManager.getAllPlayers().size() / 2) > i;i++) {
-            UUID uuid = gameManager.getAllPlayers().get(i);
+        Collections.shuffle(gameManager.getAlivePlayers());
+        for (int i = 0;(gameManager.getAlivePlayers().size() / 2) > i;i++) {
+            UUID uuid = gameManager.getAlivePlayers().get(i);
             Player player = Bukkit.getPlayer(uuid);
             team1.add(uuid);
             team1RedBukkit.addEntry(player.getName());
             player.getInventory().setArmorContents(getArmour(Color.RED));
             player.teleport(Objects.requireNonNull(plugin.getConfig().getLocation("Game4.spawn_red")));
         }
-        for (int i = team1.size();gameManager.getAllPlayers().size() > i;i++) {
-            UUID uuid = gameManager.getAllPlayers().get(i);
+        for (int i = team1.size();gameManager.getAlivePlayers().size() > i;i++) {
+            UUID uuid = gameManager.getAlivePlayers().get(i);
             Player player = Bukkit.getPlayer(uuid);
             team2.add(uuid);
             team2BlueBukkit.addEntry(player.getName());

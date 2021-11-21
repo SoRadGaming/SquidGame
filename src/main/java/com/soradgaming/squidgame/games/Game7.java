@@ -84,22 +84,18 @@ public class Game7 implements Listener {
         }
     }
 
-    //TODO Override Death
-    @EventHandler
-    public void onPlayerDeath(final PlayerDeathEvent e) {
-        final Player player = e.getEntity();
-
+    public static void onPlayerDeath(Player player) {
         if (Started && gameManager.getAllPlayers().contains(player.getUniqueId()) && !player.getGameMode().equals(GameMode.SPECTATOR)) {
             if (player.getKiller() != null) {
                 plugin.data.set(player.getKiller().getUniqueId() + ".kills", plugin.data.getInt(player.getKiller().getUniqueId() + ".kills") + 1);
             }
             if (plugin.getConfig().getBoolean("eliminate-players")) {
                 player.setGameMode(GameMode.SPECTATOR);
-                player.teleport(plugin.getConfig().getLocation("Lobby"));
+                player.teleport(plugin.getConfig().getLocation("Game7.spawn"));
                 gameManager.killPlayer(player);
             } else {
                 player.setGameMode(GameMode.SPECTATOR);
-                player.teleport(plugin.getConfig().getLocation("Lobby"));
+                player.teleport(plugin.getConfig().getLocation("Game7.spawn"));
             }
         }
     }

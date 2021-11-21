@@ -55,7 +55,7 @@ public class Game3 implements Listener {
             gameTimer.runTaskLater(plugin, Game3::endGame3, 20L * (plugin.getConfig().getInt("Game3.timer") + 1));
             bossBarProgress.runTaskTimer(plugin, Game3::bossBarProgress, 20L, 20L);
             //START
-            for (UUID uuid:gameManager.getAllPlayers()) {
+            for (UUID uuid:gameManager.getAlivePlayers()) {
                 Player player = Bukkit.getPlayer(uuid);
                 player.getInventory().setItemInMainHand(new ItemStack(Material.WOODEN_SWORD));
             }

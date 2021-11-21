@@ -43,7 +43,7 @@ public class Game6 implements Listener {
         bossBar = Bukkit.createBossBar(ChatColor.BOLD + "Game Timer : " + ChatColor.GOLD + minutes + ":" + ChatColor.GOLD + seconds , BarColor.BLUE, BarStyle.SOLID);
         bossBar.setVisible(true);
         bossBar.setProgress(0);
-        Generator.generateTiles(Material.valueOf(plugin.getConfig().getString("Game6.material")), gameManager.getAllPlayers().size());
+        Generator.generateTiles(Material.valueOf(plugin.getConfig().getString("Game6.material")), gameManager.getAlivePlayers().size());
         for (Block block : getBarrier().getBlocks()) {
             if (block.getType() == Material.AIR) {
                 block.setType(Material.BARRIER);
