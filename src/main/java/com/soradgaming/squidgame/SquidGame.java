@@ -20,6 +20,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileVisitor;
+import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -28,7 +31,7 @@ public final class SquidGame extends JavaPlugin {
     public File schematics = new File(getDataFolder() + "/schematics");
     public File dataFile = new File(getDataFolder() + "/data/players.yml");
     public File messageFile = new File(getDataFolder(), "messages.yml");
-    public FileConfiguration data = YamlConfiguration.loadConfiguration(dataFile); //IllegalArgumentException
+    public FileConfiguration data = YamlConfiguration.loadConfiguration(dataFile);
     public FileConfiguration messages = YamlConfiguration.loadConfiguration(messageFile);
 
 
@@ -54,7 +57,11 @@ public final class SquidGame extends JavaPlugin {
         //Load Files
         loadFile();
         loadMessage();
-        createSchematicsDir();
+        try {
+            createSchematicsDir();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         //Config
         registerConfig();
@@ -111,7 +118,6 @@ public final class SquidGame extends JavaPlugin {
         }
     }
 
-    //Save the data file.
     public void saveMessages() {
         try {
             messages.save(messageFile);
@@ -144,36 +150,29 @@ public final class SquidGame extends JavaPlugin {
         }
     }
 
-    //Load the data file
-    public void createSchematicsDir() {
-        if(!schematics.exists())
+    public void createSchematicsDir() throws IOException {
+        if(!schematics.exists()) {
             schematics.mkdir();
+        }
     }
 
     //Load the Message
     public void loadMessage() {
-        if (messageFile.exists()) {
-            try {
-                messages.load(messageFile);
-            } catch (IOException | InvalidConfigurationException e) {
+        if (!messageFile.exists()) {
+            messageFile.getParentFile().mkdirs();
+            saveResource("messages.yml", false);
+        }
+        messages = new YamlConfiguration();
+        try {
+            messages.load(messageFile);
 
-                e.printStackTrace();
-            }
-        } else {
-            try {
-                messages.save(messageFile);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        } catch (IOException | InvalidConfigurationException e) {
+
+            e.printStackTrace();
         }
     }
 
     public void reloadMessages() {
-        if (messageFile == null) {
-            messageFile = new File(getDataFolder(), "messages.yml");
-        }
-        messages = YamlConfiguration.loadConfiguration(messageFile);
-
         // Look for defaults in the jar
         Reader defConfigStream = new InputStreamReader(Objects.requireNonNull(this.getResource("messages.yml")), StandardCharsets.UTF_8);
         YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);

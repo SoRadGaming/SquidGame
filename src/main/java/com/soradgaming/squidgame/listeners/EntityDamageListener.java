@@ -24,31 +24,14 @@ public class EntityDamageListener implements Listener {
                                 ||Game4.getTeam2().contains(e.getEntity().getUniqueId()) && Game4.getTeam1().contains(player.getUniqueId()) ) {
                             e.setCancelled(true);
                         }
-                    }
-                    if (Game4.isStarted()) {
-                        player.setHealth(20);
-                        e.setCancelled(true);
-                        return;
-                    }  else if (Game6.isStarted()) {
-                        player.setHealth(20);
-                        e.setCancelled(true);
-                        return;
-                    }  else if (Game1.isStarted()) {
-                        player.setHealth(20);
-                        e.setCancelled(true);
-                        return;
-                    }  else {
+                    } else {
                         e.setCancelled(true);
                     }
                 }
                 if (player.getHealth() - e.getDamage() <= 0) {
                     //player dies
                     if (e.getCause() == DamageCause.ENTITY_ATTACK && !gameManager.isPvPAllowed()) {
-                        if (Game3.isStarted()) {
-                            Game3.onPlayerDeathKilled(player);
-                            e.setCancelled(true);
-                            return;
-                        } else if (Game7.isStarted()) {
+                        if (Game7.isStarted()) {
                             Game7.onPlayerDeath(player);
                             e.setCancelled(true);
                             return;

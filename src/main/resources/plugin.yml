@@ -3,7 +3,7 @@ version: '${version}'
 main: com.soradgaming.squidgame.SquidGame
 api-version: 1.17
 softdepend: [ PlaceholderAPI, WorldEdit ]
-authors: [ SoRadGaming, Shinx ]
+authors: [ SoRadGaming ]
 description: Squid Game Plugin for the UESL Minecraft Server
 commands:
   squidgame:

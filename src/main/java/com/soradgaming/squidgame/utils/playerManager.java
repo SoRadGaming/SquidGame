@@ -88,10 +88,26 @@ public class playerManager implements Listener {
     }
 
     public static boolean playerLeave(Player player) {
-        if (gameManager.removePlayer(Objects.requireNonNull(player)) || gameManager.revivePlayer(player)) {
-            if (gameManager.revivePlayer(player)) {
-                gameManager.removePlayer(Objects.requireNonNull(player));
+        if (gameManager.removePlayer(Objects.requireNonNull(player))) {
+            plugin.data.set("leave",player.getUniqueId().toString());
+            for (UUID uuid : gameManager.getAllPlayers()) {
+                Objects.requireNonNull(Bukkit.getPlayer(uuid)).sendMessage(gameManager.formatMessage(player,"arena.leave"));
             }
+            //Give Old Stats Back
+            player.teleport(last_location.get(player));
+            player.setGameMode(gamemode.get(player));
+            player.setHealthScale(healthScale.get(player));
+            player.setHealth(health.get(player));
+            player.setLevel(level.get(player));
+            player.setExp(xp.get(player));
+            player.setBedSpawnLocation(bedSpawn.get(player));
+            player.setFoodLevel(foodLevel.get(player));
+            player.getInventory().setContents(playerInv.get(player));
+            player.getInventory().setArmorContents(playerArmour.get(player));
+            player.addPotionEffects(playerEffects.get(player));
+            return true;
+        } else if (gameManager.revivePlayer(player)) {
+            gameManager.removePlayer(Objects.requireNonNull(player));
             plugin.data.set("leave",player.getUniqueId().toString());
             for (UUID uuid : gameManager.getAllPlayers()) {
                 Objects.requireNonNull(Bukkit.getPlayer(uuid)).sendMessage(gameManager.formatMessage(player,"arena.leave"));

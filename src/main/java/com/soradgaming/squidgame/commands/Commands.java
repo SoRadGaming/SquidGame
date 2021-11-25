@@ -35,7 +35,7 @@ public class Commands implements CommandExecutor {
         final Location loc = plot.getLocation();
         if (args.length == 0) {
             sender.sendMessage(ChatColor.BLUE + "=============={" + ChatColor.GREEN + "SquidGame" + ChatColor.BLUE + "}==============");
-            sender.sendMessage(ChatColor.BLUE + "Plugin developed by:" + ChatColor.GREEN + " SoRadGaming & Shinx");
+            sender.sendMessage(ChatColor.BLUE + "Plugin developed by:" + ChatColor.GREEN + " SoRadGaming");
             sender.sendMessage(ChatColor.BLUE + "Version: " + ChatColor.GREEN + String.format("%s", plugin.getDescription().getVersion()));
             sender.sendMessage(ChatColor.BLUE + "Plugin:" + ChatColor.GREEN + " https://github.com/SoRadGaming/SquidGame");
             sender.sendMessage(ChatColor.BLUE + "Do " + ChatColor.GREEN + "/sq help " + ChatColor.BLUE + "for the list of commands!");
@@ -55,7 +55,7 @@ public class Commands implements CommandExecutor {
             sender.sendMessage(ChatColor.GREEN + "/sq start" + ChatColor.BLUE + " Start the Plugin ");
             sender.sendMessage(ChatColor.GREEN + "/sq end" + ChatColor.BLUE + " End MiniGame");
             sender.sendMessage(ChatColor.GREEN + "/sq remove/add/set data player" + ChatColor.BLUE + " Modify Values ");
-            sender.sendMessage(ChatColor.GREEN + "Plugin made by: " + ChatColor.BLUE + "SoRadGaming & Shinx");
+            sender.sendMessage(ChatColor.GREEN + "Plugin made by: " + ChatColor.BLUE + "SoRadGaming");
             sender.sendMessage(ChatColor.BLUE + "---------------------------------------------------");
 
         } else if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {

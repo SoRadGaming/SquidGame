@@ -29,7 +29,10 @@ public class gameManager {
 
     public static ArrayList<UUID> getDeadPlayers() { return playerListDead; }
 
-    public static ArrayList<UUID> getAllPlayers() { return playerListAll; }
+    public static ArrayList<UUID> getAllPlayers() {
+        updateTotal();
+        return playerListAll;
+    }
 
     public static boolean isPvPAllowed() { return pvp; }
 
@@ -71,6 +74,10 @@ public class gameManager {
             playerListAlive.remove(player.getUniqueId());
             updateTotal();
             return true;
+        } else if(playerListDead.contains(player.getUniqueId())) {
+            playerListDead.remove(player.getUniqueId());
+            updateTotal();
+            return true;
         } else {
             return false;
         }
@@ -96,7 +103,10 @@ public class gameManager {
                     Objects.requireNonNull(Bukkit.getPlayer(uuid)).sendMessage(gameManager.formatMessage(player,"arena.death"));
                 }
             }
-            removePlayer(player);
+            if(playerListAlive.contains(player.getUniqueId())) {
+                playerListAlive.remove(player.getUniqueId());
+                return true;
+            }
             updateTotal();
             return true;
         } else {

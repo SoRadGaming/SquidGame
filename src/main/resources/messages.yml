@@ -39,7 +39,7 @@ games:
   first:
     name: "&cRed Light &7| &aGreen Light"
     tutorial:
-      "1": 
+      "1":
         title: "&6&l1"
         subtitle: "&eTo win you must reach the goal"
       "2":
@@ -75,7 +75,7 @@ games:
   third:
     name: "&cBattle"
     tutorial:
-      "1": 
+      "1":
         title: "&6&l1"
         subtitle: "&eIt is enough to survive to win"
       "2":
@@ -141,7 +141,7 @@ games:
       "2":
         title: "&6&l2"
         subtitle: "&eIf a player is out, they will be eliminated"
-      "3": 
+      "3":
         title: "&6&l3"
         subtitle: "&eIf a player dies, they will also be eliminated"
       "4":
