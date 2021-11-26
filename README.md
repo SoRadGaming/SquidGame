@@ -1,9 +1,6 @@
 # Squid Game
 SquidGame plugin for Minecraft
 
-**Bugs**:
-- Game4 End check
-
 **Commands**:
 - /sq
 - /sq help
