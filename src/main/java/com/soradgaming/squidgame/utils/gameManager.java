@@ -46,37 +46,28 @@ public class gameManager {
         playerListAll.clear();
         playerListAll.addAll(playerListAlive);
         playerListAll.addAll(playerListDead);
-        checkEnoughPlayersLeft();
     }
 
     public static void checkEnoughPlayersLeft() {
-        /*
-        if (playerListAlive.size() < 2 && playerManager.gameStarted && !Game7.isStarted()) {
             //End Game as not enough players left
             playerManager.gameStarted = false;
             ArrayList<UUID> players  = playerListAll;
             for (UUID uuid: players) {
                 Player player = Bukkit.getPlayer(uuid);
-                revivePlayer(player);
-                playerManager.playerLeave(player);
+                playerManager.playerQuit(player);
                 player.sendTitle(gameManager.formatMessage(player,"events.finish.draw.title"),gameManager.formatMessage(player,"events.finish.draw.subtitle"),10,30,10);
             }
             playerListAll.clear();
             playerListAlive.clear();
             playerListDead.clear();
-        }
-
-         */
     }
 
     public static synchronized boolean removePlayer(Player player) {
         if(playerListAlive.contains(player.getUniqueId())) {
             playerListAlive.remove(player.getUniqueId());
-            updateTotal();
             return true;
         } else if(playerListDead.contains(player.getUniqueId())) {
             playerListDead.remove(player.getUniqueId());
-            updateTotal();
             return true;
         } else {
             return false;
@@ -84,10 +75,9 @@ public class gameManager {
     }
 
     public static synchronized boolean revivePlayer(Player player) {
-        if(playerListDead.contains(player.getUniqueId())) {
+        if (playerListDead.contains(player.getUniqueId())) {
             playerListDead.remove(player.getUniqueId());
             addPlayer(player);
-            updateTotal();
             return true;
         } else {
             return false;
@@ -98,16 +88,12 @@ public class gameManager {
         if(!playerListDead.contains(player.getUniqueId())) {
             playerListDead.add(player.getUniqueId());
             plugin.data.set("dead",player.getUniqueId().toString());
-            if (!plugin.getConfig().getBoolean("eliminate-players")) {
+            if (plugin.getConfig().getBoolean("eliminate-players")) {
                 for (UUID uuid : gameManager.getAlivePlayers()) {
                     Objects.requireNonNull(Bukkit.getPlayer(uuid)).sendMessage(gameManager.formatMessage(player,"arena.death"));
                 }
             }
-            if(playerListAlive.contains(player.getUniqueId())) {
-                playerListAlive.remove(player.getUniqueId());
-                return true;
-            }
-            updateTotal();
+            playerListAlive.remove(player.getUniqueId());
             return true;
         } else {
             return false;
@@ -117,7 +103,6 @@ public class gameManager {
     public static synchronized boolean addPlayer(@NotNull Player player) {
         if(!playerListAlive.contains(player.getUniqueId())) {
             playerListAlive.add(player.getUniqueId());
-            updateTotal();
             return true;
         } else {
             return false;
@@ -167,6 +152,11 @@ public class gameManager {
     }
 
     public static void intermission(Games games) {
+        if (playerListAlive.size() < 2) {
+            //End Game
+            checkEnoughPlayersLeft();
+            return;
+        }
         if (!games.equals(Games.Game3) && !games.equals(Games.Game1) && !games.equals(Games.Game4)) {
             for (UUID uuid:gameManager.getAllPlayers()) {
                 Player player = Bukkit.getPlayer(uuid);

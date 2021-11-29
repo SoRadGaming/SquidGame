@@ -40,9 +40,10 @@ public class Game1 implements Listener {
     private static Cuboid goalZone;
     private static Cuboid barrierZone;
     private static Cuboid head;
-    private static ArrayList<UUID> playersList = new ArrayList<>();
+    private static ArrayList<UUID> playersList;
 
     public static void startGame1() {
+        playersList = gameManager.getAllPlayers();
         Started = true;
         canWalk = true;
         max = plugin.getConfig().getInt("Game1.lightSwitchMax");
@@ -91,25 +92,26 @@ public class Game1 implements Listener {
         if (Started) {
             bossBar.removeAll();
             bossBar.setVisible(false);
-            playersList = gameManager.getAlivePlayers();
             gameManager.broadcastTitle("events.game-timeout.title", "events.game-timeout.subtitle", 5);
             Started = false;
-            canWalk = false;
+            canWalk = true;
             gameManager.setPvPAllowed(false);
             for (UUID value : playersList) {
                 Player player = Bukkit.getPlayer(value);
                 Location location = Objects.requireNonNull(player).getLocation();
-                if (!getGoalZone().isBetween(location)) { //Player didn't make it to end in time
-                    if (plugin.getConfig().getBoolean("eliminate-players")) {
-                        player.setGameMode(GameMode.SPECTATOR);
-                        player.teleport(plugin.getConfig().getLocation("Game1.spawn"));
-                        gameManager.killPlayer(player);
+                if (!player.getGameMode().equals(GameMode.SPECTATOR)) {
+                    if (!getGoalZone().contains(location)) { //Player didn't make it to end in time
+                        if (plugin.getConfig().getBoolean("eliminate-players")) {
+                            player.setGameMode(GameMode.SPECTATOR);
+                            player.teleport(plugin.getConfig().getLocation("Game1.spawn"));
+                            gameManager.killPlayer(player);
+                        } else {
+                            player.setGameMode(GameMode.SPECTATOR);
+                            player.teleport(plugin.getConfig().getLocation("Game1.spawn"));
+                        }
                     } else {
-                        player.setGameMode(GameMode.SPECTATOR);
-                        player.teleport(plugin.getConfig().getLocation("Game1.spawn"));
+                        plugin.data.set(player.getUniqueId() + ".points", plugin.data.getInt(player.getUniqueId() + ".points") + 1);
                     }
-                } else {
-                    plugin.data.set(player.getUniqueId() + ".points", plugin.data.getInt(player.getUniqueId() + ".points") + 1);
                 }
             }
             Bukkit.getScheduler().runTaskLater(plugin, () -> {
@@ -224,15 +226,5 @@ public class Game1 implements Listener {
             goalZone = new Cuboid(Objects.requireNonNull(world),vector1.getBlockX(),vector1.getBlockY(),vector1.getBlockZ(),vector2.getBlockX(),vector2.getBlockY(),vector2.getBlockZ());
         }
         return goalZone;
-    }
-
-    private static Cuboid getHead() {
-        if (head == null) {
-            BlockVector vector1 = gameManager.configToVectors("Game1.head.first_point");
-            BlockVector vector2 = gameManager.configToVectors("Game1.head.second_point");
-            World world = Bukkit.getWorld(Objects.requireNonNull(plugin.getConfig().getString("Game1.world")));
-            head = new Cuboid(Objects.requireNonNull(world),vector1.getBlockX(),vector1.getBlockY(),vector1.getBlockZ(),vector2.getBlockX(),vector2.getBlockY(),vector2.getBlockZ());
-        }
-        return head;
     }
 }

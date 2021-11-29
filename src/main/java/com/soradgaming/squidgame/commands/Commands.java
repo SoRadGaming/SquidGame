@@ -129,6 +129,7 @@ public class Commands implements CommandExecutor {
         }else if (args.length == 2 && args[0].equalsIgnoreCase("set")) {
             if (args[1].equalsIgnoreCase("lobby")) {
                 plugin.getConfig().set("Lobby",loc);
+                plugin.getConfig().set("Game3.world", loc.getWorld().getName());
                 plugin.saveConfig();
                 sender.sendMessage("Lobby set to "  + loc);
             } else return false;
@@ -149,6 +150,7 @@ public class Commands implements CommandExecutor {
                             case "spawn" -> {
                                 if (args[1].equalsIgnoreCase("game1")) {
                                     plugin.getConfig().set("Game1.spawn", loc);
+                                    plugin.getConfig().set("Game1.world", loc.getWorld().getName());
                                     plugin.saveConfig();
                                     player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eFirst game " + "Spawn" + "&a set to your location &7(" + loc.toVector() + ")"));
                                 }
@@ -177,6 +179,7 @@ public class Commands implements CommandExecutor {
                             case "spawn_red" -> {
                                 if (args[1].equalsIgnoreCase("game2")) {
                                     plugin.getConfig().set("Game2.spawn_red", loc);
+                                    plugin.getConfig().set("Game2.world", loc.getWorld().getName());
                                     plugin.saveConfig();
                                     player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eSecond game " + "spawn_red" + "&a set to your location &7(" + loc.toVector() + ")"));
                                 }
@@ -256,6 +259,7 @@ public class Commands implements CommandExecutor {
                             case "spawn_red" -> {
                                 if (args[1].equalsIgnoreCase("game4")) {
                                     plugin.getConfig().set("Game4.spawn_red", loc);
+                                    plugin.getConfig().set("Game4.world", loc.getWorld().getName());
                                     plugin.saveConfig();
                                     player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eFourth game " + "spawn_red" + "&a set to your location &7(" + loc.toVector() + ")"));
                                 }
@@ -280,6 +284,7 @@ public class Commands implements CommandExecutor {
                             case "spawn" -> {
                                 if (args[1].equalsIgnoreCase("game6")) {
                                     plugin.getConfig().set("Game6.spawn", loc);
+                                    plugin.getConfig().set("Game6.world", loc.getWorld().getName());
                                     plugin.saveConfig();
                                     player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eSixth game " + "Spawn" + "&a set to your location &7(" + loc.toVector() + ")"));
                                 }
@@ -307,6 +312,7 @@ public class Commands implements CommandExecutor {
                         if ("spawn".equals(args[2])) {
                             if (args[1].equalsIgnoreCase("game7")) {
                                 plugin.getConfig().set("Game7.spawn", loc);
+                                plugin.getConfig().set("Game7.world", loc.getWorld().getName());
                                 plugin.saveConfig();
                                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eSeventh game " + "spawn" + "&a set to your location &7(" + loc.toVector() + ")"));
                             }

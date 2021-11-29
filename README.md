@@ -19,7 +19,6 @@ SquidGame plugin for Minecraft
 - first point of schematic must be same as build plate relative to build (not cords but direction)
 - schematic should have no offset
 - schematic should first and second position should be same relative to build plate
-- build plate selection can be 2d (pos1 at base + 1)
 - red = 1 // blue = 2 // green = 3 // yellow = 4
 
 **Glass Selection for Game 6:**

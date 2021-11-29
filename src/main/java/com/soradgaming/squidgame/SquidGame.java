@@ -77,6 +77,10 @@ public final class SquidGame extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+        ArrayList<UUID> playerList = gameManager.getAllPlayers();
+        for (UUID uuid: playerList) {
+            playerManager.playerQuit(Bukkit.getPlayer(uuid));
+        }
         plugin.saveFile();
         plugin.saveMessages();
         getLogger().info("The plugin has been disabled correctly!");
@@ -150,6 +154,7 @@ public final class SquidGame extends JavaPlugin {
         }
     }
 
+    //Create schematic file
     public void createSchematicsDir() throws IOException {
         if(!schematics.exists()) {
             schematics.mkdir();

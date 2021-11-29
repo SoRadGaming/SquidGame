@@ -3,7 +3,7 @@ plugins {
 }
 
 group = 'com.soradgaming'
-version = '1.7.1'
+version = '1.7.5'
 
 repositories {
     mavenCentral()
@@ -31,6 +31,7 @@ repositories {
 
 dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.17.1-R0.1-SNAPSHOT'
+    //compileOnly 'org.spigotmc:spigot-api:1.18-pre8-R0.1-SNAPSHOT'
     compileOnly "org.jetbrains:annotations:22.0.0"
     compileOnly "me.clip:placeholderapi:2.10.10"
     compileOnly "com.sk89q.worldedit:worldedit-bukkit:7.2.0-SNAPSHOT"

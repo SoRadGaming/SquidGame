@@ -50,7 +50,6 @@ public class playerManager implements Listener {
 
     public static boolean playerJoin(Player player) {
         if (gameManager.getAlivePlayers().size() <= plugin.getConfig().getInt("max-players") && gameManager.addPlayer(player) && !gameStarted) {
-            gameManager.revivePlayer(player);
             plugin.data.set("join",player.getUniqueId().toString());
             playerManager.checkStart();
             for (UUID uuid : gameManager.getAllPlayers()) {
@@ -127,6 +126,21 @@ public class playerManager implements Listener {
             return true;
         }
         return false;
+    }
+
+    public static void playerQuit(Player player) {
+        //Give Old Stats Back
+        player.teleport(last_location.get(player));
+        player.setGameMode(gamemode.get(player));
+        player.setHealthScale(healthScale.get(player));
+        player.setHealth(health.get(player));
+        player.setLevel(level.get(player));
+        player.setExp(xp.get(player));
+        player.setBedSpawnLocation(bedSpawn.get(player));
+        player.setFoodLevel(foodLevel.get(player));
+        player.getInventory().setContents(playerInv.get(player));
+        player.getInventory().setArmorContents(playerArmour.get(player));
+        player.addPotionEffects(playerEffects.get(player));
     }
 
     public static boolean checkStart() {

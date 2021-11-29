@@ -3,6 +3,7 @@ package com.soradgaming.squidgame.utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.BlockVector;
@@ -14,6 +15,7 @@ import java.util.Objects;
 public class playerWand {
     private static BlockVector firstPoint;
     private static BlockVector secondPoint;
+    private static World world;
     private static ItemStack wand = null;
 
     public static BlockVector getFirstPoint() {
@@ -24,12 +26,18 @@ public class playerWand {
         return secondPoint;
     }
 
+    public static World getWorld() {
+        return world;
+    }
+
     public static void setFirstPoint(final Location loc) {
         firstPoint = new BlockVector(loc.getX(), loc.getY(), loc.getZ());
+        world = loc.getWorld();
     }
 
     public static void setSecondPoint(final Location loc) {
         secondPoint = new BlockVector(loc.getX(), loc.getY(), loc.getZ());
+        world = loc.getWorld();
     }
 
     public static boolean isComplete() {
