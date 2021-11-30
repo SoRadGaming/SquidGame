@@ -119,5 +119,4 @@ public class Game7 implements Listener {
     public static boolean isStarted() {
         return Started;
     }
-
 }

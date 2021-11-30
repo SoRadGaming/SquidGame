@@ -1,3 +1,4 @@
+Config-Version: 1.0
 min-players: 2
 max-players: 12
 intermission-time: 30
@@ -20,4 +21,3 @@ Game6:
   material: LIGHT_GRAY_STAINED_GLASS
 Game7:
   kill-block: sand
-Config-Version: 1.0

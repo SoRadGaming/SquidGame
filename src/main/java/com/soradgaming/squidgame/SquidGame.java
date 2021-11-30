@@ -7,6 +7,7 @@ import com.soradgaming.squidgame.games.*;
 import com.soradgaming.squidgame.listeners.*;
 import com.soradgaming.squidgame.math.CalculateCuboid;
 import com.soradgaming.squidgame.placeholders.placeholder;
+import com.soradgaming.squidgame.utils.configuration;
 import com.soradgaming.squidgame.utils.gameManager;
 import com.soradgaming.squidgame.utils.playerManager;
 import org.bukkit.Bukkit;
@@ -65,6 +66,9 @@ public final class SquidGame extends JavaPlugin {
 
         //Config
         registerConfig();
+
+        //Check if Config is Up-to-Date
+        configuration.updateConfig();
 
         //bStats
         int pluginId = 13361;

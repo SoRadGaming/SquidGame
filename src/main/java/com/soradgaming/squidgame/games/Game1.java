@@ -227,4 +227,10 @@ public class Game1 implements Listener {
         }
         return goalZone;
     }
+
+    public static void reloadConfig() {
+        killZone = null;
+        barrierZone = null;
+        goalZone = null;
+    }
 }

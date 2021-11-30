@@ -2,6 +2,9 @@ package com.soradgaming.squidgame.commands;
 
 import com.soradgaming.squidgame.SquidGame;
 import com.soradgaming.squidgame.games.Game1;
+import com.soradgaming.squidgame.games.Game2;
+import com.soradgaming.squidgame.games.Game4;
+import com.soradgaming.squidgame.games.Game6;
 import com.soradgaming.squidgame.math.Cuboid;
 import com.soradgaming.squidgame.math.Generator;
 import com.soradgaming.squidgame.math.WorldEditHook;
@@ -63,6 +66,10 @@ public class Commands implements CommandExecutor {
                 plugin.reloadConfig();
                 plugin.reloadMessages();
                 plugin.getLogger().info("Reloaded");
+                Game1.reloadConfig();
+                Game2.reloadConfig();
+                Game4.reloadConfig();
+                Game6.reloadConfig();
                 sender.sendMessage(ChatColor.GREEN + "Reloaded");
             } else {
                 sender.sendMessage(ChatColor.RED + "You don't have permission to do that");
@@ -122,6 +129,8 @@ public class Commands implements CommandExecutor {
         } else if (args.length == 2 && args[0].equalsIgnoreCase("test")) {
             if (sender.isOp()) {
                 //QuickTest
+                Game6.reloadConfig();
+                Generator.generateTiles(Material.valueOf(plugin.getConfig().getString("Game6.material")), Integer.parseInt(args[1]));
             } else {
                 sender.sendMessage(ChatColor.RED + "You don't have permission to do that");
                 return true;

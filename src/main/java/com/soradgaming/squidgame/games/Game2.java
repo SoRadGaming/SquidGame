@@ -258,4 +258,8 @@ public class Game2 implements Listener {
     public static boolean isStarted() {
         return Started;
     }
+
+    public static void reloadConfig() {
+        CalculateCuboid.reloadCuboids();
+    }
 }

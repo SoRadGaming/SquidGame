@@ -15,7 +15,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.util.BlockVector;
@@ -220,5 +219,13 @@ public class Game6 implements Listener {
 
     public static boolean isStarted() {
         return Started;
+    }
+
+    public static void reloadConfig() {
+        fakeBlocks = null;
+        fakeCuboids = null;
+        barrierZone = null;
+        glassZone = null;
+        goalZone = null;
     }
 }

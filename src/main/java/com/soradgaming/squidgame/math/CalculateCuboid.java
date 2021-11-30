@@ -213,4 +213,15 @@ public class CalculateCuboid {
         }
         return null;
     }
+
+    public static void reloadCuboids() {
+        BuildZone1 = null;
+        BuildZone2 = null;
+        BuildZone3 = null;
+        BuildZone4 = null;
+        DisplayZone1 = null;
+        DisplayZone2 = null;
+        DisplayZone3 = null;
+        DisplayZone4 = null;
+    }
 }

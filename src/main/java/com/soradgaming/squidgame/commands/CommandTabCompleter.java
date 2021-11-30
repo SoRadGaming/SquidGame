@@ -27,12 +27,16 @@ public class CommandTabCompleter implements TabCompleter {
                     completions = new ArrayList<>(Arrays.asList("lobby", "game1", "game2", "game4", "game5", "game6", "game7"));
                     completions = getApplicableTabCompletes(args[1], completions);
                 } else if (args[0].equals("test")) {
+                    /*
                     File folder = new File("plugins/SquidGame/schematics/");
                     File[] listOfFiles = folder.listFiles();
                     completions = new ArrayList<>();
                     for (File listOfFile : listOfFiles) {
                         completions.add(listOfFile.getName());
                     }
+                    completions = getApplicableTabCompletes(args[1], completions);
+                     */
+                    completions = new ArrayList<>(List.of("FakePlatformNumber"));
                     completions = getApplicableTabCompletes(args[1], completions);
                 } else {
                     return null;

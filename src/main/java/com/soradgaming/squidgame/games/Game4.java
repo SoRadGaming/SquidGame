@@ -223,4 +223,8 @@ public class Game4 implements Listener {
     public static boolean isStarted() {
         return Started;
     }
+
+    public static void reloadConfig() {
+        barrierZone = null;
+    }
 }

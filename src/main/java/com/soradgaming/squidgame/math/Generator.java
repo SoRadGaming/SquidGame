@@ -144,20 +144,20 @@ public class Generator {
         Vector lFirstBlock = first;
         Cuboid cuboidInfile = new Cuboid(world,lFirstBlock, lFirstBlock);
         leftBlocks.add(cuboidInfile);
-        //Iterate Z
+        //Iterate X
         lFirstBlock = iterateX(first);
-        if (ztoPos) {
-            while (Math.abs(lFirstBlock.getBlockX()) <= Math.abs(second.getBlockX())) {
+        if (xtoPos) {
+            while (Math.abs(lFirstBlock.getBlockX()) >= Math.abs(second.getBlockX())) {
                 //Add Cuboid
                 leftBlocks.add(new Cuboid(world,lFirstBlock, lFirstBlock));
-                //Iterate Z
+                //Iterate X
                 lFirstBlock = iterateX(lFirstBlock);
             }
         } else {
-            while (Math.abs(lFirstBlock.getBlockZ()) >= Math.abs(second.getBlockX())) {
+            while (Math.abs(lFirstBlock.getBlockX()) <= Math.abs(second.getBlockX())) {
                 //Add Cuboid
                 leftBlocks.add(new Cuboid(world,lFirstBlock, lFirstBlock));
-                //Iterate Z
+                //Iterate X
                 lFirstBlock = iterateX(lFirstBlock);
             }
         }
@@ -219,16 +219,17 @@ public class Generator {
                 Cuboid tempCuboid = cuboid.expand(Cuboid.CuboidDirection.North,-4);
                 newCuboid = tempCuboid.expand(Cuboid.CuboidDirection.North,-4);
             } else {
-                Cuboid tempCuboid = cuboid.expand(Cuboid.CuboidDirection.North,4);
-                newCuboid = tempCuboid.expand(Cuboid.CuboidDirection.North,4);
+                Cuboid tempCuboid = cuboid.expand(Cuboid.CuboidDirection.South,-4);
+                newCuboid = tempCuboid.expand(Cuboid.CuboidDirection.South,-4);
             }
         } else {
+            //X is Indexed
             if (ztoPos) {
-                Cuboid tempCuboid = cuboid.expand(Cuboid.CuboidDirection.North,-4);
-                newCuboid = tempCuboid.expand(Cuboid.CuboidDirection.North,-4);
+                Cuboid tempCuboid = cuboid.expand(Cuboid.CuboidDirection.East,-4);
+                newCuboid = tempCuboid.expand(Cuboid.CuboidDirection.East,-4);
             } else {
-                Cuboid tempCuboid = cuboid.expand(Cuboid.CuboidDirection.North,4);
-                newCuboid = tempCuboid.expand(Cuboid.CuboidDirection.North,4);
+                Cuboid tempCuboid = cuboid.expand(Cuboid.CuboidDirection.West,-4);
+                newCuboid = tempCuboid.expand(Cuboid.CuboidDirection.West,-4);
             }
         }
         return newCuboid;
