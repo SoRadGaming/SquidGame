@@ -1,6 +1,7 @@
 # Squid Game
 SquidGame plugin for Minecraft
 https://www.spigotmc.org/resources/squidgame.97868/
+
 **Commands**:
 - /sq
 - /sq help
