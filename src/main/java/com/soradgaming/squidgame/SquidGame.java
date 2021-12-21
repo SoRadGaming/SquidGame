@@ -1,5 +1,7 @@
 package com.soradgaming.squidgame;
 
+import com.soradgaming.squidgame.arena.Arena;
+import com.soradgaming.squidgame.arena.Status;
 import com.soradgaming.squidgame.bStats.Metrics;
 import com.soradgaming.squidgame.commands.CommandTabCompleter;
 import com.soradgaming.squidgame.commands.Commands;
@@ -8,13 +10,13 @@ import com.soradgaming.squidgame.listeners.*;
 import com.soradgaming.squidgame.math.CalculateCuboid;
 import com.soradgaming.squidgame.placeholders.placeholder;
 import com.soradgaming.squidgame.utils.configuration;
-import com.soradgaming.squidgame.utils.gameManager;
-import com.soradgaming.squidgame.utils.playerManager;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,17 +25,17 @@ import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileVisitor;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 public final class SquidGame extends JavaPlugin {
     public static SquidGame plugin;
+    public File arenaFolder = new File(getDataFolder() + File.separator + "arenas");
     public File schematics = new File(getDataFolder() + "/schematics");
     public File dataFile = new File(getDataFolder() + "/data/players.yml");
     public File messageFile = new File(getDataFolder(), "messages.yml");
     public FileConfiguration data = YamlConfiguration.loadConfiguration(dataFile);
     public FileConfiguration messages = YamlConfiguration.loadConfiguration(messageFile);
+    int pluginId = 13361;
 
 
     @Override
@@ -58,6 +60,7 @@ public final class SquidGame extends JavaPlugin {
         //Load Files
         loadFile();
         loadMessage();
+        loadArenas();
         try {
             createSchematicsDir();
         } catch (IOException e) {
@@ -71,22 +74,22 @@ public final class SquidGame extends JavaPlugin {
         configuration.updateConfig();
 
         //bStats
-        int pluginId = 13361;
         Metrics metrics = new Metrics(this, pluginId);
-
-        // Optional: Add custom charts
-        metrics.addCustomChart(new Metrics.SimplePie("chart_id", () -> "My value"));
     }
 
     @Override
     public void onDisable() {
         // Plugin shutdown logic
-        ArrayList<UUID> playerList = gameManager.getAllPlayers();
-        for (UUID uuid: playerList) {
-            playerManager.playerQuit(Bukkit.getPlayer(uuid));
+        for (String name:Arena.getArenasNames()) {
+            Arena arena = Arena.getArenaByName(name);
+            List<Player> allPlayers = arena.getPlayerHandler().getAllPlayers();
+            for (Player player: allPlayers) {
+                arena.getPlayerHandler().playerQuit(player);
+            }
         }
         plugin.saveFile();
         plugin.saveMessages();
+        plugin.saveArenas();
         getLogger().info("The plugin has been disabled correctly!");
     }
 
@@ -105,7 +108,7 @@ public final class SquidGame extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerInteractListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerQuitListener(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new Game1(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new RedLightGreenLight(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new Game2(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new Game3(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new Game4(), this);
@@ -135,6 +138,32 @@ public final class SquidGame extends JavaPlugin {
         }
     }
 
+    private void saveArenas() {
+        for (Arena arena : Arena.getArenas()) {
+            arena.getGameHandler().setGameStatus(Status.Offline);
+            arena.getStructureManager().saveToConfig();
+        }
+    }
+
+    private void loadArenas() {
+        if(!arenaFolder.exists()) {
+            arenaFolder.mkdir();
+            return;
+        }
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                List<String> arenaList = Arrays.asList(Objects.requireNonNull(arenaFolder.list()));
+                Collections.shuffle(arenaList);
+                for (String file : arenaList) {
+                    Arena arena = new Arena(file.substring(0, file.length() - 4), plugin);
+                    arena.getStructureManager().loadFromConfig();
+                    Arena.registerArena(arena);
+                }
+            }
+        }.runTaskLater(this, 20L);
+    }
+
     //Config
     private void registerConfig() {
         saveDefaultConfig();
@@ -144,7 +173,7 @@ public final class SquidGame extends JavaPlugin {
     public void loadFile() {
         if (dataFile.exists()) {
             try {
-                data.load(dataFile); //IllegalArgumentException: unknown world
+                data.load(dataFile);
             } catch (IOException | InvalidConfigurationException e) {
 
                 e.printStackTrace();

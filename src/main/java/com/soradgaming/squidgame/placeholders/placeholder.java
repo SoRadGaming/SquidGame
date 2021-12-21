@@ -19,7 +19,7 @@ public class placeholder extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getAuthor() {
-        return "SoRadGaming & Shinx";
+        return "SoRadGaming";
     }
 
     @Override

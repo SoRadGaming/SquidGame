@@ -1,7 +1,7 @@
 name: SquidGame
 version: '${version}'
 main: com.soradgaming.squidgame.SquidGame
-api-version: 1.17
+api-version: 1.18
 depend: [WorldEdit]
 softdepend: [PlaceholderAPI]
 authors: [ SoRadGaming ]

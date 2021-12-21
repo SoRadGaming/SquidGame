@@ -1,16 +1,14 @@
 package com.soradgaming.squidgame.commands;
 
 import com.soradgaming.squidgame.SquidGame;
+import com.soradgaming.squidgame.arena.Arena;
 import com.soradgaming.squidgame.games.Game1;
 import com.soradgaming.squidgame.games.Game2;
 import com.soradgaming.squidgame.games.Game4;
 import com.soradgaming.squidgame.games.Game6;
 import com.soradgaming.squidgame.math.Cuboid;
 import com.soradgaming.squidgame.math.Generator;
-import com.soradgaming.squidgame.math.WorldEditHook;
 import com.soradgaming.squidgame.utils.playerWand;
-import com.soradgaming.squidgame.utils.gameManager;
-import com.soradgaming.squidgame.utils.playerManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -22,14 +20,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
 public class Commands implements CommandExecutor {
 
-    private static final SquidGame plugin = SquidGame.plugin;
+    private final SquidGame plugin = SquidGame.plugin;
 
 
     @Override

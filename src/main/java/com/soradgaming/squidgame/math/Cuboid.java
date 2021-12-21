@@ -498,7 +498,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
         };
     }
 
-    public static void rotate(Cuboid cuboid, int x, int y, int z) {
+    public void rotate(Cuboid cuboid, int x, int y, int z) {
         Vector origin = cuboid.getCenter().toVector();
         List<Vector> vectors = new ArrayList<>();
         for (Block block : cuboid.getBlocks()) {
@@ -513,28 +513,28 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
         }
     }
 
-    public static Vector rotateX(Vector inputVector,double thetaInRadians) {
+    public Vector rotateX(Vector inputVector,double thetaInRadians) {
         Vector v1 = new Vector(1,0,0).multiply(inputVector.getX());
         Vector v2 = new Vector(0,Math.cos(thetaInRadians),-1*Math.sin(thetaInRadians)).multiply(inputVector.getY());
         Vector v3 = new Vector(0,Math.sin(thetaInRadians),Math.cos(thetaInRadians)).multiply(inputVector.getZ());
         return v1.add(v2).add(v3);
     }
 
-    public static Vector rotateY(Vector inputVector,double thetaInRadians) {
+    public Vector rotateY(Vector inputVector,double thetaInRadians) {
         Vector v1 = new Vector(Math.cos(thetaInRadians),0,Math.sin(thetaInRadians)).multiply(inputVector.getX());
         Vector v2 = new Vector(0,1,0).multiply(inputVector.getY());
         Vector v3 = new Vector(-1*Math.sin(thetaInRadians),0,Math.cos(thetaInRadians)).multiply(inputVector.getZ());
         return v1.add(v2).add(v3);
     }
 
-    public static Vector rotateZ(Vector inputVector,double thetaInRadians) {
+    public Vector rotateZ(Vector inputVector,double thetaInRadians) {
         Vector v1 = new Vector(Math.cos(thetaInRadians),-1*Math.sin(thetaInRadians),0).multiply(inputVector.getX());
         Vector v2 = new Vector(Math.sin(thetaInRadians),Math.cos(thetaInRadians),0).multiply(inputVector.getY());
         Vector v3 = new Vector(0,0,-1).multiply(inputVector.getZ());
         return v1.add(v2).add(v3);
     }
 
-    public static Vector rotateGeneral(Vector inputVector, double alphaInRadians) {
+    public Vector rotateGeneral(Vector inputVector, double alphaInRadians) {
         double generalX = inputVector.getX();
         double generalY = inputVector.getY();
         double generalZ = inputVector.getZ();

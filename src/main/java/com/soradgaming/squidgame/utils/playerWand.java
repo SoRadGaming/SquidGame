@@ -13,38 +13,41 @@ import java.util.List;
 import java.util.Objects;
 
 public class playerWand {
-    private static BlockVector firstPoint;
-    private static BlockVector secondPoint;
-    private static World world;
-    private static ItemStack wand = null;
+    private BlockVector firstPoint;
+    private BlockVector secondPoint;
+    private World world;
+    private ItemStack wand = null;
 
-    public static BlockVector getFirstPoint() {
+    public playerWand() {
+    }
+
+    public BlockVector getFirstPoint() {
         return firstPoint;
     }
 
-    public static BlockVector getSecondPoint() {
+    public BlockVector getSecondPoint() {
         return secondPoint;
     }
 
-    public static World getWorld() {
+    public World getWorld() {
         return world;
     }
 
-    public static void setFirstPoint(final Location loc) {
+    public void setFirstPoint(final Location loc) {
         firstPoint = new BlockVector(loc.getX(), loc.getY(), loc.getZ());
         world = loc.getWorld();
     }
 
-    public static void setSecondPoint(final Location loc) {
+    public void setSecondPoint(final Location loc) {
         secondPoint = new BlockVector(loc.getX(), loc.getY(), loc.getZ());
         world = loc.getWorld();
     }
 
-    public static boolean isComplete() {
+    public boolean isComplete() {
         return firstPoint != null && secondPoint != null;
     }
 
-    public static ItemStack getWand() {
+    public ItemStack getWand() {
         if (wand == null) {
             final ItemStack item = new ItemStack(Material.BLAZE_ROD);
             final ItemMeta meta = item.getItemMeta();
