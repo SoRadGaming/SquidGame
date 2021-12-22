@@ -1,4 +1,4 @@
-package com.soradgaming.squidgame.games;
+package com.soradgaming.squidgame.arena;
 
 public enum Zones {
     BuildZone1,

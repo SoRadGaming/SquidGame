@@ -1,6 +1,7 @@
 package com.soradgaming.squidgame;
 
 import com.soradgaming.squidgame.arena.Arena;
+import com.soradgaming.squidgame.arena.GameHandler;
 import com.soradgaming.squidgame.arena.Status;
 import com.soradgaming.squidgame.bStats.Metrics;
 import com.soradgaming.squidgame.commands.CommandTabCompleter;
