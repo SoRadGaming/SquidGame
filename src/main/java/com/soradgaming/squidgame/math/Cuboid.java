@@ -11,7 +11,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializable {
-    private static final SquidGame plugin = SquidGame.plugin;
     protected final String worldName;
     protected final int x1, y1, z1;
     protected final int x2, y2, z2;
@@ -632,16 +631,6 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 
     public BlockVector getSecondPoint() {
         return new BlockVector(this.x2, this.y2, this.z2);
-    }
-
-    public static void setConfigVectors(String key, BlockVector pos1, BlockVector pos2) {
-        plugin.getConfig().set(key + ".first_point.x",pos1.getX());
-        plugin.getConfig().set(key + ".first_point.y",pos1.getY());
-        plugin.getConfig().set(key + ".first_point.z",pos1.getZ());
-        plugin.getConfig().set(key + ".second_point.x",pos2.getX());
-        plugin.getConfig().set(key + ".second_point.y",pos2.getY());
-        plugin.getConfig().set(key + ".second_point.z",pos2.getZ());
-        plugin.saveConfig();
     }
 
     public List<Block> getBlocks() {

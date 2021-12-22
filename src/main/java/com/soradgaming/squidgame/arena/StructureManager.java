@@ -2,6 +2,7 @@ package com.soradgaming.squidgame.arena;
 
 import com.soradgaming.squidgame.SquidGame;
 import com.soradgaming.squidgame.games.Games;
+import com.soradgaming.squidgame.math.Cuboid;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -19,7 +20,6 @@ public class StructureManager {
     private HashMap<Games, String> world;
     private int maxPlayers = 12;
     private int minPlayers = 2;
-    private Location lobby = null;
     private int startTime = 30;
     private int endTime = 5;
     private int intermissionTime = 10;
@@ -34,7 +34,7 @@ public class StructureManager {
     private int lightSwitchOff = 8;
     private Material bridgeBlock = Material.LIGHT_GRAY_STAINED_GLASS;
     private Material killBlock = Material.LIGHT_GRAY_STAINED_GLASS;
-    private List<String> rewards;
+    private List<String> rewards;//TODo Global Config
 
     public StructureManager(Arena arena) {
         this.plugin = SquidGame.plugin;
@@ -102,11 +102,62 @@ public class StructureManager {
 
     public void setCountdown(Games games,int i) {countdown.put(games, i);}
 
+    public void setLightSwitchMin(int lightSwitchMin) {
+        this.lightSwitchMin = lightSwitchMin;
+    }
+
+    public void setLightSwitchMax(int lightSwitchMax) {
+        this.lightSwitchMax = lightSwitchMax;
+    }
+
+    public void setLightSwitchOn(int lightSwitchOn) {
+        this.lightSwitchOn = lightSwitchOn;
+    }
+
+    public void setLightSwitchOff(int lightSwitchOff) {
+        this.lightSwitchOff = lightSwitchOff;
+    }
+
+    public int getLightSwitchMin() {
+        return this.lightSwitchMin;
+    }
+
+    public int getLightSwitchMax() {
+        return this.lightSwitchMax;
+    }
+
+    public int getLightSwitchOn() {
+        return this.lightSwitchOn;
+    }
+
+    public int getLightSwitchOff() {
+        return this.lightSwitchOff;
+    }
+
+    public int getStartTime() {
+        return this.startTime;
+    }
+
+    public void setStartTime(int startTime) {
+        this.startTime = startTime;
+    }
+
+    public void setEndTime(int endTime) {
+        this.endTime = endTime;
+    }
+
+    public int getEndTime() {
+        return this.endTime;
+    }
+
+    public int getIntermissionTime() {
+        return this.intermissionTime;
+    }
+
     public void saveToConfig() {
         FileConfiguration config = new YamlConfiguration();
         config.set("maxPlayers", maxPlayers);
         config.set("minPlayers", minPlayers);
-        config.set("lobby", lobby);
         config.set("startTime", startTime);
         config.set("endTime", endTime);
         config.set("intermissionTime", intermissionTime);
@@ -144,7 +195,6 @@ public class StructureManager {
         FileConfiguration config = YamlConfiguration.loadConfiguration(arena.getArenaFile());
         maxPlayers = config.getInt("maxPlayers");
         minPlayers = config.getInt("minPlayers");
-        lobby = config.getLocation("lobby");
         startTime = config.getInt("startTime");
         endTime = config.getInt("endTime");
         intermissionTime = config.getInt("intermissionTime");
@@ -179,6 +229,21 @@ public class StructureManager {
         pos.setY(config.getDouble(key + ".y"));
         pos.setZ(config.getDouble(key + ".z"));
         return pos;
+    }
+
+    public void setConfigVectors(String key, BlockVector pos1, BlockVector pos2) {
+        FileConfiguration config = YamlConfiguration.loadConfiguration(arena.getArenaFile());
+        config.set(key + ".first_point.x",pos1.getX());
+        config.set(key + ".first_point.y",pos1.getY());
+        config.set(key + ".first_point.z",pos1.getZ());
+        config.set(key + ".second_point.x",pos2.getX());
+        config.set(key + ".second_point.y",pos2.getY());
+        config.set(key + ".second_point.z",pos2.getZ());
+        try {
+            config.save(arena.getArenaFile());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public Games stringToGame(String string) {

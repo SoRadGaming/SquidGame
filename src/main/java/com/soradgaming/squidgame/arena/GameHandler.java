@@ -43,17 +43,6 @@ public class GameHandler {
 
     private BukkitScheduler game = Bukkit.getScheduler();
 
-    public void startGame() {
-        game.runTaskTimer(plugin, this::endGame,20L, 20L * arena.getStructureManager().getTimeLimit());
-    }
-
-    public void endGame() {
-        game.cancelTasks(plugin);
-        for (Player player: arena.getPlayerHandler().getAllPlayers()) {
-            arena.getPlayerHandler().playerLeave(player);
-        }
-    }
-
     public void checkStart() {
         int min = arena.getStructureManager().getMinPlayers();
         List<Player> playerList = arena.getPlayerHandler().getAllPlayers();
@@ -63,12 +52,12 @@ public class GameHandler {
             if (arena.getGameHandler().getStatus().equals(Status.Offline)) {
                 gameStartTask.runTaskLater(plugin, () -> {
                     arena.getPlayerHandler().Initialise();
-                    startGame();
+                    intermission(Games.Game1);
                     for (Player player : playerList) {
                         Objects.requireNonNull(player).sendMessage(Messages.formatMessage(player, "arena.started"));
                     }
                     setGameStatus(Status.Online);
-                }, 20L * arena.getStructureManager().getCountdown());
+                }, 20L * arena.getStructureManager().getCountdown(Games.Game1));
                 //Message Starting
                 for (Player player : playerList) {
                     Objects.requireNonNull(player).sendMessage(Messages.formatMessage(player, "arena.starting"));
@@ -105,15 +94,11 @@ public class GameHandler {
         }
         if (games.equals(Games.Game1)) {
             //No Delay on Game 1 as players already in lobby
-            Game1.startGame1();
+            new RedLightGreenLight(plugin,arena).run();
         } else if (games.equals(Games.Game2)) {
             Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                try {
-                    Game2.startGame2();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }, 20L * plugin.getConfig().getInt("intermission-time"));
+                Game2.startGame2();
+            }, 20L * arena.getStructureManager().getIntermissionTime());
         } else if (games.equals(Games.Game3)) {
             //No Delay on Game 3 as lobby is the arena
             Game3.startGame3();
@@ -121,11 +106,11 @@ public class GameHandler {
             //No Delay on Game 4 as players just finished fighting in lobby
             Game4.startGame4();
         } else if (games.equals(Games.Game5)) {
-            Bukkit.getScheduler().runTaskLater(plugin, Game5::startGame5, 20L * plugin.getConfig().getInt("intermission-time"));
+            Bukkit.getScheduler().runTaskLater(plugin, Game5::startGame5, 20L * arena.getStructureManager().getIntermissionTime());
         } else if (games.equals(Games.Game6)) {
-            Bukkit.getScheduler().runTaskLater(plugin, Game6::startGame6, 20L * plugin.getConfig().getInt("intermission-time"));
+            Bukkit.getScheduler().runTaskLater(plugin, Game6::startGame6, 20L * arena.getStructureManager().getIntermissionTime());
         } else if (games.equals(Games.Game7)) {
-            Bukkit.getScheduler().runTaskLater(plugin, Game7::startGame7, 20L * plugin.getConfig().getInt("intermission-time"));
+            Bukkit.getScheduler().runTaskLater(plugin, Game7::startGame7, 20L * arena.getStructureManager().getIntermissionTime());
         }
     }
 }

@@ -2,9 +2,7 @@ package com.soradgaming.squidgame.commands;
 
 import com.soradgaming.squidgame.SquidGame;
 import com.soradgaming.squidgame.arena.Arena;
-import com.soradgaming.squidgame.games.Game1;
-import com.soradgaming.squidgame.games.Game2;
-import com.soradgaming.squidgame.games.Game4;
+import com.soradgaming.squidgame.arena.Messages;
 import com.soradgaming.squidgame.games.Game6;
 import com.soradgaming.squidgame.math.Cuboid;
 import com.soradgaming.squidgame.math.Generator;
@@ -63,9 +61,6 @@ public class Commands implements CommandExecutor {
                 plugin.reloadConfig();
                 plugin.reloadMessages();
                 plugin.getLogger().info("Reloaded");
-                Game1.reloadConfig();
-                Game2.reloadConfig();
-                Game4.reloadConfig();
                 Game6.reloadConfig();
                 sender.sendMessage(ChatColor.GREEN + "Reloaded");
             } else {
@@ -75,7 +70,7 @@ public class Commands implements CommandExecutor {
         } else if (args.length == 1 && args[0].equalsIgnoreCase("start")) {
             if (sender.isOp()) {
                 if (!playerManager.checkStart()) {
-                    sender.sendMessage(gameManager.formatMessage(((Player) sender).getPlayer(),"arena.no-enough-players"));
+                    sender.sendMessage(Messages.formatMessage(((Player) sender).getPlayer(),"arena.no-enough-players"));
                 }
             } else {
                 sender.sendMessage(ChatColor.RED + "You don't have permission to do that");
@@ -84,17 +79,7 @@ public class Commands implements CommandExecutor {
         } else if (args.length == 1 && args[0].equalsIgnoreCase("end")) {
             if (sender.isOp()) {
                 if (playerManager.checkStart()) {
-                    Game1.endGame1();
-                }
-            } else {
-                sender.sendMessage(ChatColor.RED + "You don't have permission to do that");
-                return true;
-            }
-        }  else if (args.length == 1 && args[0].equalsIgnoreCase("list")) {
-            if (sender.isOp()) {
-                List<UUID> playerList = gameManager.getAlivePlayers();
-                for (UUID uuid : playerList) {
-                    sender.sendMessage(ChatColor.BLUE + Objects.requireNonNull(Bukkit.getPlayer(uuid)).getName());
+
                 }
             } else {
                 sender.sendMessage(ChatColor.RED + "You don't have permission to do that");
@@ -105,19 +90,20 @@ public class Commands implements CommandExecutor {
             if (playerManager.playerJoin(player)) {
                 return true;
             } else {
-                sender.sendMessage(gameManager.formatMessage(player,"arena.already-in-game"));
+                sender.sendMessage(Messages.formatMessage(player,"arena.already-in-game"));
             }
         } else if (args.length == 1 && args[0].equalsIgnoreCase("leave")) {
             Player player = ((Player) sender).getPlayer();
             if (playerManager.playerLeave(player)) {
                 return true;
             } else {
-                sender.sendMessage(gameManager.formatMessage(player,"arena.not-in-game"));
+                sender.sendMessage(Messages.formatMessage(player,"arena.not-in-game"));
             }
         } else if (args.length == 1 && args[0].equalsIgnoreCase("wand")) {
             if (sender.isOp()) {
                 Player player = (Player) sender;
-                player.getInventory().addItem(playerWand.getWand());
+                ItemStack wand = new playerWand().getWand();
+                player.getInventory().addItem(wand);
                 player.updateInventory();
             } else {
                 sender.sendMessage(ChatColor.RED + "You don't have permission to do that");
@@ -142,14 +128,16 @@ public class Commands implements CommandExecutor {
         } else if (args.length == 3 && args[0].equalsIgnoreCase("set")) {
             if (sender.isOp()) {
                 Player player = (Player) sender;
-                ItemStack wand = playerWand.getWand();
+                playerWand playerWandInstance = new playerWand();
+                ItemStack wand = playerWandInstance.getWand();
                 if (wand == null && !args[2].equals("spawn")) {
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&cYou don't have an region wand, use /sq wand to get it."));
                     return false;
-                } else if (!playerWand.isComplete() && !args[2].equals("spawn")) {
+                } else if (!playerWandInstance.isComplete() && !args[2].equals("spawn")) {
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&cYou need to set area with your region wand first."));
                     return false;
                 }
+                Arena arena = Arena.getArenaByName(args[1]);
                 switch (args[1]) {
                     case "game1":
                         switch (args[2]) {
@@ -162,21 +150,21 @@ public class Commands implements CommandExecutor {
                                 }
                             }
                             case "barrier" -> {
-                                Cuboid.setConfigVectors("Game1.barrier", playerWand.getFirstPoint(), playerWand.getSecondPoint());
+                                arena.getStructureManager().setConfigVectors("Game1.barrier", playerWandInstance.getFirstPoint(), playerWandInstance.getSecondPoint());
                                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eFirst game " + "barrier" + "&a set with your location wand &7("
-                                        + playerWand.getFirstPoint().toString() + ") (" + playerWand.getSecondPoint().toString() + ")"));
+                                        + playerWandInstance.getFirstPoint().toString() + ") (" + playerWandInstance.getSecondPoint().toString() + ")"));
                                 plugin.saveConfig();
                             }
                             case "killzone" -> {
-                                Cuboid.setConfigVectors("Game1.killzone", playerWand.getFirstPoint(), playerWand.getSecondPoint());
+                                arena.getStructureManager().setConfigVectors("Game1.killzone", playerWandInstance.getFirstPoint(), playerWandInstance.getSecondPoint());
                                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eFirst game " + "killzone" + "&a set with your location wand &7("
-                                        + playerWand.getFirstPoint().toString() + ") (" + playerWand.getSecondPoint().toString() + ")"));
+                                        + playerWandInstance.getFirstPoint().toString() + ") (" + playerWandInstance.getSecondPoint().toString() + ")"));
                                 plugin.saveConfig();
                             }
                             case "goal" -> {
-                                Cuboid.setConfigVectors("Game1.goal", playerWand.getFirstPoint(), playerWand.getSecondPoint());
+                                arena.getStructureManager().setConfigVectors("Game1.goal", playerWandInstance.getFirstPoint(), playerWandInstance.getSecondPoint());
                                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eFirst game " + "goal" + "&a set with your location wand &7("
-                                        + playerWand.getFirstPoint().toString() + ") (" + playerWand.getSecondPoint().toString() + ")"));
+                                        + playerWandInstance.getFirstPoint().toString() + ") (" + playerWandInstance.getSecondPoint().toString() + ")"));
                                 plugin.saveConfig();
                             }
                         }
@@ -212,51 +200,51 @@ public class Commands implements CommandExecutor {
                                 }
                             }
                             case "BuildZone1" -> {
-                                Cuboid.setConfigVectors("Game2.BuildZone1", playerWand.getFirstPoint(), playerWand.getSecondPoint());
+                                arena.getStructureManager().setConfigVectors("Game2.BuildZone1", playerWandInstance.getFirstPoint(), playerWandInstance.getSecondPoint());
                                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eSecond game " + "BuildZone1" + "&a set with your location wand &7("
-                                        + playerWand.getFirstPoint().toString() + ") (" + playerWand.getSecondPoint().toString() + ")"));
+                                        + playerWandInstance.getFirstPoint().toString() + ") (" + playerWandInstance.getSecondPoint().toString() + ")"));
                                 plugin.saveConfig();
                             }
                             case "BuildZone2" -> {
-                                Cuboid.setConfigVectors("Game2.BuildZone2", playerWand.getFirstPoint(), playerWand.getSecondPoint());
+                                arena.getStructureManager().setConfigVectors("Game2.BuildZone2", playerWandInstance.getFirstPoint(), playerWandInstance.getSecondPoint());
                                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eSecond game " + "BuildZone2" + "&a set with your location wand &7("
-                                        + playerWand.getFirstPoint().toString() + ") (" + playerWand.getSecondPoint().toString() + ")"));
+                                        + playerWandInstance.getFirstPoint().toString() + ") (" + playerWandInstance.getSecondPoint().toString() + ")"));
                                 plugin.saveConfig();
                             }
                             case "BuildZone3" -> {
-                                Cuboid.setConfigVectors("Game2.BuildZone3", playerWand.getFirstPoint(), playerWand.getSecondPoint());
+                                arena.getStructureManager().setConfigVectors("Game2.BuildZone3", playerWandInstance.getFirstPoint(), playerWandInstance.getSecondPoint());
                                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eSecond game " + "BuildZone3" + "&a set with your location wand &7("
-                                        + playerWand.getFirstPoint().toString() + ") (" + playerWand.getSecondPoint().toString() + ")"));
+                                        + playerWandInstance.getFirstPoint().toString() + ") (" + playerWandInstance.getSecondPoint().toString() + ")"));
                                 plugin.saveConfig();
                             }
                             case "BuildZone4" -> {
-                                Cuboid.setConfigVectors("Game2.BuildZone4", playerWand.getFirstPoint(), playerWand.getSecondPoint());
+                                arena.getStructureManager().setConfigVectors("Game2.BuildZone4", playerWandInstance.getFirstPoint(), playerWandInstance.getSecondPoint());
                                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eSecond game " + "BuildZone4" + "&a set with your location wand &7("
-                                        + playerWand.getFirstPoint().toString() + ") (" + playerWand.getSecondPoint().toString() + ")"));
+                                        + playerWandInstance.getFirstPoint().toString() + ") (" + playerWandInstance.getSecondPoint().toString() + ")"));
                                 plugin.saveConfig();
                             }
                             case "DisplayZone1" -> {
-                                Cuboid.setConfigVectors("Game2.DisplayZone1", playerWand.getFirstPoint(), playerWand.getSecondPoint());
+                                arena.getStructureManager().setConfigVectors("Game2.DisplayZone1", playerWandInstance.getFirstPoint(), playerWandInstance.getSecondPoint());
                                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eSecond game " + "DisplayZone1" + "&a set with your location wand &7("
-                                        + playerWand.getFirstPoint().toString() + ") (" + playerWand.getSecondPoint().toString() + ")"));
+                                        + playerWandInstance.getFirstPoint().toString() + ") (" + playerWandInstance.getSecondPoint().toString() + ")"));
                                 plugin.saveConfig();
                             }
                             case "DisplayZone2" -> {
-                                Cuboid.setConfigVectors("Game2.DisplayZone2", playerWand.getFirstPoint(), playerWand.getSecondPoint());
+                                arena.getStructureManager().setConfigVectors("Game2.DisplayZone2", playerWandInstance.getFirstPoint(), playerWandInstance.getSecondPoint());
                                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eSecond game " + "DisplayZone2" + "&a set with your location wand &7("
-                                        + playerWand.getFirstPoint().toString() + ") (" + playerWand.getSecondPoint().toString() + ")"));
+                                        + playerWandInstance.getFirstPoint().toString() + ") (" + playerWandInstance.getSecondPoint().toString() + ")"));
                                 plugin.saveConfig();
                             }
                             case "DisplayZone3" -> {
-                                Cuboid.setConfigVectors("Game2.DisplayZone3", playerWand.getFirstPoint(), playerWand.getSecondPoint());
+                                arena.getStructureManager().setConfigVectors("Game2.DisplayZone3", playerWandInstance.getFirstPoint(), playerWandInstance.getSecondPoint());
                                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eSecond game " + "DisplayZone3" + "&a set with your location wand &7("
-                                        + playerWand.getFirstPoint().toString() + ") (" + playerWand.getSecondPoint().toString() + ")"));
+                                        + playerWandInstance.getFirstPoint().toString() + ") (" + playerWandInstance.getSecondPoint().toString() + ")"));
                                 plugin.saveConfig();
                             }
                             case "DisplayZone4" -> {
-                                Cuboid.setConfigVectors("Game2.DisplayZone4", playerWand.getFirstPoint(), playerWand.getSecondPoint());
+                                arena.getStructureManager().setConfigVectors("Game2.DisplayZone4", playerWandInstance.getFirstPoint(), playerWandInstance.getSecondPoint());
                                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eSecond game " + "DisplayZone4" + "&a set with your location wand &7("
-                                        + playerWand.getFirstPoint().toString() + ") (" + playerWand.getSecondPoint().toString() + ")"));
+                                        + playerWandInstance.getFirstPoint().toString() + ") (" + playerWandInstance.getSecondPoint().toString() + ")"));
                                 plugin.saveConfig();
                             }
                         }
@@ -278,9 +266,9 @@ public class Commands implements CommandExecutor {
                                 }
                             }
                             case "barrier" -> {
-                                Cuboid.setConfigVectors("Game4.barrier", playerWand.getFirstPoint(), playerWand.getSecondPoint());
+                                arena.getStructureManager().setConfigVectors("Game4.barrier", playerWandInstance.getFirstPoint(), playerWandInstance.getSecondPoint());
                                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eFourth game " + "barrier" + "&a set with your location wand &7("
-                                        + playerWand.getFirstPoint().toString() + ") (" + playerWand.getSecondPoint().toString() + ")"));
+                                        + playerWandInstance.getFirstPoint().toString() + ") (" + playerWandInstance.getSecondPoint().toString() + ")"));
                                 plugin.saveConfig();
                             }
                         }
@@ -296,21 +284,21 @@ public class Commands implements CommandExecutor {
                                 }
                             }
                             case "glass" -> {
-                                Cuboid.setConfigVectors("Game6.glass", playerWand.getFirstPoint(), playerWand.getSecondPoint());
+                                arena.getStructureManager().setConfigVectors("Game6.glass", playerWandInstance.getFirstPoint(), playerWandInstance.getSecondPoint());
                                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eSixth game " + "glass" + "&a set with your location wand &7("
-                                        + playerWand.getFirstPoint().toString() + ") (" + playerWand.getSecondPoint().toString() + ")"));
+                                        + playerWandInstance.getFirstPoint().toString() + ") (" + playerWandInstance.getSecondPoint().toString() + ")"));
                                 plugin.saveConfig();
                             }
                             case "goal" -> {
-                                Cuboid.setConfigVectors("Game6.goal", playerWand.getFirstPoint(), playerWand.getSecondPoint());
+                                arena.getStructureManager().setConfigVectors("Game6.goal", playerWandInstance.getFirstPoint(), playerWandInstance.getSecondPoint());
                                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eSixth game " + "goal" + "&a set with your location wand &7("
-                                        + playerWand.getFirstPoint().toString() + ") (" + playerWand.getSecondPoint().toString() + ")"));
+                                        + playerWandInstance.getFirstPoint().toString() + ") (" + playerWandInstance.getSecondPoint().toString() + ")"));
                                 plugin.saveConfig();
                             }
                             case "barrier" -> {
-                                Cuboid.setConfigVectors("Game6.barrier", playerWand.getFirstPoint(), playerWand.getSecondPoint());
+                                arena.getStructureManager().setConfigVectors("Game6.barrier", playerWandInstance.getFirstPoint(), playerWandInstance.getSecondPoint());
                                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eSixth game " + "barrier" + "&a set with your location wand &7("
-                                        + playerWand.getFirstPoint().toString() + ") (" + playerWand.getSecondPoint().toString() + ")"));
+                                        + playerWandInstance.getFirstPoint().toString() + ") (" + playerWandInstance.getSecondPoint().toString() + ")"));
                                 plugin.saveConfig();
                             }
                         }

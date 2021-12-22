@@ -1,63 +1,71 @@
 package com.soradgaming.squidgame.games;
 
 import com.soradgaming.squidgame.SquidGame;
+import com.soradgaming.squidgame.arena.Arena;
+import com.soradgaming.squidgame.arena.Messages;
 import com.soradgaming.squidgame.math.CalculateCuboid;
-import com.soradgaming.squidgame.utils.gameManager;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Color;
+import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
+public class SpeedBuilders implements Runnable, Listener {
+    private SquidGame plugin;
+    private Arena arena;
+    private CalculateCuboid calculateCuboid;
+    private boolean Started = false;
+    private ArrayList<Player> team1 = new ArrayList<>();
+    private ArrayList<Player> team2 = new ArrayList<>();
+    private ArrayList<Player> team3 = new ArrayList<>();
+    private ArrayList<Player> team4 = new ArrayList<>();
+    private boolean winTeam1 = false;
+    private boolean winTeam2 = false;
+    private boolean winTeam3 = false;
+    private boolean winTeam4 = false;
 
-public class Game2 implements Listener {
-    private static final SquidGame plugin = SquidGame.plugin;
-    private static boolean Started = false;
-    private static ArrayList<Player> team1 = new ArrayList<>();
-    private static ArrayList<Player> team2 = new ArrayList<>();
-    private static ArrayList<Player> team3 = new ArrayList<>();
-    private static ArrayList<Player> team4 = new ArrayList<>();
-    private static boolean winTeam1 = false;
-    private static boolean winTeam2 = false;
-    private static boolean winTeam3 = false;
-    private static boolean winTeam4 = false;
+    public SpeedBuilders(SquidGame plugin, Arena arena) {
+        this.plugin = plugin;
+        this.arena = arena;
+    }
 
-    public static void startGame2() throws IOException {
+    @Override
+    public void run() {
         winTeam1 = false;
         winTeam2 = false;
         winTeam3 = false;
         winTeam4 = false;
         Started = true;
-        gameManager.setPvPAllowed(false);
-        CalculateCuboid.start();
+        arena.getGameHandler().setPvPAllowed(false);
+        calculateCuboid = new CalculateCuboid(this,arena);
+        calculateCuboid.run();
         generateTeams();
-        gameManager.onExplainStart("second");
+        Messages.onExplainStart(arena.getPlayerHandler().getAllPlayers(),"second");
         // With BukkitScheduler
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             //START
-            for (UUID uuid:gameManager.getAlivePlayers()) {
-                Bukkit.getPlayer(uuid).setGameMode(GameMode.CREATIVE);
+            for (Player player:arena.getPlayerHandler().getAlivePlayers()) {
+                player.setGameMode(GameMode.CREATIVE);
             }
-            gameManager.setBlockAllowed(true);
-            gameManager.setPvPAllowed(false);
+            arena.getGameHandler().setBlockAllowed(true);
+            arena.getGameHandler().setPvPAllowed(false);
         }, 20L * 15);
     }
 
-    public static void endGame2() {
+    public void endGame2() {
         if (Started) {
-            gameManager.setPvPAllowed(false);
-            gameManager.setBlockAllowed(false);
+            arena.getGameHandler().setPvPAllowed(false);
+            arena.getGameHandler().setBlockAllowed(false);
             if (!winTeam1) {
                 for (Player player:team1) {
-                    player.sendTitle(gameManager.formatMessage(player,"events.game-timeout-died.title") ,
-                            gameManager.formatMessage(player,"events.game-timeout-died.subtitle"),10, 30,10);
-                    gameManager.killPlayer(player);
+                    player.sendTitle(Messages.formatMessage(player,"events.game-timeout-died.title") ,
+                            Messages.formatMessage(player,"events.game-timeout-died.subtitle"),10, 30,10);
+                    arena.getPlayerHandler().killPlayer(player);
                     player.getInventory().clear();
                     player.getInventory().setArmorContents(null);
                     player.setGameMode(GameMode.SPECTATOR);
@@ -65,9 +73,9 @@ public class Game2 implements Listener {
             }
             if (!winTeam2) {
                 for (Player player:team2) {
-                    player.sendTitle(gameManager.formatMessage(player,"events.game-timeout-died.title") ,
-                            gameManager.formatMessage(player,"events.game-timeout-died.subtitle"),10, 30,10);
-                    gameManager.killPlayer(player);
+                    player.sendTitle(Messages.formatMessage(player,"events.game-timeout-died.title") ,
+                            Messages.formatMessage(player,"events.game-timeout-died.subtitle"),10, 30,10);
+                    arena.getPlayerHandler().killPlayer(player);
                     player.getInventory().clear();
                     player.getInventory().setArmorContents(null);
                     player.setGameMode(GameMode.SPECTATOR);
@@ -75,9 +83,9 @@ public class Game2 implements Listener {
             }
             if (!winTeam3) {
                 for (Player player:team3) {
-                    player.sendTitle(gameManager.formatMessage(player,"events.game-timeout-died.title") ,
-                            gameManager.formatMessage(player,"events.game-timeout-died.subtitle"),10, 30,10);
-                    gameManager.killPlayer(player);
+                    player.sendTitle(Messages.formatMessage(player,"events.game-timeout-died.title") ,
+                            Messages.formatMessage(player,"events.game-timeout-died.subtitle"),10, 30,10);
+                    arena.getPlayerHandler().killPlayer(player);
                     player.getInventory().clear();
                     player.getInventory().setArmorContents(null);
                     player.setGameMode(GameMode.SPECTATOR);
@@ -85,31 +93,30 @@ public class Game2 implements Listener {
             }
             if (!winTeam4) {
                 for (Player player:team4) {
-                    player.sendTitle(gameManager.formatMessage(player,"events.game-timeout-died.title") ,
-                            gameManager.formatMessage(player,"events.game-timeout-died.subtitle"),10, 30,10);
-                    gameManager.killPlayer(player);
+                    player.sendTitle(Messages.formatMessage(player,"events.game-timeout-died.title") ,
+                            Messages.formatMessage(player,"events.game-timeout-died.subtitle"),10, 30,10);
+                    arena.getPlayerHandler().killPlayer(player);
                     player.getInventory().clear();
                     player.getInventory().setArmorContents(null);
                     player.setGameMode(GameMode.SPECTATOR);
                 }
             }
             //End Code
-            Bukkit.getScheduler().runTaskLater(plugin, () -> gameManager.intermission(Games.Game3), 20L * plugin.getConfig().getInt("endgame-time"));
+            Bukkit.getScheduler().runTaskLater(plugin, () -> arena.getGameHandler().intermission(Games.Game3), 20L * arena.getStructureManager().getEndTime());
         }
     }
 
-    private static void generateTeams() {
-        Collections.shuffle(gameManager.getAlivePlayers());
-        for (int i = 0;(gameManager.getAlivePlayers().size() / 2) > i;i++) {
-            UUID uuid = gameManager.getAlivePlayers().get(i);
-            Player player = Bukkit.getPlayer(uuid);
+    private void generateTeams() {
+        List<Player> playerList = arena.getPlayerHandler().getAlivePlayers();
+        Collections.shuffle(playerList);
+        for (int i = 0;(playerList.size() / 2) > i;i++) {
+            Player player = playerList.get(i);
             team1.add(player);
             player.getInventory().setArmorContents(getArmour(Color.RED));
             player.teleport(Objects.requireNonNull(plugin.getConfig().getLocation("Game2.spawn_red")));
         }
-        for (int i = team1.size();gameManager.getAlivePlayers().size() > i;i++) {
-            UUID uuid = gameManager.getAlivePlayers().get(i);
-            Player player = Bukkit.getPlayer(uuid);
+        for (int i = team1.size();playerList.size() > i;i++) {
+            Player player = playerList.get(i);
             team2.add(player);
             player.getInventory().setArmorContents(getArmour(Color.BLUE));
             player.teleport(Objects.requireNonNull(plugin.getConfig().getLocation("Game2.spawn_blue")));
@@ -132,7 +139,7 @@ public class Game2 implements Listener {
         }
     }
 
-    private static ItemStack[] getArmour(Color colour) {
+    private ItemStack[] getArmour(Color colour) {
         ItemStack helmet = new ItemStack(Material.LEATHER_HELMET);
         ItemStack chest = new ItemStack(Material.LEATHER_CHESTPLATE);
         ItemStack pants = new ItemStack(Material.LEATHER_LEGGINGS);
@@ -159,7 +166,7 @@ public class Game2 implements Listener {
         return list.toArray(new ItemStack[0]);
     }
 
-    private static void checkGameComplete() {
+    private void checkGameComplete() {
         if ((team1.size() > 0?1:0) + (team2.size() > 0?1:0) + (team3.size() > 0?1:0) + (team4.size() > 0?1:0) == 4) {
             if ((winTeam1?1:0) + (winTeam2?1:0) + (winTeam3?1:0) + (winTeam4?1:0) == 3) {
                 endGame2();
@@ -175,91 +182,87 @@ public class Game2 implements Listener {
         }
     }
 
-    public static void completeTeam1() {
+    public void completeTeam1() {
         winTeam1 = true;
         for (Player player: team1) {
             player.getInventory().clear();
             player.getInventory().setArmorContents(null);
             player.setGameMode(GameMode.SPECTATOR);
-            player.sendTitle(gameManager.formatMessage(player,"events.game-pass.title") , gameManager.formatMessage(player,"events.game-pass.subtitle"),10, 30,10);
+            player.sendTitle(Messages.formatMessage(player,"events.game-pass.title") , Messages.formatMessage(player,"events.game-pass.subtitle"),10, 30,10);
             //send message saying team 1 finished
         }
         checkGameComplete();
     }
 
-    public static void completeTeam2() {
+    public void completeTeam2() {
         winTeam2 = true;
         for (Player player: team2) {
             player.getInventory().clear();
             player.getInventory().setArmorContents(null);
             player.setGameMode(GameMode.SPECTATOR);
-            player.sendTitle(gameManager.formatMessage(player,"events.game-pass.title") , gameManager.formatMessage(player,"events.game-pass.subtitle"),10, 30,10);
+            player.sendTitle(Messages.formatMessage(player,"events.game-pass.title") , Messages.formatMessage(player,"events.game-pass.subtitle"),10, 30,10);
             //send message saying team 1 finished
         }
         checkGameComplete();
     }
 
-    public static void completeTeam3() {
+    public void completeTeam3() {
         winTeam3 = true;
         for (Player player: team3) {
             player.getInventory().clear();
             player.getInventory().setArmorContents(null);
             player.setGameMode(GameMode.SPECTATOR);
-            player.sendTitle(gameManager.formatMessage(player,"events.game-pass.title") , gameManager.formatMessage(player,"events.game-pass.subtitle"),10, 30,10);
+            player.sendTitle(Messages.formatMessage(player,"events.game-pass.title") , Messages.formatMessage(player,"events.game-pass.subtitle"),10, 30,10);
             //send message saying team 1 finished
         }
         checkGameComplete();
     }
 
-    public static void completeTeam4() {
+    public void completeTeam4() {
         winTeam4 = true;
         for (Player player: team4) {
             player.getInventory().clear();
             player.getInventory().setArmorContents(null);
             player.setGameMode(GameMode.SPECTATOR);
-            player.sendTitle(gameManager.formatMessage(player,"events.game-pass.title") , gameManager.formatMessage(player,"events.game-pass.subtitle"),10, 30,10);
+            player.sendTitle(Messages.formatMessage(player,"events.game-pass.title") , Messages.formatMessage(player,"events.game-pass.subtitle"),10, 30,10);
             //send message saying team 1 finished
         }
         checkGameComplete();
     }
 
-    public static boolean getWinTeam1() {
-        return winTeam1;
-    }
+    public boolean getWinTeam1() {return winTeam1;}
 
-    public static boolean getWinTeam2() {
+    public boolean getWinTeam2() {
         return winTeam2;
     }
 
-    public static boolean getWinTeam3() {
+    public boolean getWinTeam3() {
         return winTeam3;
     }
 
-    public static boolean getWinTeam4() {
+    public boolean getWinTeam4() {
         return winTeam4;
     }
 
-    public static ArrayList<Player> getTeam1() {
+    public ArrayList<Player> getTeam1() {
         return team1;
     }
 
-    public static ArrayList<Player> getTeam2() {
+    public ArrayList<Player> getTeam2() {
         return team2;
     }
 
-    public static ArrayList<Player> getTeam3() {
+    public ArrayList<Player> getTeam3() {
         return team3;
     }
 
-    public static ArrayList<Player> getTeam4() {
+    public ArrayList<Player> getTeam4() {
         return team4;
     }
 
-    public static boolean isStarted() {
+    public boolean isStarted() {
         return Started;
     }
 
-    public static void reloadConfig() {
-        CalculateCuboid.reloadCuboids();
-    }
+    public void reloadConfig() {calculateCuboid.reloadCuboids();}
 }

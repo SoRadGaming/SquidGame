@@ -8,5 +8,9 @@ public enum Zones {
     DisplayZone1,
     DisplayZone2,
     DisplayZone3,
-    DisplayZone4
+    DisplayZone4,
+    Spawn1,
+    Spawn2,
+    Spawn3,
+    Spawn4
 }
