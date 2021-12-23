@@ -46,7 +46,7 @@ public class SetupTabCompleter implements TabCompleter {
 		} else if (args.length == 2) {
 			if (args[0].equalsIgnoreCase("save")) {
 				completions = new ArrayList<>(Arena.getArenasNames());
-				completions = getApplicableTabCompletes(args[0], completions);
+				completions = getApplicableTabCompletes(args[1], completions);
 			} else if (args[0].equalsIgnoreCase("create")) {
 				completions = new ArrayList<>(List.of(""));
 				completions = getApplicableTabCompletes(args[1], completions);
