@@ -14,17 +14,14 @@ public class Create implements CommandHandlerInterface {
 
     @Override
     public boolean handleCommand(Player player, String[] args) {
-        if (args[0].equalsIgnoreCase("create")) {
-            //TODO check if name is taken
-            Arena arena = new Arena(args[1],plugin);
-            Arena.registerArena(arena);
-            return true;
-        }
+        //TODO check if name is taken
+        Arena arena = new Arena(args[0],plugin);
+        Arena.registerArena(arena);
         return true;
     }
 
     @Override
     public int getMinArgsLength() {
-        return 2;
+        return 1;
     }
 }

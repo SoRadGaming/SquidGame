@@ -47,7 +47,10 @@ public class Arena {
     }
 
     //Arena Managers
-    public static void registerArena(Arena arena) {arenaNames.put(arena.getArenaName(), arena);}
+    public static void registerArena(Arena arena) {
+        arenaNames.put(arena.getArenaName(), arena);
+        arena.getGameHandler().setGameStatus(Status.Offline);
+    }
 
     public void unregisterArena(Arena arena) {
         arenaNames.remove(arena.getArenaName());

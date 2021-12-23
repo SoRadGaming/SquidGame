@@ -14,16 +14,13 @@ public class Save implements CommandHandlerInterface {
 
     @Override
     public boolean handleCommand(Player player, String[] args) {
-        if (args[0].equalsIgnoreCase("save")) {
-            //TODO check if setup is complete
-            Arena.getArenaByName(args[1]).getStructureManager().saveToConfig();
-            return true;
-        }
+        //TODO check if setup is complete
+        Arena.getArenaByName(args[0]).getStructureManager().saveToConfig();
         return true;
     }
 
     @Override
     public int getMinArgsLength() {
-        return 2;
+        return 1;
     }
 }

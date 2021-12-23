@@ -27,6 +27,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -51,18 +52,31 @@ public class SetupCommandsHandler implements CommandExecutor {
 			sender.sendMessage("Player is expected");
 			return true;
 		}
-		// get command
-		if (args.length > 0 && commandHandlers.containsKey(args[0])) {
-			CommandHandlerInterface commandHandlerInterface = commandHandlers.get(args[0]);
-			//check args length
-			if (args.length - 1 < commandHandlerInterface.getMinArgsLength()) {
-				player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&c ERROR: 1 Please use &6/sqsetup &c to view all valid game commands"));
-				return false;
-			}
-			//execute command
-			return commandHandlerInterface.handleCommand(player, Arrays.copyOfRange(args, 1, args.length));
+		if (args.length == 0) {
+			//help
 		}
-		player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&c ERROR: 2 Please use &6/sqsetup &c to view all valid game commands"));
+		if (args.length == 2) {
+			CommandHandlerInterface commandHandlerInterface = commandHandlers.get(args[0]);
+			if (args[0].equalsIgnoreCase("save")) {
+				return commandHandlerInterface.handleCommand(player, Arrays.copyOfRange(args, 1, args.length));
+			} else if (args[0].equalsIgnoreCase("create")) {
+				return commandHandlerInterface.handleCommand(player, Arrays.copyOfRange(args, 1, args.length));
+			}
+		} else if (args.length == 3) {
+			CommandHandlerInterface commandHandlerInterface = commandHandlers.get(args[1]);
+			if (args[1].equalsIgnoreCase("game1")) {
+				return commandHandlerInterface.handleCommand(player, Arrays.copyOfRange(args, 0, args.length));
+			} else if (args[1].equalsIgnoreCase("game2")) {
+				return commandHandlerInterface.handleCommand(player, Arrays.copyOfRange(args, 0, args.length));
+			} else if (args[1].equalsIgnoreCase("game3")) {
+				return commandHandlerInterface.handleCommand(player, Arrays.copyOfRange(args, 0, args.length));
+			} else if (args[1].equalsIgnoreCase("game6")) {
+				return commandHandlerInterface.handleCommand(player, Arrays.copyOfRange(args, 0, args.length));
+			} else if (args[1].equalsIgnoreCase("game7")) {
+				return commandHandlerInterface.handleCommand(player, Arrays.copyOfRange(args, 0, args.length));
+			}
+		}
+		player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c ERROR: Please use &6/sqsetup &c to view all valid game commands"));
 		return false;
 	}
 }

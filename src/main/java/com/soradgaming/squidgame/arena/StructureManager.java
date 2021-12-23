@@ -16,7 +16,7 @@ import java.util.*;
 public class StructureManager {
     private SquidGame plugin;
     private Arena arena;
-    private HashMap<Games, String> world;
+    private HashMap<Games, String> world = new HashMap<>();
     private int maxPlayers = 12;
     private int minPlayers = 2;
     private int startTime = 30;

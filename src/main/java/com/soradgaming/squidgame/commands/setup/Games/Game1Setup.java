@@ -42,25 +42,21 @@ public class Game1Setup implements CommandHandlerInterface {
             case "spawn" -> {
                 arena.getStructureManager().setSpawnPoint(Games.Game1,player.getLocation());
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eFirst game " + "Spawn" + "&a set to your location &7(" + player.getLocation().toVector() + ")"));
-                arena.getStructureManager().saveToConfig();
             }
             case "barrier" -> {
                 arena.getStructureManager().setConfigVectors("Game1.barrier", playerWand.getFirstPoint(player), playerWand.getSecondPoint(player));
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eFirst game " + "barrier" + "&a set with your location wand &7("
                         + playerWand.getFirstPoint(player).toString() + ") (" + playerWand.getSecondPoint(player).toString() + ")"));
-                arena.getStructureManager().saveToConfig();
             }
             case "killzone" -> {
                 arena.getStructureManager().setConfigVectors("Game1.killzone", playerWand.getFirstPoint(player), playerWand.getSecondPoint(player));
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eFirst game " + "killzone" + "&a set with your location wand &7("
                         + playerWand.getFirstPoint(player).toString() + ") (" + playerWand.getSecondPoint(player).toString() + ")"));
-                arena.getStructureManager().saveToConfig();
             }
             case "goal" -> {
                 arena.getStructureManager().setConfigVectors("Game1.goal", playerWand.getFirstPoint(player), playerWand.getSecondPoint(player));
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eFirst game " + "goal" + "&a set with your location wand &7("
                         + playerWand.getFirstPoint(player).toString() + ") (" + playerWand.getSecondPoint(player).toString() + ")"));
-                arena.getStructureManager().saveToConfig();
             }
         }
         return true;
