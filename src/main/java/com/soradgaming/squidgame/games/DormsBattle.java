@@ -122,33 +122,8 @@ public class DormsBattle implements Runnable {
         return null;
     }
 
-    @EventHandler(ignoreCancelled = true)
-    private void onEntityDamage(final EntityDamageEvent e) {
-        final Entity entity = e.getEntity();
-        if (entity instanceof Player) {
-            final Player player = ((Player) entity).getPlayer();
-            if (player != null && arena.getPlayerHandler().getAllPlayers().contains(player)) {
-                if (player.getHealth() - e.getDamage() <= 0) {
-                    //player dies
-                    if (e.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK && !arena.getGameHandler().isPvPAllowed()) {
-                        if (Started) {
-                            e.setDamage(0);
-                            e.setCancelled(true);
-                        }
-                    } else if (e.getCause() == EntityDamageEvent.DamageCause.FALL && !arena.getGameHandler().isPvPAllowed()) {
-                        if (Started) {
-                            e.setDamage(0);
-                            onPlayerDeathKilled(player);
-                            e.setCancelled(true);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     public void onPlayerDeathKilled(Player player) {
-        if (!player.getGameMode().equals(GameMode.SPECTATOR) && Started && arena.getPlayerHandler().getAllPlayers().contains(player)) {
+        if (!player.getGameMode().equals(GameMode.SPECTATOR) && Started) {
             player.setGameMode(GameMode.SPECTATOR);
             player.teleport(plugin.getConfig().getLocation("Lobby"));
             arena.getPlayerHandler().killPlayer(player);

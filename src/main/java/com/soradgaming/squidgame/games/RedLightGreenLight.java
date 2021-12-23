@@ -10,20 +10,14 @@ import org.bukkit.block.Block;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.util.BlockVector;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Objects;
 
-public class RedLightGreenLight implements Runnable, Listener {
+public class RedLightGreenLight implements Runnable {
     private SquidGame plugin;
     private Arena arena;
     private boolean canWalk = true;
@@ -45,6 +39,10 @@ public class RedLightGreenLight implements Runnable, Listener {
     public RedLightGreenLight(SquidGame plugin, Arena arena) {
         this.plugin = plugin;
         this.arena = arena;
+    }
+
+    public boolean isCanWalk() {
+        return canWalk;
     }
 
     @Override
@@ -132,45 +130,6 @@ public class RedLightGreenLight implements Runnable, Listener {
         return null;
     }
 
-    @EventHandler(ignoreCancelled = true)
-    private void onEntityDamage(final EntityDamageEvent e) {
-        final Entity entity = e.getEntity();
-        if (entity instanceof Player) {
-            final Player player = ((Player) entity).getPlayer();
-            if (player != null && arena.getPlayerHandler().getAllPlayers().contains(player)) {
-                if (arena.getGameHandler().isPvPAllowed()) {
-                    e.setDamage(0);
-                }
-            }
-        }
-    }
-
-    @EventHandler(ignoreCancelled = true)
-    private void PlayerMoveEvent(@NotNull PlayerMoveEvent e) {
-        if (e.getFrom().distance(Objects.requireNonNull(e.getTo())) <= 0.015) {
-            return;
-        } else if (e.getPlayer().getGameMode().equals(GameMode.SPECTATOR)) {
-            return;
-        }
-        Player player = e.getPlayer();
-        if (arena.getPlayerHandler().getAlivePlayers().contains(player)) {
-            if (!canWalk) {
-                final Location location = e.getPlayer().getLocation();
-                if (getKillZone().isBetween(location)) {
-                    Location spawn = arena.getStructureManager().getSpawn(Games.Game1);
-                    if (plugin.getConfig().getBoolean("eliminate-players")) {
-                        player.setGameMode(GameMode.SPECTATOR);
-                        player.teleport(spawn);
-                        arena.getPlayerHandler().killPlayer(player);
-                    } else {
-                        player.setGameMode(GameMode.SPECTATOR);
-                        player.teleport(spawn);
-                    }
-                }
-            }
-        }
-    }
-
     private Runnable singDoll() {
         if (!arena.getGameHandler().getStatus().equals(Status.Online)) {
             return null;
@@ -201,7 +160,7 @@ public class RedLightGreenLight implements Runnable, Listener {
         return null;
     }
 
-    private Cuboid getBarrier() {
+    public Cuboid getBarrier() {
         if (barrierZone == null) {
             BlockVector vector1 = arena.getStructureManager().configToVectors("Game1.barrier.first_point");
             BlockVector vector2 = arena.getStructureManager().configToVectors("Game1.barrier.second_point");
@@ -211,7 +170,7 @@ public class RedLightGreenLight implements Runnable, Listener {
         return barrierZone;
     }
 
-    private Cuboid getKillZone() {
+    public Cuboid getKillZone() {
         if (killZone == null) {
             BlockVector vector1 = arena.getStructureManager().configToVectors("Game1.killZone.first_point");
             BlockVector vector2 = arena.getStructureManager().configToVectors("Game1.killZone.second_point");
@@ -221,7 +180,7 @@ public class RedLightGreenLight implements Runnable, Listener {
         return killZone;
     }
 
-    private Cuboid getGoalZone() {
+    public Cuboid getGoalZone() {
         if (goalZone == null) {
             BlockVector vector1 = arena.getStructureManager().configToVectors("Game1.goal.first_point");
             BlockVector vector2 = arena.getStructureManager().configToVectors("Game1.goal.second_point");

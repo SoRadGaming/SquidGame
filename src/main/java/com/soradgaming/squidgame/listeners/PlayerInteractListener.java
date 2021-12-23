@@ -1,8 +1,8 @@
 package com.soradgaming.squidgame.listeners;
 
-import com.soradgaming.squidgame.utils.playerManager;
+import com.soradgaming.squidgame.arena.Arena;
+import com.soradgaming.squidgame.arena.Status;
 import com.soradgaming.squidgame.utils.playerWand;
-import com.soradgaming.squidgame.utils.gameManager;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,7 +16,12 @@ public class PlayerInteractListener implements Listener {
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent e) {
         Player player = e.getPlayer();
-        if (gameManager.getAllPlayers().contains(player.getUniqueId()) && !gameManager.isBlockAllowed() && playerManager.gameStarted) {
+        Arena arena = Arena.getPlayerArena(player);
+        if (arena == null) {
+            return;
+        }
+        playerWand playerWand = new playerWand();
+        if (!arena.getGameHandler().isBlockAllowed() && arena.getGameHandler().getStatus().equals(Status.Online) || arena.getGameHandler().getStatus().equals(Status.Starting)) {
             e.setCancelled(true);
         } else if (playerWand.getWand() != null && e.getItem() != null && e.getItem().isSimilar(playerWand.getWand())) {
             if (e.getAction() == Action.LEFT_CLICK_BLOCK) {

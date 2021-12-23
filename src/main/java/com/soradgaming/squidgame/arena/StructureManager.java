@@ -2,7 +2,6 @@ package com.soradgaming.squidgame.arena;
 
 import com.soradgaming.squidgame.SquidGame;
 import com.soradgaming.squidgame.games.Games;
-import com.soradgaming.squidgame.math.Cuboid;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;

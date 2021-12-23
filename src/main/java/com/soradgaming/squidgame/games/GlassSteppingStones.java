@@ -3,7 +3,6 @@ package com.soradgaming.squidgame.games;
 import com.soradgaming.squidgame.SquidGame;
 import com.soradgaming.squidgame.arena.Arena;
 import com.soradgaming.squidgame.arena.Messages;
-import com.soradgaming.squidgame.math.BlockUtils;
 import com.soradgaming.squidgame.math.Cuboid;
 import com.soradgaming.squidgame.math.Generator;
 import org.bukkit.*;
@@ -11,21 +10,15 @@ import org.bukkit.block.Block;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.util.BlockVector;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class GlassSteppingStones implements Runnable, Listener {
+public class GlassSteppingStones implements Runnable {
     private SquidGame plugin;
     private Arena arena;
     private Generator generator;
@@ -122,52 +115,10 @@ public class GlassSteppingStones implements Runnable, Listener {
         return null;
     }
 
-    @EventHandler(ignoreCancelled = true)
-    private void onEntityDamage(final EntityDamageEvent e) {
-        final Entity entity = e.getEntity();
-        if (entity instanceof Player) {
-            final Player player = ((Player) entity).getPlayer();
-            if (player != null && arena.getPlayerHandler().getAllPlayers().contains(player)) {
-                if (Started) {
-                    //player dies
-                    if (e.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK && !arena.getGameHandler().isPvPAllowed()) {
-                        e.setDamage(0);
-                        e.setCancelled(true);
-                    } else if (e.getCause() == EntityDamageEvent.DamageCause.FALL && !arena.getGameHandler().isPvPAllowed()) {
-                        e.setDamage(0);
-                        onPlayerDeathFall(player);
-                        e.setCancelled(true);
-                    }
-                }
-            }
-        }
-    }
-
-    @EventHandler(ignoreCancelled = true)
-    public void PlayerMoveEvent(@NotNull PlayerMoveEvent e) {
-        if (e.getFrom().distance(Objects.requireNonNull(e.getTo())) <= 0.015) {
-            return;
-        }
-        Player player = e.getPlayer();
-
-        if (!arena.getPlayerHandler().getAlivePlayers().contains(player) || !Started) {
-            return;
-        }
-
-        final Location location = Objects.requireNonNull(e.getTo()).clone().subtract(0, 1, 0);
-        final Block block = location.getBlock();
-
-        if (block != null && block.getType() == Material.valueOf(plugin.getConfig().getString("Game6.material"))) {
-            if (getFakeBlocks().contains(block)) {
-                BlockUtils.destroyBlockGroup(location.getBlock(), true);
-            }
-        }
-    }
-
     public void onPlayerDeathFall(Player player) {
-        if (!player.getGameMode().equals(GameMode.SPECTATOR) && Started && arena.getPlayerHandler().getAllPlayers().contains(player)) {
+        if (!player.getGameMode().equals(GameMode.SPECTATOR)) {
             player.setGameMode(GameMode.SPECTATOR);
-            player.teleport(plugin.getConfig().getLocation("Game6.spawn"));
+            player.teleport(arena.getStructureManager().getSpawn(Games.Game6));
             arena.getPlayerHandler().killPlayer(player);
         }
     }

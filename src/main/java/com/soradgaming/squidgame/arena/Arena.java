@@ -2,6 +2,7 @@ package com.soradgaming.squidgame.arena;
 
 import com.soradgaming.squidgame.SquidGame;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.util.Collection;
@@ -64,9 +65,9 @@ public class Arena {
         return arenaNames.get(name);
     }
 
-    public static Arena getPlayerArena(String name) {
+    public static Arena getPlayerArena(Player player) {
         for (Arena arena : arenaNames.values()) {
-            if (arena.getPlayerHandler().getAllPlayers().contains(Bukkit.getPlayer(name))) {
+            if (arena.getPlayerHandler().getAllPlayers().contains(player)) {
                 return arena;
             }
         }

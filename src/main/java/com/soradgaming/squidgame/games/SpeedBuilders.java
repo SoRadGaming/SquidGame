@@ -4,10 +4,7 @@ import com.soradgaming.squidgame.SquidGame;
 import com.soradgaming.squidgame.arena.Arena;
 import com.soradgaming.squidgame.arena.Messages;
 import com.soradgaming.squidgame.math.CalculateCuboid;
-import org.bukkit.Bukkit;
-import org.bukkit.Color;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
@@ -15,10 +12,10 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import java.util.*;
 
-public class SpeedBuilders implements Runnable, Listener {
+public class SpeedBuilders implements Runnable {
     private SquidGame plugin;
     private Arena arena;
-    private CalculateCuboid calculateCuboid;
+    public CalculateCuboid calculateCuboid;
     private boolean Started = false;
     private ArrayList<Player> team1 = new ArrayList<>();
     private ArrayList<Player> team2 = new ArrayList<>();

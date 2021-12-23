@@ -1,7 +1,6 @@
 package com.soradgaming.squidgame.placeholders;
 
 import com.soradgaming.squidgame.SquidGame;
-import com.soradgaming.squidgame.utils.gameManager;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -10,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 public class placeholder extends PlaceholderExpansion {
-    private static final SquidGame plugin = SquidGame.plugin;
+    private final SquidGame plugin = SquidGame.plugin;
 
     @Override
     public @NotNull String getIdentifier() {
@@ -40,17 +39,15 @@ public class placeholder extends PlaceholderExpansion {
     @Override
     public String onRequest(OfflinePlayer player, @NotNull String params)  {
         {
-            Set<UUID> leadBoardSetWins = scoreboard.grabData(PlayerDataType.Wins).keySet();
-            List<UUID> leadBoardWins = new ArrayList<>(leadBoardSetWins);
-
-            Set<UUID> leadBoardSetPoints = scoreboard.grabData(PlayerDataType.Points).keySet();
+            Set<UUID> leadBoardSetPoints = new scoreboard(plugin,PlayerDataType.Points).getPlayerList().keySet();
             List<UUID> leadBoardPoints = new ArrayList<>(leadBoardSetPoints);
+
+            Set<UUID> leadBoardSetWins = new scoreboard(plugin,PlayerDataType.Wins).getPlayerList().keySet();
+            List<UUID> leadBoardWins = new ArrayList<>(leadBoardSetWins);
             String[] args = params.split("_");
             if(args[0].equalsIgnoreCase("arena")){
                 if (args[1].equalsIgnoreCase("joined")) {
                     return Objects.requireNonNull(Bukkit.getPlayer(UUID.fromString(Objects.requireNonNull(plugin.data.getString("join"))))).getName();
-                } else if (args[1].equalsIgnoreCase("players")) {
-                    return String.valueOf(gameManager.getAlivePlayers().size() + gameManager.getDeadPlayers().size());
                 } else if (args[1].equalsIgnoreCase("maxplayers")) {
                     return String.valueOf(plugin.getConfig().getInt("max-players"));
                 } else if (args[1].equalsIgnoreCase("leaved")) {

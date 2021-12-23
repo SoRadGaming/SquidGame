@@ -3,14 +3,9 @@ package com.soradgaming.squidgame.commands;
 import com.soradgaming.squidgame.SquidGame;
 import com.soradgaming.squidgame.arena.Arena;
 import com.soradgaming.squidgame.arena.Messages;
-import com.soradgaming.squidgame.games.Game6;
-import com.soradgaming.squidgame.math.Cuboid;
-import com.soradgaming.squidgame.math.Generator;
 import com.soradgaming.squidgame.utils.playerWand;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -18,14 +13,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
-
 public class Commands implements CommandExecutor {
 
     private final SquidGame plugin = SquidGame.plugin;
-
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String s, String[] args) {
@@ -61,7 +51,6 @@ public class Commands implements CommandExecutor {
                 plugin.reloadConfig();
                 plugin.reloadMessages();
                 plugin.getLogger().info("Reloaded");
-                Game6.reloadConfig();
                 sender.sendMessage(ChatColor.GREEN + "Reloaded");
             } else {
                 sender.sendMessage(ChatColor.RED + "You don't have permission to do that");
@@ -69,7 +58,8 @@ public class Commands implements CommandExecutor {
             }
         } else if (args.length == 1 && args[0].equalsIgnoreCase("start")) {
             if (sender.isOp()) {
-                if (!playerManager.checkStart()) {
+                Arena arena = Arena.getPlayerArena(((Player) sender).getPlayer());
+                if (!arena.getGameHandler().checkStart()) {
                     sender.sendMessage(Messages.formatMessage(((Player) sender).getPlayer(),"arena.no-enough-players"));
                 }
             } else {
@@ -78,23 +68,23 @@ public class Commands implements CommandExecutor {
             }
         } else if (args.length == 1 && args[0].equalsIgnoreCase("end")) {
             if (sender.isOp()) {
-                if (playerManager.checkStart()) {
-
-                }
+                Arena arena = Arena.getPlayerArena(((Player) sender).getPlayer());
             } else {
                 sender.sendMessage(ChatColor.RED + "You don't have permission to do that");
                 return true;
             }
         } else if (args.length == 1 && args[0].equalsIgnoreCase("join")) {
             Player player = ((Player) sender).getPlayer();
-            if (playerManager.playerJoin(player)) {
+            Arena arena = Arena.getPlayerArena(player);
+            if (arena.getPlayerHandler().playerJoin(player)) {
                 return true;
             } else {
                 sender.sendMessage(Messages.formatMessage(player,"arena.already-in-game"));
             }
         } else if (args.length == 1 && args[0].equalsIgnoreCase("leave")) {
             Player player = ((Player) sender).getPlayer();
-            if (playerManager.playerLeave(player)) {
+            Arena arena = Arena.getPlayerArena(player);
+            if (arena.getPlayerHandler().playerLeave(player)) {
                 return true;
             } else {
                 sender.sendMessage(Messages.formatMessage(player,"arena.not-in-game"));
@@ -109,16 +99,7 @@ public class Commands implements CommandExecutor {
                 sender.sendMessage(ChatColor.RED + "You don't have permission to do that");
                 return true;
             }
-        } else if (args.length == 2 && args[0].equalsIgnoreCase("test")) {
-            if (sender.isOp()) {
-                //QuickTest
-                Game6.reloadConfig();
-                Generator.generateTiles(Material.valueOf(plugin.getConfig().getString("Game6.material")), Integer.parseInt(args[1]));
-            } else {
-                sender.sendMessage(ChatColor.RED + "You don't have permission to do that");
-                return true;
-            }
-        }else if (args.length == 2 && args[0].equalsIgnoreCase("set")) {
+        } else if (args.length == 2 && args[0].equalsIgnoreCase("set")) {
             if (args[1].equalsIgnoreCase("lobby")) {
                 plugin.getConfig().set("Lobby",loc);
                 plugin.getConfig().set("Game3.world", loc.getWorld().getName());

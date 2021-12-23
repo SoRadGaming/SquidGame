@@ -16,6 +16,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -108,14 +109,8 @@ public final class SquidGame extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerDropEvent(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerInteractListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new PlayerMoveListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerQuitListener(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new RedLightGreenLight(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new Game2(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new Game3(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new Game4(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new Game5(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new Game6(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new Game7(), this);
         //PAPI
         new placeholder().register();
     }

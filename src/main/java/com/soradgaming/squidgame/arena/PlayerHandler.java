@@ -131,7 +131,7 @@ public class PlayerHandler {
         }
     }
 
-    public void playerJoin(Player player) {
+    public boolean playerJoin(Player player) {
         if (getAllPlayers().size() <= plugin.getConfig().getInt("max-players") && arena.getGameHandler().getStatus().equals(Status.Offline) || arena.getGameHandler().getStatus().equals(Status.Starting)) {
             plugin.data.set("join",player.getUniqueId().toString());
             //checkStart();
@@ -141,10 +141,12 @@ public class PlayerHandler {
             savePlayerData(player);
             setDefaultData(player);
             addPlayer(player);
+            return true;
         }
+        return false;
     }
 
-    public void playerLeave(Player player) {
+    public boolean playerLeave(Player player) {
         if (arena.getGameHandler().getStatus().equals(Status.Starting)) {
             plugin.data.set("leave",player.getUniqueId().toString());
             for (Player players : getAllPlayers()) {
@@ -152,7 +154,9 @@ public class PlayerHandler {
             }
             returnPlayerData(player);
             removePlayer(player);
+            return true;
         }
+        return false;
     }
 
     public void playerQuit(Player player) {
