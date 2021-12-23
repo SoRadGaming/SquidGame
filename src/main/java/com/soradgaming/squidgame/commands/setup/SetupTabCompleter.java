@@ -45,28 +45,28 @@ public class SetupTabCompleter implements TabCompleter {
 				arenaArrayList.add(arena.toString());
 			}
 			completions = arenaArrayList;
-			completions = getApplicableTabCompletes(args[1], completions);
+			completions = getApplicableTabCompletes(args[0], completions);
 		} else if (args.length == 2) {
 			completions = new ArrayList<>(Arrays.asList("game1", "game2", "game3", "game4", "game5", "game6", "game7"));
 			completions = getApplicableTabCompletes(args[1], completions);
 		} else if (args.length == 3) {
-			switch (args[2]) {
+			switch (args[1]) {
 				case ("game1") -> {
 					completions = new ArrayList<>(Arrays.asList("spawn", "barrier", "killzone", "goal"));
-					completions = getApplicableTabCompletes(args[3], completions);
+					completions = getApplicableTabCompletes(args[2], completions);
 				}
 				case ("game2") -> {
 					completions = new ArrayList<>(Arrays.asList("spawn_red", "spawn_blue", "spawn_green", "spawn_yellow",
 							"BuildZone1", "BuildZone2", "BuildZone3", "BuildZone4","DisplayZone1", "DisplayZone2", "DisplayZone3", "DisplayZone4"));
-					completions = getApplicableTabCompletes(args[3], completions);
+					completions = getApplicableTabCompletes(args[2], completions);
 				}
 				case ("game3"), ("game7") -> {
 					completions = new ArrayList<>(List.of("spawn"));
-					completions = getApplicableTabCompletes(args[3], completions);
+					completions = getApplicableTabCompletes(args[2], completions);
 				}
 				case ("game6") -> {
 					completions = new ArrayList<>(Arrays.asList("spawn", "glass", "goal", "barrier"));
-					completions = getApplicableTabCompletes(args[3], completions);
+					completions = getApplicableTabCompletes(args[2], completions);
 				}
 			}
 		}

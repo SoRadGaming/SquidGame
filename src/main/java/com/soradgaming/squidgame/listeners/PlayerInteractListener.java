@@ -17,12 +17,7 @@ public class PlayerInteractListener implements Listener {
     public void onPlayerInteract(PlayerInteractEvent e) {
         Player player = e.getPlayer();
         Arena arena = Arena.getPlayerArena(player);
-        if (arena == null) {
-            return;
-        }
-        if (!arena.getGameHandler().isBlockAllowed() && arena.getGameHandler().getStatus().equals(Status.Online) || arena.getGameHandler().getStatus().equals(Status.Starting)) {
-            e.setCancelled(true);
-        } else if (playerWand.getWand() != null && e.getItem() != null && e.getItem().isSimilar(playerWand.getWand())) {
+        if (e.getItem() != null && e.getItem().isSimilar(playerWand.getWand())) {
             if (e.getAction() == Action.LEFT_CLICK_BLOCK) {
                 playerWand.setFirstPoint(e.getClickedBlock().getLocation(), player);
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&aSet &dfirst &apoint &7(&e" +
@@ -32,6 +27,12 @@ public class PlayerInteractListener implements Listener {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&aSet &bsecond &apoint &7(&e" +
                         playerWand.getSecondPoint(player).toString() + "&7)"));
             }
+            e.setCancelled(true);
+        }
+        if (arena == null) {
+            return;
+        }
+        if (!arena.getGameHandler().isBlockAllowed() && arena.getGameHandler().getStatus().equals(Status.Online) || arena.getGameHandler().getStatus().equals(Status.Starting)) {
             e.setCancelled(true);
         }
     }

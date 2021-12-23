@@ -15,9 +15,9 @@ import java.util.List;
 import java.util.Objects;
 
 public class playerWand {
-    private static HashMap<Player, BlockVector> firstPoint;
-    private static HashMap<Player, BlockVector> secondPoint;
-    private static HashMap<Player, World> world;
+    private static HashMap<Player, BlockVector> firstPoint = new HashMap<>();
+    private static HashMap<Player, BlockVector> secondPoint = new HashMap<>();
+    private static HashMap<Player, World> world = new HashMap<>();
     private static ItemStack wand = null;
 
     public static BlockVector getFirstPoint(Player player) {
