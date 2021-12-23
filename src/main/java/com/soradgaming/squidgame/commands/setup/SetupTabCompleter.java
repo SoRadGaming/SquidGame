@@ -39,16 +39,21 @@ public class SetupTabCompleter implements TabCompleter {
 		ArrayList<String> completions = new ArrayList<>();
 
 		if (args.length == 1) {
-			List<Arena> arenas = Arena.getArenas().stream().toList();
-			ArrayList<String> arenaArrayList = new ArrayList<>();
-			for (Arena arena:arenas) {
-				arenaArrayList.add(arena.toString());
-			}
-			completions = arenaArrayList;
+			completions = new ArrayList<>(Arena.getArenasNames());
+			completions.add("save");
+			completions.add("create");
 			completions = getApplicableTabCompletes(args[0], completions);
 		} else if (args.length == 2) {
-			completions = new ArrayList<>(Arrays.asList("game1", "game2", "game3", "game4", "game5", "game6", "game7"));
-			completions = getApplicableTabCompletes(args[1], completions);
+			if (args[0].equalsIgnoreCase("save")) {
+				completions = new ArrayList<>(Arena.getArenasNames());
+				completions = getApplicableTabCompletes(args[0], completions);
+			} else if (args[0].equalsIgnoreCase("create")) {
+				completions = new ArrayList<>(List.of(""));
+				completions = getApplicableTabCompletes(args[1], completions);
+			} else {
+				completions = new ArrayList<>(Arrays.asList("game1", "game2", "game3", "game4", "game5", "game6", "game7"));
+				completions = getApplicableTabCompletes(args[1], completions);
+			}
 		} else if (args.length == 3) {
 			switch (args[1]) {
 				case ("game1") -> {

@@ -36,12 +36,10 @@ public class Commands implements CommandExecutor {
             sender.sendMessage(ChatColor.BLUE + "-----------------=[" + ChatColor.GREEN + "SquidGame" + ChatColor.BLUE + "]=-----------------");
             sender.sendMessage(ChatColor.GREEN + "/sq help" + ChatColor.BLUE + "  The help command.");
             sender.sendMessage(ChatColor.GREEN + "/sq reload" + ChatColor.BLUE + "  To reload the plugin");
-            sender.sendMessage(ChatColor.GREEN + "/sq join" + ChatColor.BLUE + " Join Game");
+            sender.sendMessage(ChatColor.GREEN + "/sq join arena" + ChatColor.BLUE + " Join Game");
             sender.sendMessage(ChatColor.GREEN + "/sq leave" + ChatColor.BLUE + " Leave Game");
-            sender.sendMessage(ChatColor.GREEN + "/sq list" + ChatColor.BLUE + " See all players in Game");
-            sender.sendMessage(ChatColor.GREEN + "/sq start" + ChatColor.BLUE + " Start the Plugin ");
-            sender.sendMessage(ChatColor.GREEN + "/sq end" + ChatColor.BLUE + " End MiniGame");
-            sender.sendMessage(ChatColor.GREEN + "/sq remove/add/set data player" + ChatColor.BLUE + " Modify Values ");
+            sender.sendMessage(ChatColor.GREEN + "/sq start arena" + ChatColor.BLUE + " Start the Game ");
+            sender.sendMessage(ChatColor.GREEN + "/sq end arena" + ChatColor.BLUE + " End the Game");
             sender.sendMessage(ChatColor.GREEN + "Plugin made by: " + ChatColor.BLUE + "SoRadGaming");
             sender.sendMessage(ChatColor.BLUE + "---------------------------------------------------");
 
@@ -93,13 +91,6 @@ public class Commands implements CommandExecutor {
                 Player player = (Player) sender;;
                 player.getInventory().addItem(playerWand.getWand());
                 player.updateInventory();
-            } else {
-                sender.sendMessage(ChatColor.RED + "You don't have permission to do that");
-                return true;
-            }
-        } else if (args.length == 3 && args[0].equalsIgnoreCase("set")) {
-            if (sender.isOp()) {
-                Player player = (Player) sender;
             } else {
                 sender.sendMessage(ChatColor.RED + "You don't have permission to do that");
                 return true;

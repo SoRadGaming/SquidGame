@@ -10,10 +10,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class Messages {
-    private static SquidGame plugin;
-    public Messages() {
-        plugin = SquidGame.plugin;
-    }
+    private static final SquidGame plugin = SquidGame.plugin;
 
     //Message Formatting
     public static void broadcastTitle(List<Player> players, final String title, final String subtitle, int time) {

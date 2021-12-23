@@ -18,6 +18,7 @@
 package com.soradgaming.squidgame.commands.setup;
 
 import com.soradgaming.squidgame.SquidGame;
+import com.soradgaming.squidgame.arena.Arena;
 import com.soradgaming.squidgame.arena.Messages;
 import com.soradgaming.squidgame.commands.setup.Games.*;
 import org.bukkit.command.Command;
@@ -30,8 +31,10 @@ import java.util.HashMap;
 
 public class SetupCommandsHandler implements CommandExecutor {
 	private HashMap<String, CommandHandlerInterface> commandHandlers = new HashMap<>();
+	private SquidGame plugin;
 
 	public SetupCommandsHandler(SquidGame plugin) {
+		this.plugin = plugin;
 		commandHandlers.put("game1", new Game1Setup(plugin));
 		commandHandlers.put("game2", new Game2Setup(plugin));
 		commandHandlers.put("game3", new Game3Setup(plugin));
@@ -46,17 +49,25 @@ public class SetupCommandsHandler implements CommandExecutor {
 			return true;
 		}
 		// get command
-		if (args.length > 0 && commandHandlers.containsKey(args[0])) {
+		if (args.length == 2) {
+			if (args[0].equalsIgnoreCase("create")) {
+				Arena arena = new Arena(args[1],plugin);
+				Arena.registerArena(arena);
+			} else if (args[0].equalsIgnoreCase("save")) {
+				Arena.getArenaByName(args[1]).getStructureManager().saveToConfig();
+			}
+
+		} else if (args.length > 0 && commandHandlers.containsKey(args[0])) {
 			CommandHandlerInterface commandHandlerInterface = commandHandlers.get(args[0]);
 			//check args length
 			if (args.length - 1 < commandHandlerInterface.getMinArgsLength()) {
-				player.sendMessage(Messages.formatMessage(player,"&c ERROR: Please use &6/tr cmds&c to view required arguments for all game commands"));
+				player.sendMessage(Messages.formatMessage(player,"&c ERROR: Please use &6/sqr cmds&c to view required arguments for all game commands"));
 				return false;
 			}
 			//execute command
 			return commandHandlerInterface.handleCommand(player, Arrays.copyOfRange(args, 1, args.length));
 		}
-		player.sendMessage(Messages.formatMessage(player,"&c ERROR: Please use &6/tr cmds&c to view all valid game commands"));
+		player.sendMessage(Messages.formatMessage(player,"&c ERROR: Please use &6/sqr cmds&c to view all valid game commands"));
 		return false;
 	}
 }
