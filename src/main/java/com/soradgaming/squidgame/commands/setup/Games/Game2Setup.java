@@ -29,10 +29,7 @@ public class Game2Setup implements CommandHandlerInterface {
         if (!args[1].equalsIgnoreCase("game2")) {
             return true;
         }
-        if (!args[2].equals("spawn")) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&cYou don't have an region wand, use /sq wand to get it."));
-            return true;
-        } else if (!playerWand.isComplete(player) && !args[2].equals("spawn")) {
+        if (!playerWand.isComplete(player) && !args[2].equals("spawn")) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&cYou need to set area with your region wand first."));
             return true;
         }

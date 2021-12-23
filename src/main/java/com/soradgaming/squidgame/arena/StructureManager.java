@@ -180,8 +180,8 @@ public class StructureManager {
         config.set("lightSwitchMax", lightSwitchMax);
         config.set("lightSwitchOn", lightSwitchOn);
         config.set("lightSwitchOff", lightSwitchOff);
-        config.set("bridgeBlock", bridgeBlock);
-        config.set("killBlock", killBlock);
+        config.set("bridgeBlock", bridgeBlock.toString());
+        config.set("killBlock", killBlock.toString());
         config.set("rewards", rewards);
         //Save Arena file
         try {
@@ -232,7 +232,15 @@ public class StructureManager {
     }
 
     public void setConfigVectors(String key, BlockVector pos1, BlockVector pos2) {
-        FileConfiguration config = YamlConfiguration.loadConfiguration(arena.getArenaFile());
+        if (!arena.getArenaFile().isFile()) {
+            FileConfiguration config = new YamlConfiguration();
+            try {
+                config.save(arena.getArenaFile());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        FileConfiguration config = new YamlConfiguration();
         config.set(key + ".first_point.x",pos1.getX());
         config.set(key + ".first_point.y",pos1.getY());
         config.set(key + ".first_point.z",pos1.getZ());
