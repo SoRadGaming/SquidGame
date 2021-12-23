@@ -20,16 +20,17 @@ public class PlayerInteractListener implements Listener {
         if (arena == null) {
             return;
         }
-        playerWand playerWand = new playerWand();
         if (!arena.getGameHandler().isBlockAllowed() && arena.getGameHandler().getStatus().equals(Status.Online) || arena.getGameHandler().getStatus().equals(Status.Starting)) {
             e.setCancelled(true);
         } else if (playerWand.getWand() != null && e.getItem() != null && e.getItem().isSimilar(playerWand.getWand())) {
             if (e.getAction() == Action.LEFT_CLICK_BLOCK) {
-                playerWand.setFirstPoint(Objects.requireNonNull(e.getClickedBlock()).getLocation());
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&aSet &dfirst &apoint &7(&e" + playerWand.getFirstPoint().toString() + "&7)"));
+                playerWand.setFirstPoint(e.getClickedBlock().getLocation(), player);
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&aSet &dfirst &apoint &7(&e" +
+                        playerWand.getFirstPoint(player).toString() + "&7)"));
             } else if (e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                playerWand.setSecondPoint(Objects.requireNonNull(e.getClickedBlock()).getLocation());
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&aSet &bsecond &apoint &7(&e" + playerWand.getSecondPoint().toString() + "&7)"));
+                playerWand.setSecondPoint(e.getClickedBlock().getLocation(), player);
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&aSet &bsecond &apoint &7(&e" +
+                        playerWand.getSecondPoint(player).toString() + "&7)"));
             }
             e.setCancelled(true);
         }

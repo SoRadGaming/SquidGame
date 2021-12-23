@@ -25,6 +25,7 @@ public class StructureManager {
     private HashMap<Games, Integer> timeLimit = new HashMap<>();
     private HashMap<Games, Integer> countdown = new HashMap<>();
     private HashMap<Games,Location> spawn = new HashMap<>();
+    private HashMap<String,Location> spawnGame2 = new HashMap<>();
     private HashMap<Games,List<Location>> additionalSpawnPoints = new HashMap<>();
     private HashMap<Games,List<Location>> freeSpawnList = new HashMap<>();
     private int lightSwitchMin = 1;
@@ -262,5 +263,13 @@ public class StructureManager {
             return Games.Game7;
         }
         return null;
+    }
+
+    public void setSpawnGame2(String key, Location location) {
+        spawnGame2.put(key,location);
+    }
+
+    public Location getSpawnGame2(String key) {
+        return spawnGame2.get(key);
     }
 }

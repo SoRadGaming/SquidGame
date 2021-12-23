@@ -10,3 +10,6 @@ commands:
   squidgame:
     aliases: ["sg", "sq", "squid"]
     description: The main command for the plugin.
+  squidgamesetup:
+    aliases: ["sgsetup", "sqsetup", "squidsetup"]
+    description: The setup command for the plugin.

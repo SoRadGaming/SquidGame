@@ -110,13 +110,13 @@ public class SpeedBuilders implements Runnable {
             Player player = playerList.get(i);
             team1.add(player);
             player.getInventory().setArmorContents(getArmour(Color.RED));
-            player.teleport(Objects.requireNonNull(plugin.getConfig().getLocation("Game2.spawn_red")));
+            player.teleport(arena.getStructureManager().getSpawnGame2("spawn_red"));
         }
         for (int i = team1.size();playerList.size() > i;i++) {
             Player player = playerList.get(i);
             team2.add(player);
             player.getInventory().setArmorContents(getArmour(Color.BLUE));
-            player.teleport(Objects.requireNonNull(plugin.getConfig().getLocation("Game2.spawn_blue")));
+            player.teleport(arena.getStructureManager().getSpawnGame2("spawn_blue"));
         }
         Collections.shuffle(team1);
         for (int i = 0;(team1.size() / 2) > i;i++) {
@@ -124,7 +124,7 @@ public class SpeedBuilders implements Runnable {
             team1.remove(player);
             team3.add(player);
             player.getInventory().setArmorContents(getArmour(Color.GREEN));
-            player.teleport(Objects.requireNonNull(plugin.getConfig().getLocation("Game2.spawn_green")));
+            player.teleport(arena.getStructureManager().getSpawnGame2("spawn_green"));
         }
         Collections.shuffle(team2);
         for (int i = 0;(team2.size()/ 2) > i;i++) {
@@ -132,7 +132,7 @@ public class SpeedBuilders implements Runnable {
             team2.remove(player);
             team4.add(player);
             player.getInventory().setArmorContents(getArmour(Color.YELLOW));
-            player.teleport(Objects.requireNonNull(plugin.getConfig().getLocation("Game2.spawn_yellow")));
+            player.teleport(arena.getStructureManager().getSpawnGame2("spawn_yellow"));
         }
     }
 

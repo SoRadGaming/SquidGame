@@ -6,6 +6,8 @@ import com.soradgaming.squidgame.arena.Status;
 import com.soradgaming.squidgame.bStats.Metrics;
 import com.soradgaming.squidgame.commands.CommandTabCompleter;
 import com.soradgaming.squidgame.commands.Commands;
+import com.soradgaming.squidgame.commands.setup.SetupCommandsHandler;
+import com.soradgaming.squidgame.commands.setup.SetupTabCompleter;
 import com.soradgaming.squidgame.games.*;
 import com.soradgaming.squidgame.listeners.*;
 import com.soradgaming.squidgame.math.CalculateCuboid;
@@ -98,8 +100,10 @@ public final class SquidGame extends JavaPlugin {
     //Loads all the Events and Commands
     public void loadMethod() {
         //Registers Commands
-        Objects.requireNonNull(getCommand("squidgame")).setExecutor(new Commands());
-        Objects.requireNonNull(getCommand("squidgame")).setTabCompleter(new CommandTabCompleter());
+        getCommand("squidgame").setExecutor(new Commands());
+        getCommand("squidgame").setTabCompleter(new CommandTabCompleter());
+        getCommand("squidgamesetup").setExecutor(new SetupCommandsHandler(this));
+        getCommand("squidgamesetup").setTabCompleter(new SetupTabCompleter());
         //Listener
         Bukkit.getServer().getPluginManager().registerEvents(new BlockBreakListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new BlockPlaceListener(), this);
