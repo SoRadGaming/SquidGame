@@ -60,6 +60,7 @@ public class StructureManager {
 
     public void setSpawnPoint(Games games, Location location) {
         this.spawn.put(games,location);
+        this.additionalSpawnPoints.put(games,null);
     }
 
     public void addSpawnPoint(Games games, Location loc) {additionalSpawnPoints.get(games).add(loc);}

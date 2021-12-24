@@ -139,6 +139,7 @@ public final class SquidGame extends JavaPlugin {
         for (Arena arena : Arena.getArenas()) {
             arena.getGameHandler().setGameStatus(Status.Offline);
             arena.getStructureManager().saveToConfig();
+            getLogger().info("Saved " + arena.getArenaName());
         }
     }
 
@@ -156,6 +157,7 @@ public final class SquidGame extends JavaPlugin {
                     Arena arena = new Arena(file.substring(0, file.length() - 4), plugin);
                     arena.getStructureManager().loadFromConfig();
                     Arena.registerArena(arena);
+                    getLogger().info("Loaded " + arena.getArenaName());
                 }
             }
         }.runTaskLater(this, 20L);
