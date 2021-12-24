@@ -1,16 +1,13 @@
 package com.soradgaming.squidgame;
 
 import com.soradgaming.squidgame.arena.Arena;
-import com.soradgaming.squidgame.arena.GameHandler;
 import com.soradgaming.squidgame.arena.Status;
 import com.soradgaming.squidgame.bStats.Metrics;
 import com.soradgaming.squidgame.commands.CommandTabCompleter;
 import com.soradgaming.squidgame.commands.Commands;
 import com.soradgaming.squidgame.commands.setup.SetupCommandsHandler;
 import com.soradgaming.squidgame.commands.setup.SetupTabCompleter;
-import com.soradgaming.squidgame.games.*;
 import com.soradgaming.squidgame.listeners.*;
-import com.soradgaming.squidgame.math.CalculateCuboid;
 import com.soradgaming.squidgame.placeholders.placeholder;
 import com.soradgaming.squidgame.utils.configuration;
 import org.bukkit.Bukkit;
@@ -18,7 +15,6 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -27,15 +23,16 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.FileVisitor;
-import java.nio.file.Files;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 public final class SquidGame extends JavaPlugin {
     public static SquidGame plugin;
     public File arenaFolder = new File(getDataFolder() + File.separator + "arenas");
-    public File schematics = new File(getDataFolder() + "/schematics");
-    public File dataFile = new File(getDataFolder() + "/data/players.yml");
+    public File schematics = new File(getDataFolder() + File.separator + "schematics");
+    public File dataFile = new File(getDataFolder() + File.separator + "data"+ File.separator + "players.yml");
     public File messageFile = new File(getDataFolder(), "messages.yml");
     public FileConfiguration data = YamlConfiguration.loadConfiguration(dataFile);
     public FileConfiguration messages = YamlConfiguration.loadConfiguration(messageFile);

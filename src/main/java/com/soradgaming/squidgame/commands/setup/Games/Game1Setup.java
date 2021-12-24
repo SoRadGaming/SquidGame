@@ -37,8 +37,13 @@ public class Game1Setup implements CommandHandlerInterface {
         }
         switch (args[2]) {
             case "spawn" -> {
-                arena.getStructureManager().setSpawnPoint(Games.Game1,player.getLocation());
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eFirst game " + "Spawn" + "&a set to your location &7(" + player.getLocation().toVector() + ")"));
+                if (!arena.getStructureManager().isSpawnSet(Games.Game1)) {
+                    arena.getStructureManager().setSpawnPoint(Games.Game1,player.getLocation());
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eFirst game " + "Spawn" + "&a set to your location &7(" + player.getLocation().toVector() + ")"));
+                } else {
+                    arena.getStructureManager().addSpawnPoint(Games.Game1,player.getLocation());
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eFirst game " + "Spawn" + "&a set to your location &7(" + player.getLocation().toVector() + ")"));
+                }
             }
             case "barrier" -> {
                 arena.getStructureManager().setConfigVectors("Game1.barrier", playerWand.getFirstPoint(player), playerWand.getSecondPoint(player));

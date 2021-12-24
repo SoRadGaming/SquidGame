@@ -50,6 +50,7 @@ public class Arena {
     public static void registerArena(Arena arena) {
         arenaNames.put(arena.getArenaName(), arena);
         arena.getGameHandler().setGameStatus(Status.Offline);
+        arena.getStructureManager().saveToConfig();
     }
 
     public void unregisterArena(Arena arena) {

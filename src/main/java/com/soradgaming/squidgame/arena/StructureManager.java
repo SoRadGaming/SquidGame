@@ -2,10 +2,8 @@ package com.soradgaming.squidgame.arena;
 
 import com.soradgaming.squidgame.SquidGame;
 import com.soradgaming.squidgame.games.Games;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.util.BlockVector;
@@ -16,7 +14,6 @@ import java.util.*;
 public class StructureManager {
     private SquidGame plugin;
     private Arena arena;
-    private HashMap<Games, String> world = new HashMap<>();
     private int maxPlayers = 12;
     private int minPlayers = 2;
     private int startTime = 30;
@@ -41,16 +38,6 @@ public class StructureManager {
         this.arena = arena;
     }
 
-    public String getWorldName(Games games) {
-        return world.get(games);
-    }
-
-    public World getWorld(Games games) {
-        return Bukkit.getWorld(world.get(games));
-    }
-
-    public void setWorld(Games games, String worldI) {world.put(games,worldI);}
-
     public int getMaxPlayers() {
         return maxPlayers;
     }
@@ -73,7 +60,6 @@ public class StructureManager {
 
     public void setSpawnPoint(Games games, Location location) {
         this.spawn.put(games,location);
-        this.world.put(games,location.getWorld().getName());
     }
 
     public void addSpawnPoint(Games games, Location loc) {additionalSpawnPoints.get(games).add(loc);}
@@ -154,16 +140,28 @@ public class StructureManager {
         return this.intermissionTime;
     }
 
+    public void setIntermissionTime(int intermissionTime) {this.intermissionTime = intermissionTime;}
+
+    public Material getBridgeBlock() {return bridgeBlock;}
+
+    public void setBridgeBlock(Material bridgeBlock) {this.bridgeBlock = bridgeBlock;}
+
+    public Material getKillBlock() {return killBlock;}
+
+    public void setKillBlock(Material killBlock) {this.killBlock = killBlock;}
+
     public void saveToConfig() {
-        FileConfiguration config = new YamlConfiguration();
+        YamlConfiguration config;
+        if (!arena.getArenaFile().isFile()) {
+            config = new YamlConfiguration();
+        } else {
+            config = YamlConfiguration.loadConfiguration(arena.getArenaFile());
+        }
         config.set("maxPlayers", maxPlayers);
         config.set("minPlayers", minPlayers);
         config.set("startTime", startTime);
         config.set("endTime", endTime);
         config.set("intermissionTime", intermissionTime);
-        for (Games key : world.keySet()) {
-            config.set("world." + key, world.get(key));
-        }
         for (Games key : spawn.keySet()) {
             config.set("spawn." + key, spawn.get(key));
         }
@@ -198,9 +196,6 @@ public class StructureManager {
         startTime = config.getInt("startTime");
         endTime = config.getInt("endTime");
         intermissionTime = config.getInt("intermissionTime");
-        for (String key : config.getConfigurationSection("world").getKeys(false)) {
-            world.put(stringToGame(key), config.getString("world." + key));
-        }
         for (String key : config.getConfigurationSection("spawn").getKeys(false)) {
             spawn.put(stringToGame(key), config.getLocation("spawn." + key));
         }
@@ -232,15 +227,7 @@ public class StructureManager {
     }
 
     public void setConfigVectors(String key, BlockVector pos1, BlockVector pos2) {
-        if (!arena.getArenaFile().isFile()) {
-            FileConfiguration config = new YamlConfiguration();
-            try {
-                config.save(arena.getArenaFile());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        FileConfiguration config = new YamlConfiguration();
+        FileConfiguration config = YamlConfiguration.loadConfiguration(arena.getArenaFile());
         config.set(key + ".first_point.x",pos1.getX());
         config.set(key + ".first_point.y",pos1.getY());
         config.set(key + ".first_point.z",pos1.getZ());

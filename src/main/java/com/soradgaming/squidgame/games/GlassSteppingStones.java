@@ -139,7 +139,7 @@ public class GlassSteppingStones implements Runnable {
         if (glassZone == null) {
             BlockVector vector1 = arena.getStructureManager().configToVectors("Game6.glass.first_point");
             BlockVector vector2 = arena.getStructureManager().configToVectors("Game6.glass.second_point");
-            World world = arena.getStructureManager().getWorld(Games.Game6);
+            World world = arena.getStructureManager().getSpawn(Games.Game6).getWorld();
             glassZone = new Cuboid(Objects.requireNonNull(world),vector1.toBlockVector(),vector2.toBlockVector());
         }
         return glassZone;
@@ -149,7 +149,7 @@ public class GlassSteppingStones implements Runnable {
         if (goalZone == null) {
             BlockVector vector1 = arena.getStructureManager().configToVectors("Game6.goal.first_point");
             BlockVector vector2 = arena.getStructureManager().configToVectors("Game6.goal.second_point");
-            World world = arena.getStructureManager().getWorld(Games.Game6);
+            World world = arena.getStructureManager().getSpawn(Games.Game6).getWorld();
             goalZone = new Cuboid(Objects.requireNonNull(world),vector1.getBlockX(),vector1.getBlockY(),vector1.getBlockZ(),vector2.getBlockX(),vector2.getBlockY(),vector2.getBlockZ());
         }
         return goalZone;
@@ -159,7 +159,7 @@ public class GlassSteppingStones implements Runnable {
         if (barrierZone == null) {
             BlockVector vector1 = arena.getStructureManager().configToVectors("Game6.barrier.first_point");
             BlockVector vector2 = arena.getStructureManager().configToVectors("Game6.barrier.second_point");
-            World world = arena.getStructureManager().getWorld(Games.Game6);
+            World world = arena.getStructureManager().getSpawn(Games.Game6).getWorld();
             barrierZone = new Cuboid(Objects.requireNonNull(world),vector1.getBlockX(),vector1.getBlockY(),vector1.getBlockZ(),vector2.getBlockX(),vector2.getBlockY(),vector2.getBlockZ());
         }
         return barrierZone;

@@ -164,7 +164,7 @@ public class RedLightGreenLight implements Runnable {
         if (barrierZone == null) {
             BlockVector vector1 = arena.getStructureManager().configToVectors("Game1.barrier.first_point");
             BlockVector vector2 = arena.getStructureManager().configToVectors("Game1.barrier.second_point");
-            World world = arena.getStructureManager().getWorld(Games.Game1);
+            World world = arena.getStructureManager().getSpawn(Games.Game1).getWorld();
             barrierZone = new Cuboid(Objects.requireNonNull(world),vector1.toBlockVector(),vector2.toBlockVector());
         }
         return barrierZone;
@@ -174,7 +174,7 @@ public class RedLightGreenLight implements Runnable {
         if (killZone == null) {
             BlockVector vector1 = arena.getStructureManager().configToVectors("Game1.killZone.first_point");
             BlockVector vector2 = arena.getStructureManager().configToVectors("Game1.killZone.second_point");
-            World world = arena.getStructureManager().getWorld(Games.Game1);
+            World world = arena.getStructureManager().getSpawn(Games.Game1).getWorld();
             killZone = new Cuboid(Objects.requireNonNull(world),vector1.toBlockVector(),vector2.toBlockVector());
         }
         return killZone;
@@ -184,7 +184,7 @@ public class RedLightGreenLight implements Runnable {
         if (goalZone == null) {
             BlockVector vector1 = arena.getStructureManager().configToVectors("Game1.goal.first_point");
             BlockVector vector2 = arena.getStructureManager().configToVectors("Game1.goal.second_point");
-            World world = arena.getStructureManager().getWorld(Games.Game1);
+            World world = arena.getStructureManager().getSpawn(Games.Game1).getWorld();
             goalZone = new Cuboid(Objects.requireNonNull(world),vector1.toBlockVector(),vector2.toBlockVector());
         }
         return goalZone;

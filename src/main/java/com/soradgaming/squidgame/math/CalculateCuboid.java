@@ -168,7 +168,8 @@ public class CalculateCuboid implements Runnable {
             if (BuildZone1 == null) {
                 BlockVector vector1 = arena.getStructureManager().configToVectors("Game2.BuildZone1.first_point");
                 BlockVector vector2 = arena.getStructureManager().configToVectors("Game2.BuildZone1.second_point");
-                World world = arena.getStructureManager().getWorld(Games.Game2);                BuildZone1 = new Cuboid(Objects.requireNonNull(world),vector1.getBlockX(),vector1.getBlockY(),vector1.getBlockZ(),vector2.getBlockX(),vector2.getBlockY(),vector2.getBlockZ());
+                World world = arena.getStructureManager().getSpawn(Games.Game2).getWorld();
+                BuildZone1 = new Cuboid(Objects.requireNonNull(world),vector1.getBlockX(),vector1.getBlockY(),vector1.getBlockZ(),vector2.getBlockX(),vector2.getBlockY(),vector2.getBlockZ());
                 return BuildZone1;
             }
             return BuildZone1;
@@ -176,7 +177,8 @@ public class CalculateCuboid implements Runnable {
             if (BuildZone2 == null) {
                 BlockVector vector1 = arena.getStructureManager().configToVectors("Game2.BuildZone2.first_point");
                 BlockVector vector2 = arena.getStructureManager().configToVectors("Game2.BuildZone2.second_point");
-                World world = arena.getStructureManager().getWorld(Games.Game2);                BuildZone2 = new Cuboid(Objects.requireNonNull(world),vector1.getBlockX(),vector1.getBlockY(),vector1.getBlockZ(),vector2.getBlockX(),vector2.getBlockY(),vector2.getBlockZ());
+                World world = arena.getStructureManager().getSpawn(Games.Game2).getWorld();
+                BuildZone2 = new Cuboid(Objects.requireNonNull(world),vector1.getBlockX(),vector1.getBlockY(),vector1.getBlockZ(),vector2.getBlockX(),vector2.getBlockY(),vector2.getBlockZ());
                 return BuildZone2;
             }
             return BuildZone2;
@@ -184,7 +186,7 @@ public class CalculateCuboid implements Runnable {
             if (BuildZone3 == null) {
                 BlockVector vector1 = arena.getStructureManager().configToVectors("Game2.BuildZone3.first_point");
                 BlockVector vector2 = arena.getStructureManager().configToVectors("Game2.BuildZone3.second_point");
-                World world = arena.getStructureManager().getWorld(Games.Game2);
+                World world = arena.getStructureManager().getSpawn(Games.Game2).getWorld();
                 BuildZone3 = new Cuboid(Objects.requireNonNull(world),vector1.getBlockX(),vector1.getBlockY(),vector1.getBlockZ(),vector2.getBlockX(),vector2.getBlockY(),vector2.getBlockZ());
                 return BuildZone3;
             }
@@ -193,7 +195,7 @@ public class CalculateCuboid implements Runnable {
             if (BuildZone4 == null) {
                 BlockVector vector1 = arena.getStructureManager().configToVectors("Game2.BuildZone4.first_point");
                 BlockVector vector2 = arena.getStructureManager().configToVectors("Game2.BuildZone4.second_point");
-                World world = arena.getStructureManager().getWorld(Games.Game2);
+                World world = arena.getStructureManager().getSpawn(Games.Game2).getWorld();
                 BuildZone4 = new Cuboid(Objects.requireNonNull(world),vector1.getBlockX(),vector1.getBlockY(),vector1.getBlockZ(),vector2.getBlockX(),vector2.getBlockY(),vector2.getBlockZ());
                 return BuildZone4;
             }
@@ -202,7 +204,7 @@ public class CalculateCuboid implements Runnable {
             if (DisplayZone1 == null) {
                 BlockVector vector1 = arena.getStructureManager().configToVectors("Game2.DisplayZone1.first_point");
                 BlockVector vector2 = arena.getStructureManager().configToVectors("Game2.DisplayZone1.second_point");
-                World world = arena.getStructureManager().getWorld(Games.Game2);
+                World world = arena.getStructureManager().getSpawn(Games.Game2).getWorld();
                 DisplayZone1 = new Cuboid(Objects.requireNonNull(world), vector1.getBlockX(), vector1.getBlockY(), vector1.getBlockZ(), vector2.getBlockX(), vector2.getBlockY(), vector2.getBlockZ());
                 return DisplayZone1;
             }
@@ -211,7 +213,7 @@ public class CalculateCuboid implements Runnable {
             if (DisplayZone2 == null) {
                 BlockVector vector1 = arena.getStructureManager().configToVectors("Game2.DisplayZone2.first_point");
                 BlockVector vector2 = arena.getStructureManager().configToVectors("Game2.DisplayZone2.second_point");
-                World world = arena.getStructureManager().getWorld(Games.Game2);
+                World world = arena.getStructureManager().getSpawn(Games.Game2).getWorld();
                 DisplayZone2 = new Cuboid(Objects.requireNonNull(world), vector1.getBlockX(), vector1.getBlockY(), vector1.getBlockZ(), vector2.getBlockX(), vector2.getBlockY(), vector2.getBlockZ());
                 return DisplayZone2;
             }
@@ -220,7 +222,7 @@ public class CalculateCuboid implements Runnable {
             if (DisplayZone3 == null) {
                 BlockVector vector1 = arena.getStructureManager().configToVectors("Game2.DisplayZone3.first_point");
                 BlockVector vector2 = arena.getStructureManager().configToVectors("Game2.DisplayZone3.second_point");
-                World world = arena.getStructureManager().getWorld(Games.Game2);
+                World world = arena.getStructureManager().getSpawn(Games.Game2).getWorld();
                 DisplayZone3 = new Cuboid(Objects.requireNonNull(world), vector1.getBlockX(), vector1.getBlockY(), vector1.getBlockZ(), vector2.getBlockX(), vector2.getBlockY(), vector2.getBlockZ());
                 return DisplayZone3;
             }
@@ -229,7 +231,7 @@ public class CalculateCuboid implements Runnable {
             if (DisplayZone4 == null) {
                 BlockVector vector1 = arena.getStructureManager().configToVectors("Game2.DisplayZone4.first_point");
                 BlockVector vector2 = arena.getStructureManager().configToVectors("Game2.DisplayZone4.second_point");
-                World world = arena.getStructureManager().getWorld(Games.Game2);
+                World world = arena.getStructureManager().getSpawn(Games.Game2).getWorld();
                 DisplayZone4 = new Cuboid(Objects.requireNonNull(world), vector1.getBlockX(), vector1.getBlockY(), vector1.getBlockZ(), vector2.getBlockX(), vector2.getBlockY(), vector2.getBlockZ());
                 return DisplayZone4;
             }
