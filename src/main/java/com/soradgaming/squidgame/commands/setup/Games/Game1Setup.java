@@ -28,14 +28,17 @@ public class Game1Setup implements CommandHandlerInterface {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&cDisable Arena First"));
             return true;
         }
-        if (!args[1].equalsIgnoreCase("game1")) {
+        if (!args[1].equalsIgnoreCase("games")) {
             return true;
         }
-        if (!playerWand.isComplete(player) && !args[2].equals("spawn")) {
+        if (!args[2].equalsIgnoreCase("game1")) {
+            return true;
+        }
+        if (!playerWand.isComplete(player) && !args[3].equals("spawn")) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&cYou need to set area with your region wand first."));
             return true;
         }
-        switch (args[2]) {
+        switch (args[3]) {
             case "spawn" -> {
                 if (!arena.getStructureManager().isSpawnSet(Games.Game1)) {
                     arena.getStructureManager().setSpawnPoint(Games.Game1,player.getLocation());
@@ -60,12 +63,32 @@ public class Game1Setup implements CommandHandlerInterface {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eFirst game " + "goal" + "&a set with your location wand &7("
                         + playerWand.getFirstPoint(player).toString() + ") (" + playerWand.getSecondPoint(player).toString() + ")"));
             }
+            case "time" -> {
+                arena.getStructureManager().setTimeLimit(Games.Game1, Integer.parseInt(args[4]));
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eFirst game " + "Time" + "&a set to &7("
+                        + Integer.parseInt(args[4]) + ")"));
+            }
+            case "countdown" -> {
+                arena.getStructureManager().setCountdown(Games.Game1, Integer.parseInt(args[4]));
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eFirst game " + "Countdown" + "&a set to &7("
+                        + Integer.parseInt(args[4]) + ")"));
+            }
+            case "lightSwitchMin" -> {
+                arena.getStructureManager().setLightSwitchMin(Integer.parseInt(args[4]));
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eFirst game " + "Light Switch Min" + "&a set to &7("
+                        + Integer.parseInt(args[4]) + ")"));
+            }
+            case "lightSwitchMax" -> {
+                arena.getStructureManager().setLightSwitchMax(Integer.parseInt(args[4]));
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eFirst game " + "Light Switch Max" + "&a set to &7("
+                        + Integer.parseInt(args[4]) + ")"));
+            }
         }
         return true;
     }
 
     @Override
     public int getMinArgsLength() {
-        return 3;
+        return 4;
     }
 }

@@ -7,6 +7,7 @@ import com.soradgaming.squidgame.commands.setup.CommandHandlerInterface;
 import com.soradgaming.squidgame.games.Games;
 import com.soradgaming.squidgame.utils.playerWand;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 public class Game6Setup implements CommandHandlerInterface {
@@ -26,14 +27,17 @@ public class Game6Setup implements CommandHandlerInterface {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&cDisable Arena First"));
             return true;
         }
-        if (!args[1].equalsIgnoreCase("game6")) {
+        if (!args[1].equalsIgnoreCase("games")) {
             return true;
         }
-        if (!playerWand.isComplete(player) && !args[2].equals("spawn")) {
+        if (!args[2].equalsIgnoreCase("game6")) {
+            return true;
+        }
+        if (!playerWand.isComplete(player) && !args[3].equals("spawn")) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&cYou need to set area with your region wand first."));
             return true;
         }
-        switch (args[2]) {
+        switch (args[3]) {
             case "spawn" -> {
                 arena.getStructureManager().setSpawnPoint(Games.Game6, player.getLocation());
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&Sixth game " + "Spawn" + "&a set to your location &7(" + player.getLocation().toVector() + ")"));
@@ -57,12 +61,27 @@ public class Game6Setup implements CommandHandlerInterface {
                         + playerWand.getFirstPoint(player).toString() + ") (" + playerWand.getSecondPoint(player).toString() + ")"));
                 arena.getStructureManager().saveToConfig();
             }
+            case "bridgeBlock" -> {
+                arena.getStructureManager().setBridgeBlock(Material.getMaterial(args[4]));
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eSixth game " + "Bridge Block" + "&a set to &7("
+                        + Integer.parseInt(args[4]) + ")"));
+            }
+            case "time" -> {
+                arena.getStructureManager().setTimeLimit(Games.Game6, Integer.parseInt(args[4]));
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eSixth game " + "Time" + "&a set to &7("
+                        + Integer.parseInt(args[4]) + ")"));
+            }
+            case "countdown" -> {
+                arena.getStructureManager().setCountdown(Games.Game6, Integer.parseInt(args[4]));
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eSixth game " + "Countdown" + "&a set to &7("
+                        + Integer.parseInt(args[4]) + ")"));
+            }
         }
         return true;
     }
 
     @Override
     public int getMinArgsLength() {
-        return 3;
+        return 4;
     }
 }

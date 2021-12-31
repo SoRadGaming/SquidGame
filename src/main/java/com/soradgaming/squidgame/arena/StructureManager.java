@@ -21,9 +21,9 @@ public class StructureManager {
     private int intermissionTime = 10;
     private HashMap<Games, Integer> timeLimit = new HashMap<>();
     private HashMap<Games, Integer> countdown = new HashMap<>();
-    private HashMap<Games,Location> spawn = new HashMap<>();
+    private HashMap<Games,Location> spawn = new HashMap<>();//
     private HashMap<String,Location> spawnGame2 = new HashMap<>();
-    private HashMap<Games,List<Location>> additionalSpawnPoints = new HashMap<>();
+    private HashMap<Games,List<Location>> additionalSpawnPoints = new HashMap<>();//
     private HashMap<Games,List<Location>> freeSpawnList = new HashMap<>();
     private int lightSwitchMin = 1;
     private int lightSwitchMax = 5;
@@ -31,7 +31,6 @@ public class StructureManager {
     private int lightSwitchOff = 8;
     private Material bridgeBlock = Material.LIGHT_GRAY_STAINED_GLASS;
     private Material killBlock = Material.LIGHT_GRAY_STAINED_GLASS;
-    private List<String> rewards;//TODo Global Config
 
     public StructureManager(Arena arena) {
         this.plugin = SquidGame.plugin;
@@ -90,11 +89,19 @@ public class StructureManager {
     public void setCountdown(Games games,int i) {countdown.put(games, i);}
 
     public void setLightSwitchMin(int lightSwitchMin) {
-        this.lightSwitchMin = lightSwitchMin;
+        if (lightSwitchMin >= 1) {
+            this.lightSwitchMin = lightSwitchMin;
+        } else {
+            this.lightSwitchMin = 1;
+        }
     }
 
     public void setLightSwitchMax(int lightSwitchMax) {
-        this.lightSwitchMax = lightSwitchMax;
+        if (lightSwitchMax > this.lightSwitchMin) {
+            this.lightSwitchMax = lightSwitchMax;
+        } else {
+            this.lightSwitchMax = this.lightSwitchMin + 3;
+        }
     }
 
     public void setLightSwitchOn(int lightSwitchOn) {
@@ -181,7 +188,6 @@ public class StructureManager {
         config.set("lightSwitchOff", lightSwitchOff);
         config.set("bridgeBlock", bridgeBlock.toString());
         config.set("killBlock", killBlock.toString());
-        config.set("rewards", rewards);
         //Save Arena file
         try {
             config.save(arena.getArenaFile());
@@ -215,7 +221,6 @@ public class StructureManager {
         lightSwitchOff = config.getInt("lightSwitchOff");
         bridgeBlock = Material.getMaterial(config.getString("bridgeBlock"));
         killBlock = Material.getMaterial(config.getString("killBlock"));
-        rewards = config.getStringList("rewards");
     }
 
     public BlockVector configToVectors(String key) {
@@ -267,5 +272,85 @@ public class StructureManager {
 
     public Location getSpawnGame2(String key) {
         return spawnGame2.get(key);
+    }
+
+    public boolean checkSetupDone() {
+        //Checking Data
+        ArrayList<Games> allGames = new ArrayList<>(Arrays.asList(Games.Game1,Games.Game2,Games.Game3,Games.Game6,Games.Game7));
+        for (Games games: allGames) {
+            if (getTimeLimit(games) == 0) {
+                return false;
+            }
+            if (getCountdown(games) == 0) {
+                return false;
+            }
+            if (getSpawn(games) == null) {
+                return false;
+            }
+
+        }
+        //Game 1
+        if (configToVectors("Game1.barrier.first_point") == null) {
+            return false;
+        } else if (configToVectors("Game1.barrier.second_point") == null) {
+            return false;
+        } else if (configToVectors("Game1.killZone.first_point") == null) {
+            return false;
+        } else if (configToVectors("Game1.killZone.second_point") == null) {
+            return false;
+        } else if (configToVectors("Game1.goal.first_point") == null) {
+            return false;
+        } else if (configToVectors("Game1.goal.second_point") == null) {
+            return false;
+        }
+        //Game 2
+        if (configToVectors("Game2.BuildZone1.first_point") == null) {
+            return false;
+        } else if (configToVectors("Game2.BuildZone1.second_point") == null) {
+            return false;
+        } else if (configToVectors("Game2.BuildZone2.first_point") == null) {
+            return false;
+        } else if (configToVectors("Game2.BuildZone2.second_point") == null) {
+            return false;
+        } else if (configToVectors("Game2.BuildZone3.first_point") == null) {
+            return false;
+        } else if (configToVectors("Game2.BuildZone3.second_point") == null) {
+            return false;
+        } else if (configToVectors("Game2.BuildZone4.first_point") == null) {
+            return false;
+        } else if (configToVectors("Game2.BuildZone4.second_point") == null) {
+            return false;
+        } else if (configToVectors("Game2.DisplayZone1.first_point") == null) {
+            return false;
+        } else if (configToVectors("Game2.DisplayZone1.second_point") == null) {
+            return false;
+        } else if (configToVectors("Game2.DisplayZone2.first_point") == null) {
+            return false;
+        } else if (configToVectors("Game2.DisplayZone2.second_point") == null) {
+            return false;
+        } else if (configToVectors("Game2.DisplayZone3.first_point") == null) {
+            return false;
+        } else if (configToVectors("Game2.DisplayZone3.second_point") == null) {
+            return false;
+        } else if (configToVectors("Game2.DisplayZone4.first_point") == null) {
+            return false;
+        } else if (configToVectors("Game2.DisplayZone4.second_point") == null) {
+            return false;
+        }
+        //Game 6
+        if (configToVectors("Game6.barrier.first_point") == null) {
+            return false;
+        } else if (configToVectors("Game6.barrier.second_point") == null) {
+            return false;
+        } else if (configToVectors("Game6.glass.first_point") == null) {
+            return false;
+        } else if (configToVectors("Game6.glass.second_point") == null) {
+            return false;
+        } else if (configToVectors("Game6.goal.first_point") == null) {
+            return false;
+        } else if (configToVectors("Game6.goal.second_point") == null) {
+            return false;
+        }
+        return true;
     }
 }

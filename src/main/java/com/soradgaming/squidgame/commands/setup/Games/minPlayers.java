@@ -2,13 +2,15 @@ package com.soradgaming.squidgame.commands.setup.Games;
 
 import com.soradgaming.squidgame.SquidGame;
 import com.soradgaming.squidgame.arena.Arena;
+import com.soradgaming.squidgame.arena.Status;
 import com.soradgaming.squidgame.commands.setup.CommandHandlerInterface;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-public class Save implements CommandHandlerInterface {
+public class minPlayers implements CommandHandlerInterface {
     private SquidGame plugin;
 
-    public Save(SquidGame plugin) {
+    public minPlayers(SquidGame plugin) {
         this.plugin = plugin;
     }
 
@@ -16,20 +18,21 @@ public class Save implements CommandHandlerInterface {
     public boolean handleCommand(Player player, String[] args) {
         Arena arena = Arena.getArenaByName(args[0]);
         if (arena == null) {
-            player.sendMessage("Not an Arena");
             return true;
         }
-        if (arena.getStructureManager().checkSetupDone()) {
-            player.sendMessage("Saving");
-            arena.getStructureManager().saveToConfig();
-        } else {
-            player.sendMessage("Setup Not Complete");
+        if (arena.getGameHandler().getStatus().equals(Status.Online)) {
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&cDisable Arena First"));
+            return true;
         }
+        if (!args[1].equalsIgnoreCase("minplayers")) {
+            return true;
+        }
+        arena.getStructureManager().setMinPlayers(Integer.parseInt(args[2]));
         return true;
     }
 
     @Override
     public int getMinArgsLength() {
-        return 1;
+        return 3;
     }
 }

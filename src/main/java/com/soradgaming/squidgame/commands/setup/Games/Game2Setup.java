@@ -26,14 +26,17 @@ public class Game2Setup implements CommandHandlerInterface {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&cDisable Arena First"));
             return true;
         }
-        if (!args[1].equalsIgnoreCase("game2")) {
+        if (!args[1].equalsIgnoreCase("games")) {
             return true;
         }
-        if (!playerWand.isComplete(player) && !args[2].equals("spawn")) {
+        if (!args[2].equalsIgnoreCase("game2")) {
+            return true;
+        }
+        if (!playerWand.isComplete(player) && !args[3].equals("spawn")) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&cYou need to set area with your region wand first."));
             return true;
         }
-        switch (args[2]) {
+        switch (args[3]) {
             case "spawn_red" -> {
                 arena.getStructureManager().setSpawnGame2("spawn_red",player.getLocation());
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eSecond game " + "spawn_red" + "&a set to your location &7(" + player.getLocation().toVector() + ")"));
@@ -90,12 +93,22 @@ public class Game2Setup implements CommandHandlerInterface {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eSecond game " + "DisplayZone4" + "&a set with your location wand &7("
                         + playerWand.getFirstPoint(player).toString() + ") (" + playerWand.getSecondPoint(player).toString() + ")"));
             }
+            case "time" -> {
+                arena.getStructureManager().setTimeLimit(Games.Game2, Integer.parseInt(args[4]));
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eSecond game " + "Time" + "&a set to &7("
+                        + Integer.parseInt(args[4]) + ")"));
+            }
+            case "countdown" -> {
+                arena.getStructureManager().setCountdown(Games.Game2, Integer.parseInt(args[4]));
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eSecond game " + "Countdown" + "&a set to &7("
+                        + Integer.parseInt(args[4]) + ")"));
+            }
         }
         return true;
     }
 
     @Override
     public int getMinArgsLength() {
-        return 3;
+        return 4;
     }
 }

@@ -26,19 +26,38 @@ public class Game3Setup implements CommandHandlerInterface {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&cDisable Arena First"));
             return true;
         }
-        if (!args[1].equalsIgnoreCase("game3")) {
+        if (!args[1].equalsIgnoreCase("games")) {
             return true;
         }
-        if (args[2].equals("spawn")) {
+        if (!args[2].equalsIgnoreCase("game3")) {
+            return true;
+        }
+        if (args[3].equals("spawn")) {
             arena.getStructureManager().setSpawnPoint(Games.Game3, player.getLocation());
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&Third game " + "Spawn" + "&a set to your location &7(" + player.getLocation().toVector() + ")"));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eThird game " + "Spawn" + "&a set to your location &7(" + player.getLocation().toVector() + ")"));
             arena.getStructureManager().saveToConfig();
+        } else if (args[3].equals("lightSwitchOn")) {
+            arena.getStructureManager().setLightSwitchOn(Integer.parseInt(args[4]));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eThird game " + "Light Switch On interval" + "&a set to &7("
+                    + Integer.parseInt(args[4]) + ")"));
+        } else if (args[3].equals("lightSwitchOff")) {
+            arena.getStructureManager().setLightSwitchOff(Integer.parseInt(args[4]));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eThird game " + "Light Switch Off interval" + "&a set to &7("
+                    + Integer.parseInt(args[4]) + ")"));
+        } else if (args[3].equals("time")) {
+            arena.getStructureManager().setTimeLimit(Games.Game3, Integer.parseInt(args[4]));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eThird game " + "Time" + "&a set to &7("
+                    + Integer.parseInt(args[4]) + ")"));
+        } else if (args[3].equals("countdown")) {
+            arena.getStructureManager().setCountdown(Games.Game3, Integer.parseInt(args[4]));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eThird game " + "Countdown" + "&a set to &7("
+                    + Integer.parseInt(args[4]) + ")"));
         }
         return true;
     }
 
     @Override
     public int getMinArgsLength() {
-        return 3;
+        return 4;
     }
 }

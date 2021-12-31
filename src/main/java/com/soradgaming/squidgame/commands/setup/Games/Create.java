@@ -15,6 +15,10 @@ public class Create implements CommandHandlerInterface {
     @Override
     public boolean handleCommand(Player player, String[] args) {
         //TODO check if name is taken
+        if (Arena.getArenaByName(args[0]) == null) {
+            player.sendMessage("Name Taken");
+            return false;
+        }
         Arena arena = new Arena(args[0],plugin);
         Arena.registerArena(arena);
         return true;

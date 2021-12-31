@@ -44,6 +44,11 @@ public class SetupCommandsHandler implements CommandExecutor {
 		commandHandlers.put("game7", new Game7Setup(plugin));
 		commandHandlers.put("create", new Create(plugin));
 		commandHandlers.put("save", new Save(plugin));
+		commandHandlers.put("maxplayers", new maxPlayers(plugin));
+		commandHandlers.put("minplayers", new minPlayers(plugin));
+		commandHandlers.put("startTime", new startTime(plugin));
+		commandHandlers.put("endTime", new endTime(plugin));
+		commandHandlers.put("intermissionTime", new intermissionTime(plugin));
 	}
 
 	@Override
@@ -56,25 +61,49 @@ public class SetupCommandsHandler implements CommandExecutor {
 			//help
 		}
 		if (args.length == 2) {
+			if (commandHandlers.containsKey(args[0])) {
+				return false;
+			}
 			CommandHandlerInterface commandHandlerInterface = commandHandlers.get(args[0]);
-			if (args[0].equalsIgnoreCase("save")) {
-				return commandHandlerInterface.handleCommand(player, Arrays.copyOfRange(args, 1, args.length));
-			} else if (args[0].equalsIgnoreCase("create")) {
-				return commandHandlerInterface.handleCommand(player, Arrays.copyOfRange(args, 1, args.length));
+			//check args length
+			if (args.length - 1 < commandHandlerInterface.getMinArgsLength()) {
+				player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c ERROR: Please use &6/sqsetup &c to view all valid game commands"));
+				return false;
 			}
+			return commandHandlerInterface.handleCommand(player, Arrays.copyOfRange(args, 1, args.length));
 		} else if (args.length == 3) {
-			CommandHandlerInterface commandHandlerInterface = commandHandlers.get(args[1]);
-			if (args[1].equalsIgnoreCase("game1")) {
-				return commandHandlerInterface.handleCommand(player, Arrays.copyOfRange(args, 0, args.length));
-			} else if (args[1].equalsIgnoreCase("game2")) {
-				return commandHandlerInterface.handleCommand(player, Arrays.copyOfRange(args, 0, args.length));
-			} else if (args[1].equalsIgnoreCase("game3")) {
-				return commandHandlerInterface.handleCommand(player, Arrays.copyOfRange(args, 0, args.length));
-			} else if (args[1].equalsIgnoreCase("game6")) {
-				return commandHandlerInterface.handleCommand(player, Arrays.copyOfRange(args, 0, args.length));
-			} else if (args[1].equalsIgnoreCase("game7")) {
-				return commandHandlerInterface.handleCommand(player, Arrays.copyOfRange(args, 0, args.length));
+			if (commandHandlers.containsKey(args[1])) {
+				return false;
 			}
+			CommandHandlerInterface commandHandlerInterface = commandHandlers.get(args[1]);
+			//check args length
+			if (args.length < commandHandlerInterface.getMinArgsLength()) {
+				player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c ERROR: Please use &6/sqsetup &c to view all valid game commands"));
+				return false;
+			}
+			return commandHandlerInterface.handleCommand(player, Arrays.copyOfRange(args, 0, args.length));
+		} else if (args.length == 4) {
+			if (commandHandlers.containsKey(args[2])) {
+				return false;
+			}
+			CommandHandlerInterface commandHandlerInterface = commandHandlers.get(args[2]);
+			//check args length
+			if (args.length < commandHandlerInterface.getMinArgsLength()) {
+				player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c ERROR: Please use &6/sqsetup &c to view all valid game commands"));
+				return false;
+			}
+			return commandHandlerInterface.handleCommand(player, Arrays.copyOfRange(args, 0, args.length));
+		} else if (args.length == 5) {
+			if (commandHandlers.containsKey(args[2])) {
+				return false;
+			}
+			CommandHandlerInterface commandHandlerInterface = commandHandlers.get(args[2]);
+			//check args length
+			if (args.length < commandHandlerInterface.getMinArgsLength()) {
+				player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c ERROR: Please use &6/sqsetup &c to view all valid game commands"));
+				return false;
+			}
+			return commandHandlerInterface.handleCommand(player, Arrays.copyOfRange(args, 0, args.length));
 		}
 		player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c ERROR: Please use &6/sqsetup &c to view all valid game commands"));
 		return false;
