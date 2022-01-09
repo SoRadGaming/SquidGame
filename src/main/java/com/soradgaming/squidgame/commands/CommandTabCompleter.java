@@ -1,6 +1,7 @@
 package com.soradgaming.squidgame.commands;
 
 import com.soradgaming.squidgame.SquidGame;
+import com.soradgaming.squidgame.arena.Arena;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -21,6 +22,14 @@ public class CommandTabCompleter implements TabCompleter {
             if (args.length == 1) {
                 completions = new ArrayList<>(Arrays.asList("join", "help", "reload", "leave", "end", "start", "wand"));
                 completions = getApplicableTabCompletes(args[0], completions);
+            } else if (args.length == 2) {
+                switch (args[0]) {
+                    case ("join") -> {
+                        completions = new ArrayList<>(Arena.getArenasNames());
+                        completions = getApplicableTabCompletes(args[1], completions);
+                    }
+                }
+
             }
             Collections.sort(completions);
             return completions;

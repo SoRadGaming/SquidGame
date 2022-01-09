@@ -20,6 +20,7 @@ public class Game2Setup implements CommandHandlerInterface {
     public boolean handleCommand(Player player, String[] args) {
         Arena arena = Arena.getArenaByName(args[0]);
         if (arena == null) {
+            player.sendMessage("Not Valid Arena: " + arena);
             return true;
         }
         if (arena.getGameHandler().getStatus().equals(Status.Online)) {

@@ -20,10 +20,7 @@ public class BlockPlaceListener implements Listener {
             return;
         }
         Games games = arena.getGameHandler().getCurrentGame();
-        if (games == null) {
-            return;
-        }
-        if (games.equals(Games.Game2)) {
+        if (games != null && games.equals(Games.Game2)) {
             SpeedBuilders speedBuilders = arena.getGameHandler().speedBuilders;
             if (speedBuilders == null) {
                 return;

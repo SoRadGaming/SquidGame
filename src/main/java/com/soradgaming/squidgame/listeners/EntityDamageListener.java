@@ -23,33 +23,10 @@ public class EntityDamageListener implements Listener {
                 return;
             }
             Games games = arena.getGameHandler().getCurrentGame();
-            if (games == null) {
-                return;
-            }
-            if (e.getCause() == DamageCause.ENTITY_ATTACK && !arena.getGameHandler().isPvPAllowed()) {
-                e.setCancelled(true);
-            }
-            if (games.equals(Games.Game1)) {
-                e.setDamage(0);
-                return;
-            }
-
             //Player Dies
             if (player.getHealth() - e.getDamage() <= 0) {
-                if (e.getCause() == DamageCause.ENTITY_ATTACK) {
-                    if (games.equals(Games.Game7)) {
-                        arena.getGameHandler().sumo.onPlayerDeath(player);
-                        e.setDamage(0);
-                        e.setCancelled(true);
-                        return;
-                    } else if (games.equals(Games.Game3)) {
-                        arena.getGameHandler().dormsBattle.onPlayerDeathKilled(player);
-                        e.setDamage(0);
-                        e.setCancelled(true);
-                    }
-                }
                 if (e.getCause() == DamageCause.FALL) {
-                    if (games.equals(Games.Game6)) {
+                    if (games != null && games.equals(Games.Game6)) {
                         e.setDamage(0);
                         arena.getGameHandler().glassSteppingStones.onPlayerDeathFall(player);
                         e.setCancelled(true);

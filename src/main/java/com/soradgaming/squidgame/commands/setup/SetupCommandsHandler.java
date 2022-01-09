@@ -40,6 +40,7 @@ public class SetupCommandsHandler implements CommandExecutor {
 		commandHandlers.put("game1", new Game1Setup(plugin));
 		commandHandlers.put("game2", new Game2Setup(plugin));
 		commandHandlers.put("game3", new Game3Setup(plugin));
+		commandHandlers.put("game4", new Game4Setup(plugin));
 		commandHandlers.put("game6", new Game6Setup(plugin));
 		commandHandlers.put("game7", new Game7Setup(plugin));
 		commandHandlers.put("create", new Create(plugin));
@@ -61,10 +62,11 @@ public class SetupCommandsHandler implements CommandExecutor {
 			//help
 		}
 		if (args.length == 2) {
-			if (commandHandlers.containsKey(args[0])) {
+			if (!commandHandlers.containsKey(args[0].toLowerCase())) {
+				player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c ERROR: Please use &6/sqsetup &c to view all valid game commands"));
 				return false;
 			}
-			CommandHandlerInterface commandHandlerInterface = commandHandlers.get(args[0]);
+			CommandHandlerInterface commandHandlerInterface = commandHandlers.get(args[0].toLowerCase());
 			//check args length
 			if (args.length - 1 < commandHandlerInterface.getMinArgsLength()) {
 				player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c ERROR: Please use &6/sqsetup &c to view all valid game commands"));
@@ -72,10 +74,11 @@ public class SetupCommandsHandler implements CommandExecutor {
 			}
 			return commandHandlerInterface.handleCommand(player, Arrays.copyOfRange(args, 1, args.length));
 		} else if (args.length == 3) {
-			if (commandHandlers.containsKey(args[1])) {
+			if (!commandHandlers.containsKey(args[1].toLowerCase())) {
+				player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c ERROR: Please use &6/sqsetup &c to view all valid game commands"));
 				return false;
 			}
-			CommandHandlerInterface commandHandlerInterface = commandHandlers.get(args[1]);
+			CommandHandlerInterface commandHandlerInterface = commandHandlers.get(args[1].toLowerCase());
 			//check args length
 			if (args.length < commandHandlerInterface.getMinArgsLength()) {
 				player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c ERROR: Please use &6/sqsetup &c to view all valid game commands"));
@@ -83,10 +86,11 @@ public class SetupCommandsHandler implements CommandExecutor {
 			}
 			return commandHandlerInterface.handleCommand(player, Arrays.copyOfRange(args, 0, args.length));
 		} else if (args.length == 4) {
-			if (commandHandlers.containsKey(args[2])) {
+			if (!commandHandlers.containsKey(args[2].toLowerCase())) {
+				player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c ERROR: Please use &6/sqsetup &c to view all valid game commands"));
 				return false;
 			}
-			CommandHandlerInterface commandHandlerInterface = commandHandlers.get(args[2]);
+			CommandHandlerInterface commandHandlerInterface = commandHandlers.get(args[2].toLowerCase());
 			//check args length
 			if (args.length < commandHandlerInterface.getMinArgsLength()) {
 				player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c ERROR: Please use &6/sqsetup &c to view all valid game commands"));
@@ -94,10 +98,11 @@ public class SetupCommandsHandler implements CommandExecutor {
 			}
 			return commandHandlerInterface.handleCommand(player, Arrays.copyOfRange(args, 0, args.length));
 		} else if (args.length == 5) {
-			if (commandHandlers.containsKey(args[2])) {
+			if (!commandHandlers.containsKey(args[2].toLowerCase())) {
+				player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c ERROR: Please use &6/sqsetup &c to view all valid game commands"));
 				return false;
 			}
-			CommandHandlerInterface commandHandlerInterface = commandHandlers.get(args[2]);
+			CommandHandlerInterface commandHandlerInterface = commandHandlers.get(args[2].toLowerCase());
 			//check args length
 			if (args.length < commandHandlerInterface.getMinArgsLength()) {
 				player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c ERROR: Please use &6/sqsetup &c to view all valid game commands"));

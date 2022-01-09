@@ -44,7 +44,7 @@ public class SetupTabCompleter implements TabCompleter {
 			completions.add("create");
 			completions = getApplicableTabCompletes(args[0], completions);
 		} else if (args.length == 2) {
-			if (args[0].equalsIgnoreCase("save")) {
+			if (args[0].equalsIgnoreCase("placeholder(was_saved)")) {
 				completions = new ArrayList<>(Arena.getArenasNames());
 				completions = getApplicableTabCompletes(args[1], completions);
 			} else if (args[0].equalsIgnoreCase("create")) {
@@ -56,26 +56,34 @@ public class SetupTabCompleter implements TabCompleter {
 			}
 		} else if (args.length == 3) {
 			if (args[1].equalsIgnoreCase("games")) {
-				completions = new ArrayList<>(Arrays.asList("game1", "game2", "game3", "game4", "game5", "game6", "game7"));
+				completions = new ArrayList<>(Arrays.asList("game1", "game2", "game3", "game4", "game6", "game7"));
 				completions = getApplicableTabCompletes(args[2], completions);
 			}
 		} else if (args.length == 4) {
 			switch (args[2]) {
 				case ("game1") -> {
-					completions = new ArrayList<>(Arrays.asList("spawn", "barrier", "killzone", "goal"));
+					completions = new ArrayList<>(Arrays.asList("spawn", "barrier", "killzone", "goal", "time", "countdown", "lightSwitchMin", "lightSwitchMax"));
 					completions = getApplicableTabCompletes(args[3], completions);
 				}
 				case ("game2") -> {
 					completions = new ArrayList<>(Arrays.asList("spawn_red", "spawn_blue", "spawn_green", "spawn_yellow",
-							"BuildZone1", "BuildZone2", "BuildZone3", "BuildZone4","DisplayZone1", "DisplayZone2", "DisplayZone3", "DisplayZone4"));
+							"BuildZone1", "BuildZone2", "BuildZone3", "BuildZone4","DisplayZone1", "DisplayZone2", "DisplayZone3", "DisplayZone4", "time", "countdown"));
 					completions = getApplicableTabCompletes(args[3], completions);
 				}
-				case ("game3"), ("game7") -> {
-					completions = new ArrayList<>(List.of("spawn"));
+				case ("game3") -> {
+					completions = new ArrayList<>(List.of("spawn", "time", "countdown", "lightSwitchOn", "lightSwitchOff"));
+					completions = getApplicableTabCompletes(args[3], completions);
+				}
+				case ("game4") -> {
+					completions = new ArrayList<>(Arrays.asList("spawn", "time", "countdown"));
 					completions = getApplicableTabCompletes(args[3], completions);
 				}
 				case ("game6") -> {
 					completions = new ArrayList<>(Arrays.asList("spawn", "glass", "goal", "barrier"));
+					completions = getApplicableTabCompletes(args[3], completions);
+				}
+				case ("game7") -> {
+					completions = new ArrayList<>(List.of("spawn", "time", "countdown", "killBlock"));
 					completions = getApplicableTabCompletes(args[3], completions);
 				}
 			}

@@ -31,6 +31,7 @@ public class StructureManager {
     private int lightSwitchOff = 8;
     private Material bridgeBlock = Material.LIGHT_GRAY_STAINED_GLASS;
     private Material killBlock = Material.LIGHT_GRAY_STAINED_GLASS;
+    private final ArrayList<Games> allGames = new ArrayList<>(Arrays.asList(Games.Game1,Games.Game2,Games.Game3,Games.Game4,Games.Game6,Games.Game7));
 
     public StructureManager(Arena arena) {
         this.plugin = SquidGame.plugin;
@@ -41,13 +42,21 @@ public class StructureManager {
         return maxPlayers;
     }
 
-    public void setMaxPlayers(int i) {maxPlayers = i;}
+    public void setMaxPlayers(int i) {
+        maxPlayers = i;
+        config().set("maxPlayers", i);
+        configSave();
+    }
 
     public int getMinPlayers() {
         return minPlayers;
     }
 
-    public void setMinPlayers(int i) {minPlayers = i;}
+    public void setMinPlayers(int i) {
+        minPlayers = i;
+        config().set("minPlayers", i);
+        configSave();
+    }
 
     public Location getSpawn(Games games) {return spawn.get(games);}
 
@@ -60,9 +69,14 @@ public class StructureManager {
     public void setSpawnPoint(Games games, Location location) {
         this.spawn.put(games,location);
         this.additionalSpawnPoints.put(games,null);
+        config().set("spawn." + games, spawn.get(games));
+        configSave();
     }
 
-    public void addSpawnPoint(Games games, Location loc) {additionalSpawnPoints.get(games).add(loc);}
+    public void addSpawnPoint(Games games, Location loc) {
+        additionalSpawnPoints.get(games).add(loc);
+        config().set("additionalSpawnPoints." + games, additionalSpawnPoints.get(games));
+    }
 
     public boolean hasAdditionalSpawnPoints(Games games) {return !additionalSpawnPoints.get(games).isEmpty();}
 
@@ -82,11 +96,19 @@ public class StructureManager {
 
     public int getTimeLimit(Games games) {return timeLimit.get(games);}
 
-    public void setTimeLimit(Games games,int i) {timeLimit.put(games, i);}
+    public void setTimeLimit(Games games,int i) {
+        timeLimit.put(games, i);
+        config().set("timeLimit." + games, timeLimit.get(games));
+        configSave();
+    }
 
     public int getCountdown(Games games) {return countdown.get(games);}
 
-    public void setCountdown(Games games,int i) {countdown.put(games, i);}
+    public void setCountdown(Games games,int i) {
+        countdown.put(games, i);
+        config().set("countdown." + games, countdown.get(games));
+        configSave();
+    }
 
     public void setLightSwitchMin(int lightSwitchMin) {
         if (lightSwitchMin >= 1) {
@@ -94,6 +116,8 @@ public class StructureManager {
         } else {
             this.lightSwitchMin = 1;
         }
+        config().set("lightSwitchMin", this.lightSwitchMin);
+        configSave();
     }
 
     public void setLightSwitchMax(int lightSwitchMax) {
@@ -102,14 +126,20 @@ public class StructureManager {
         } else {
             this.lightSwitchMax = this.lightSwitchMin + 3;
         }
+        config().set("lightSwitchMax", this.lightSwitchMax);
+        configSave();
     }
 
     public void setLightSwitchOn(int lightSwitchOn) {
         this.lightSwitchOn = lightSwitchOn;
+        config().set("lightSwitchOn", this.lightSwitchMin);
+        configSave();
     }
 
     public void setLightSwitchOff(int lightSwitchOff) {
         this.lightSwitchOff = lightSwitchOff;
+        config().set("lightSwitchOff",  this.lightSwitchOff);
+        configSave();
     }
 
     public int getLightSwitchMin() {
@@ -134,10 +164,14 @@ public class StructureManager {
 
     public void setStartTime(int startTime) {
         this.startTime = startTime;
+        config().set("startTime", startTime);
+        configSave();
     }
 
     public void setEndTime(int endTime) {
         this.endTime = endTime;
+        config().set("endTime", endTime);
+        configSave();
     }
 
     public int getEndTime() {
@@ -148,15 +182,45 @@ public class StructureManager {
         return this.intermissionTime;
     }
 
-    public void setIntermissionTime(int intermissionTime) {this.intermissionTime = intermissionTime;}
+    public void setIntermissionTime(int intermissionTime) {
+        this.intermissionTime = intermissionTime;
+        config().set("intermissionTime", intermissionTime);
+        configSave();
+    }
 
     public Material getBridgeBlock() {return bridgeBlock;}
 
-    public void setBridgeBlock(Material bridgeBlock) {this.bridgeBlock = bridgeBlock;}
+    public void setBridgeBlock(Material bridgeBlock) {
+        this.bridgeBlock = bridgeBlock;
+        config().set("bridgeBlock", this.bridgeBlock.toString());
+        configSave();
+    }
 
     public Material getKillBlock() {return killBlock;}
 
-    public void setKillBlock(Material killBlock) {this.killBlock = killBlock;}
+    public void setKillBlock(Material killBlock) {
+        this.killBlock = killBlock;
+        config().set("killBlock", this.killBlock.toString());
+        configSave();
+    }
+
+    public YamlConfiguration config() {
+        YamlConfiguration config;
+        if (!arena.getArenaFile().isFile()) {
+            config = new YamlConfiguration();
+        } else {
+            config = YamlConfiguration.loadConfiguration(arena.getArenaFile());
+        }
+        return config;
+    }
+
+    public void configSave() {
+        try {
+            config().save(arena.getArenaFile());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public void saveToConfig() {
         YamlConfiguration config;
@@ -188,6 +252,13 @@ public class StructureManager {
         config.set("lightSwitchOff", lightSwitchOff);
         config.set("bridgeBlock", bridgeBlock.toString());
         config.set("killBlock", killBlock.toString());
+
+        for (Games games: allGames) {
+            setTimeLimit(games,60);
+        }
+        for (Games games: allGames) {
+            setCountdown(games,30);
+        }
         //Save Arena file
         try {
             config.save(arena.getArenaFile());
@@ -212,9 +283,12 @@ public class StructureManager {
         for (String key : config.getConfigurationSection("countdown").getKeys(false)) {
             countdown.put(stringToGame(key), config.getInt("countdown." + key));
         }
+        /*
         for (String key : config.getConfigurationSection("additionalSpawnPoints").getKeys(false)) {
             additionalSpawnPoints.put(stringToGame(key), (List<Location>) config.getList("additionalSpawnPoints." + key, new ArrayList<>()));
         }
+
+         */
         lightSwitchMin = config.getInt("lightSwitchMin");
         lightSwitchMax = config.getInt("lightSwitchMax");
         lightSwitchOn = config.getInt("lightSwitchOn");
@@ -275,15 +349,11 @@ public class StructureManager {
     }
 
     public boolean checkSetupDone() {
+        return true;
         //Checking Data
-        ArrayList<Games> allGames = new ArrayList<>(Arrays.asList(Games.Game1,Games.Game2,Games.Game3,Games.Game6,Games.Game7));
-        for (Games games: allGames) {
-            if (getTimeLimit(games) == 0) {
-                return false;
-            }
-            if (getCountdown(games) == 0) {
-                return false;
-            }
+        /*
+        ArrayList<Games> allGamesbut2 = new ArrayList<>(Arrays.asList(Games.Game1,Games.Game3,Games.Game6,Games.Game7));
+        for (Games games: allGamesbut2) {
             if (getSpawn(games) == null) {
                 return false;
             }
@@ -352,5 +422,7 @@ public class StructureManager {
             return false;
         }
         return true;
+
+         */
     }
 }

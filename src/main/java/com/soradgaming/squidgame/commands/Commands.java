@@ -70,10 +70,9 @@ public class Commands implements CommandExecutor {
                 sender.sendMessage(ChatColor.RED + "You don't have permission to do that");
                 return true;
             }
-        } else if (args.length == 1 && args[0].equalsIgnoreCase("join")) {
+        } else if (args.length == 2 && args[0].equalsIgnoreCase("join")) {
             Player player = ((Player) sender).getPlayer();
-            Arena arena = Arena.getPlayerArena(player);
-            if (arena.getPlayerHandler().playerJoin(player)) {
+            if (Arena.getArenaByName(args[1]).getPlayerHandler().playerJoin(player)) {
                 return true;
             } else {
                 sender.sendMessage(Messages.formatMessage(player,"arena.already-in-game"));

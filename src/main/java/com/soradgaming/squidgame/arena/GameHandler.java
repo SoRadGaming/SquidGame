@@ -21,6 +21,7 @@ public class GameHandler {
     public RedLightGreenLight redLightGreenLight = null;
     public SpeedBuilders speedBuilders = null;
     public DormsBattle dormsBattle = null;
+    public GrabTheCrown grabTheCrown = null;
     public GlassSteppingStones glassSteppingStones = null;
     public Sumo sumo = null;
     //Status of Games
@@ -113,6 +114,8 @@ public class GameHandler {
             dormsBattle = new DormsBattle(plugin,arena);
             dormsBattle.run();
         } else if (games.equals(Games.Game4)) {
+            grabTheCrown = new GrabTheCrown(plugin,arena);
+            grabTheCrown.run();
             //No Delay on Game 4 as players just finished fighting in lobby
         } else if (games.equals(Games.Game5)) {
             //Bukkit.getScheduler().runTaskLater(plugin,  20L * arena.getStructureManager().getIntermissionTime());

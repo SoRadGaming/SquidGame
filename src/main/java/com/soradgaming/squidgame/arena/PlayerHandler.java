@@ -1,6 +1,7 @@
 package com.soradgaming.squidgame.arena;
 
 import com.soradgaming.squidgame.SquidGame;
+import com.soradgaming.squidgame.games.Games;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -51,7 +52,7 @@ public class PlayerHandler {
     }
 
     private void setDefaultData(Player player) {
-        player.teleport(Objects.requireNonNull(plugin.getConfig().getLocation("Lobby")));
+        player.teleport(arena.getStructureManager().getSpawn(Games.Game3));
         player.setGameMode(GameMode.ADVENTURE);
         player.setHealthScale(20);
         player.setHealth(20);
@@ -147,7 +148,7 @@ public class PlayerHandler {
     }
 
     public boolean playerLeave(Player player) {
-        if (arena.getGameHandler().getStatus().equals(Status.Starting)) {
+        if (arena.getGameHandler().getStatus().equals(Status.Starting) || arena.getGameHandler().getStatus().equals(Status.Online)) {
             plugin.data.set("leave",player.getUniqueId().toString());
             for (Player players : getAllPlayers()) {
                 Objects.requireNonNull(players).sendMessage(Messages.formatMessage(player,"arena.leave"));

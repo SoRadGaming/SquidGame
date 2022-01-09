@@ -53,6 +53,11 @@ public class Arena {
         arena.getStructureManager().saveToConfig();
     }
 
+    public static void enableArena(Arena arena) {
+        arenaNames.put(arena.getArenaName(), arena);
+        arena.getGameHandler().setGameStatus(Status.Offline);
+    }
+
     public void unregisterArena(Arena arena) {
         arenaNames.remove(arena.getArenaName());
     }

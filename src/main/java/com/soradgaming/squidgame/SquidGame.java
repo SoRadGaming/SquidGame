@@ -104,6 +104,7 @@ public final class SquidGame extends JavaPlugin {
         //Listener
         Bukkit.getServer().getPluginManager().registerEvents(new BlockBreakListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new BlockPlaceListener(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new EntityDamageByEntityListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new EntityDamageListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new FoodLevelChangeListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new InventoryClickListener(), this);
@@ -151,12 +152,11 @@ public final class SquidGame extends JavaPlugin {
         new BukkitRunnable() {
             @Override
             public void run() {
-                List<String> arenaList = Arrays.asList(Objects.requireNonNull(arenaFolder.list()));
-                Collections.shuffle(arenaList);
+                String[] arenaList = Objects.requireNonNull(arenaFolder.list());
                 for (String file : arenaList) {
                     Arena arena = new Arena(file.substring(0, file.length() - 4), plugin);
                     arena.getStructureManager().loadFromConfig();
-                    Arena.registerArena(arena);
+                    Arena.enableArena(arena);
                     getLogger().info("Loaded " + arena.getArenaName());
                 }
             }

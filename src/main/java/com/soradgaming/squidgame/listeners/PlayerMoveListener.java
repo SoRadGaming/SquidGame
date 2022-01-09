@@ -31,10 +31,7 @@ public class PlayerMoveListener implements Listener {
             return;
         }
         Games games = arena.getGameHandler().getCurrentGame();
-        if (games == null) {
-            return;
-        }
-        if (games.equals(Games.Game1)) {
+        if (games != null && games.equals(Games.Game1)) {
             RedLightGreenLight redLightGreenLight = arena.getGameHandler().redLightGreenLight;
             if (!redLightGreenLight.isCanWalk()) {
                 final Location location = e.getPlayer().getLocation();
@@ -50,7 +47,7 @@ public class PlayerMoveListener implements Listener {
                     }
                 }
             }
-        } else if (games.equals(Games.Game6) && arena.getGameHandler().glassSteppingStones.isStarted()) {
+        } else if (games != null && games.equals(Games.Game6) && arena.getGameHandler().glassSteppingStones.isStarted()) {
             final Location location = Objects.requireNonNull(e.getTo()).clone().subtract(0, 1, 0);
             final Block block = location.getBlock();
             if (block != null && block.getType() == Material.valueOf(plugin.getConfig().getString("Game6.material"))) {
@@ -58,7 +55,7 @@ public class PlayerMoveListener implements Listener {
                     BlockUtils.destroyBlockGroup(location.getBlock(), true);
                 }
             }
-        } else if (games.equals(Games.Game7) && arena.getGameHandler().sumo.isStarted()) {
+        } else if (games != null && games.equals(Games.Game7) && arena.getGameHandler().sumo.isStarted()) {
             final Location location = e.getTo().clone();
             final String killBlock = plugin.getConfig().getString("Game7.kill-block", "sand");
             location.subtract(0, 1, 0);
