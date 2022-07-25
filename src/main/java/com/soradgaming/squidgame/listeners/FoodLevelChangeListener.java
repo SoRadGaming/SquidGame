@@ -1,7 +1,7 @@
 package com.soradgaming.squidgame.listeners;
 
-import com.soradgaming.squidgame.utils.gameManager;
-import com.soradgaming.squidgame.utils.playerManager;
+import com.soradgaming.squidgame.arena.Arena;
+import com.soradgaming.squidgame.arena.Status;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,7 +14,14 @@ public class FoodLevelChangeListener implements Listener {
         final HumanEntity entity = e.getEntity();
         if (entity instanceof Player) {
             final Player player = entity.getKiller();
-            if (player != null && gameManager.getAllPlayers().contains(player.getUniqueId()) && playerManager.gameStarted) {
+            if (player == null) {
+                return;
+            }
+            Arena arena = Arena.getPlayerArena(player);
+            if (arena == null) {
+                return;
+            }
+            if (arena.getGameHandler().getStatus() == Status.Online || arena.getGameHandler().getStatus() == Status.Starting) {
                 e.setCancelled(true);
             }
         }

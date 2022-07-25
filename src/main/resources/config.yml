@@ -1,23 +1,5 @@
 Config-Version: 1.0
-min-players: 2
-max-players: 12
-intermission-time: 30
-endgame-time: 5
-start-time: 30
 eliminate-players: true
 rewards:
   - say %squidgame_arena_winner% is the winner!
   - eco give %squidgame_arena_winner% 10
-Game1:
-  timer: 60
-  lightSwitchMin: 1
-  lightSwitchMax: 5
-Game3:
-  timer: 60
-  lightSwitchOn: 1
-  lightSwitchOff: 8
-Game6:
-  timer: 60
-  material: LIGHT_GRAY_STAINED_GLASS
-Game7:
-  kill-block: sand

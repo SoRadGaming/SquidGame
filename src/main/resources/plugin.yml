@@ -1,7 +1,7 @@
 name: SquidGame
 version: '${version}'
 main: com.soradgaming.squidgame.SquidGame
-api-version: 1.17
+api-version: 1.18
 depend: [WorldEdit]
 softdepend: [PlaceholderAPI]
 authors: [ SoRadGaming ]
@@ -10,3 +10,6 @@ commands:
   squidgame:
     aliases: ["sg", "sq", "squid"]
     description: The main command for the plugin.
+  squidgamesetup:
+    aliases: ["sgsetup", "sqsetup", "squidsetup"]
+    description: The setup command for the plugin.

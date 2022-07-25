@@ -4,44 +4,46 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.BlockVector;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
 public class playerWand {
-    private static BlockVector firstPoint;
-    private static BlockVector secondPoint;
-    private static World world;
+    private static HashMap<Player, BlockVector> firstPoint = new HashMap<>();
+    private static HashMap<Player, BlockVector> secondPoint = new HashMap<>();
+    private static HashMap<Player, World> world = new HashMap<>();
     private static ItemStack wand = null;
 
-    public static BlockVector getFirstPoint() {
-        return firstPoint;
+    public static BlockVector getFirstPoint(Player player) {
+        return firstPoint.get(player);
     }
 
-    public static BlockVector getSecondPoint() {
-        return secondPoint;
+    public static BlockVector getSecondPoint(Player player) {
+        return secondPoint.get(player);
     }
 
-    public static World getWorld() {
-        return world;
+    public static World getWorld(Player player) {
+        return world.get(player);
     }
 
-    public static void setFirstPoint(final Location loc) {
-        firstPoint = new BlockVector(loc.getX(), loc.getY(), loc.getZ());
-        world = loc.getWorld();
+    public static void setFirstPoint(final Location loc, Player player) {
+        firstPoint.put(player, new BlockVector(loc.getX(), loc.getY(), loc.getZ()));
+        world.put(player, loc.getWorld());
     }
 
-    public static void setSecondPoint(final Location loc) {
-        secondPoint = new BlockVector(loc.getX(), loc.getY(), loc.getZ());
-        world = loc.getWorld();
+    public static void setSecondPoint(final Location loc, Player player) {
+        secondPoint.put(player, new BlockVector(loc.getX(), loc.getY(), loc.getZ()));
+        world.put(player, loc.getWorld());
     }
 
-    public static boolean isComplete() {
-        return firstPoint != null && secondPoint != null;
+    public static boolean isComplete(Player player) {
+        return firstPoint.get(player) != null && secondPoint.get(player) != null;
     }
 
     public static ItemStack getWand() {

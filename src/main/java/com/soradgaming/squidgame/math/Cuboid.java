@@ -11,7 +11,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializable {
-    private static final SquidGame plugin = SquidGame.plugin;
     protected final String worldName;
     protected final int x1, y1, z1;
     protected final int x2, y2, z2;
@@ -498,7 +497,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
         };
     }
 
-    public static void rotate(Cuboid cuboid, int x, int y, int z) {
+    public void rotate(Cuboid cuboid, int x, int y, int z) {
         Vector origin = cuboid.getCenter().toVector();
         List<Vector> vectors = new ArrayList<>();
         for (Block block : cuboid.getBlocks()) {
@@ -513,28 +512,28 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
         }
     }
 
-    public static Vector rotateX(Vector inputVector,double thetaInRadians) {
+    public Vector rotateX(Vector inputVector,double thetaInRadians) {
         Vector v1 = new Vector(1,0,0).multiply(inputVector.getX());
         Vector v2 = new Vector(0,Math.cos(thetaInRadians),-1*Math.sin(thetaInRadians)).multiply(inputVector.getY());
         Vector v3 = new Vector(0,Math.sin(thetaInRadians),Math.cos(thetaInRadians)).multiply(inputVector.getZ());
         return v1.add(v2).add(v3);
     }
 
-    public static Vector rotateY(Vector inputVector,double thetaInRadians) {
+    public Vector rotateY(Vector inputVector,double thetaInRadians) {
         Vector v1 = new Vector(Math.cos(thetaInRadians),0,Math.sin(thetaInRadians)).multiply(inputVector.getX());
         Vector v2 = new Vector(0,1,0).multiply(inputVector.getY());
         Vector v3 = new Vector(-1*Math.sin(thetaInRadians),0,Math.cos(thetaInRadians)).multiply(inputVector.getZ());
         return v1.add(v2).add(v3);
     }
 
-    public static Vector rotateZ(Vector inputVector,double thetaInRadians) {
+    public Vector rotateZ(Vector inputVector,double thetaInRadians) {
         Vector v1 = new Vector(Math.cos(thetaInRadians),-1*Math.sin(thetaInRadians),0).multiply(inputVector.getX());
         Vector v2 = new Vector(Math.sin(thetaInRadians),Math.cos(thetaInRadians),0).multiply(inputVector.getY());
         Vector v3 = new Vector(0,0,-1).multiply(inputVector.getZ());
         return v1.add(v2).add(v3);
     }
 
-    public static Vector rotateGeneral(Vector inputVector, double alphaInRadians) {
+    public Vector rotateGeneral(Vector inputVector, double alphaInRadians) {
         double generalX = inputVector.getX();
         double generalY = inputVector.getY();
         double generalZ = inputVector.getZ();
@@ -632,16 +631,6 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 
     public BlockVector getSecondPoint() {
         return new BlockVector(this.x2, this.y2, this.z2);
-    }
-
-    public static void setConfigVectors(String key, BlockVector pos1, BlockVector pos2) {
-        plugin.getConfig().set(key + ".first_point.x",pos1.getX());
-        plugin.getConfig().set(key + ".first_point.y",pos1.getY());
-        plugin.getConfig().set(key + ".first_point.z",pos1.getZ());
-        plugin.getConfig().set(key + ".second_point.x",pos2.getX());
-        plugin.getConfig().set(key + ".second_point.y",pos2.getY());
-        plugin.getConfig().set(key + ".second_point.z",pos2.getZ());
-        plugin.saveConfig();
     }
 
     public List<Block> getBlocks() {
