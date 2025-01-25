@@ -5,7 +5,6 @@ import com.soradgaming.squidgame.arena.Arena;
 import com.soradgaming.squidgame.arena.Messages;
 import com.soradgaming.squidgame.utils.playerWand;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -19,7 +18,7 @@ public class Commands implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String s, String[] args) {
         final Player plot = (Player) sender;
-        final Location loc = plot.getLocation();
+        // final Location loc = plot.getLocation();
         if (args.length == 0) {
             sender.sendMessage(ChatColor.BLUE + "=============={" + ChatColor.GREEN + "SquidGame" + ChatColor.BLUE + "}==============");
             sender.sendMessage(ChatColor.BLUE + "Plugin developed by:" + ChatColor.GREEN + " SoRadGaming");
@@ -56,8 +55,12 @@ public class Commands implements CommandExecutor {
         } else if (args.length == 1 && args[0].equalsIgnoreCase("start")) {
             if (sender.isOp()) {
                 Arena arena = Arena.getPlayerArena(((Player) sender).getPlayer());
+                if (arena == null) {
+                    sender.sendMessage(ChatColor.RED + "You are not in an arena.");
+                    return true;
+                }
                 if (!arena.getGameHandler().checkStart()) {
-                    sender.sendMessage(Messages.formatMessage(((Player) sender).getPlayer(),"arena.no-enough-players"));
+                    sender.sendMessage(Messages.formatMessage(((Player) sender).getPlayer(), "arena.no-enough-players"));
                 }
             } else {
                 sender.sendMessage(ChatColor.RED + "You don't have permission to do that");
@@ -66,6 +69,11 @@ public class Commands implements CommandExecutor {
         } else if (args.length == 1 && args[0].equalsIgnoreCase("end")) {
             if (sender.isOp()) {
                 Arena arena = Arena.getPlayerArena(((Player) sender).getPlayer());
+                if (arena == null) {
+                    sender.sendMessage(ChatColor.RED + "You are not in an arena.");
+                    return true;
+                }
+                // TODO
             } else {
                 sender.sendMessage(ChatColor.RED + "You don't have permission to do that");
                 return true;
@@ -80,16 +88,16 @@ public class Commands implements CommandExecutor {
         } else if (args.length == 1 && args[0].equalsIgnoreCase("leave")) {
             Player player = ((Player) sender).getPlayer();
             Arena arena = Arena.getPlayerArena(player);
-            if (arena.getPlayerHandler().playerLeave(player)) {
+            if (arena != null && arena.getPlayerHandler().playerLeave(player)) {
                 return true;
             } else {
-                sender.sendMessage(Messages.formatMessage(player,"arena.not-in-game"));
+                sender.sendMessage(Messages.formatMessage(player, "arena.not-in-game"));
             }
         } else if (args.length == 1 && args[0].equalsIgnoreCase("wand")) {
             if (sender.isOp()) {
-                Player player = (Player) sender;;
+                Player player = (Player) sender;
                 player.getInventory().addItem(playerWand.getWand());
-                player.updateInventory();
+                //player.updateInventory();
             } else {
                 sender.sendMessage(ChatColor.RED + "You don't have permission to do that");
                 return true;

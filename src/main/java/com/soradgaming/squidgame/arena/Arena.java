@@ -1,7 +1,6 @@
 package com.soradgaming.squidgame.arena;
 
 import com.soradgaming.squidgame.SquidGame;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.io.File;
@@ -10,12 +9,10 @@ import java.util.HashMap;
 import java.util.Set;
 
 public class Arena {
-    private SquidGame plugin;
-    private String arenaName;
-    private static HashMap<String, Arena> arenaNames = new HashMap<>();
+    private final String arenaName;
+    private static final HashMap<String, Arena> arenaNames = new HashMap<>();
 
     public Arena(String name, SquidGame plugin) {
-        this.plugin = plugin;
         this.arenaName = name;
         this.arenaPlayer = new PlayerHandler(plugin, this);
         this.arenaGameHandler = new GameHandler(plugin, this);
@@ -26,30 +23,29 @@ public class Arena {
         return arenaName;
     }
 
-    private StructureManager structureManager = new StructureManager(this);
+    private final StructureManager structureManager = new StructureManager(this);
     public StructureManager getStructureManager() {
         return structureManager;
     }
 
-    private GameHandler arenaGameHandler;
+    private final GameHandler arenaGameHandler;
     public GameHandler getGameHandler() {
         return arenaGameHandler;
     }
 
-    private File arenaFile;
+    private final File arenaFile;
     public File getArenaFile() {
         return arenaFile;
     }
 
-    private PlayerHandler arenaPlayer;
+    private final PlayerHandler arenaPlayer;
     public PlayerHandler getPlayerHandler() {
         return arenaPlayer;
     }
 
     //Arena Managers
     public static void registerArena(Arena arena) {
-        arenaNames.put(arena.getArenaName(), arena);
-        arena.getGameHandler().setGameStatus(Status.Offline);
+        enableArena(arena);
         arena.getStructureManager().saveToConfig();
     }
 

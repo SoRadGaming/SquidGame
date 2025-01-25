@@ -3,8 +3,6 @@ package com.soradgaming.squidgame.games;
 import com.soradgaming.squidgame.SquidGame;
 import com.soradgaming.squidgame.arena.Arena;
 import com.soradgaming.squidgame.arena.Messages;
-import com.soradgaming.squidgame.placeholders.PlayerDataType;
-import com.soradgaming.squidgame.placeholders.scoreboard;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;

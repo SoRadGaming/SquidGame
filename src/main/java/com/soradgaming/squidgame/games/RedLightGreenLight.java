@@ -3,7 +3,6 @@ package com.soradgaming.squidgame.games;
 import com.soradgaming.squidgame.SquidGame;
 import com.soradgaming.squidgame.arena.Arena;
 import com.soradgaming.squidgame.arena.Messages;
-import com.soradgaming.squidgame.arena.Status;
 import com.soradgaming.squidgame.math.Cuboid;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -18,15 +17,15 @@ import java.util.List;
 import java.util.Objects;
 
 public class RedLightGreenLight implements Runnable {
-    private SquidGame plugin;
-    private Arena arena;
+    private final SquidGame plugin;
+    private final Arena arena;
     private boolean canWalk = true;
     private boolean Started = false;
-    private BukkitScheduler gameTimer = Bukkit.getScheduler();
-    private BukkitScheduler bossBarProgress = Bukkit.getScheduler();
-    private BukkitScheduler redLight = Bukkit.getScheduler();
-    private BukkitScheduler greenLight = Bukkit.getScheduler();
-    private BukkitScheduler delay = Bukkit.getScheduler();
+    private final BukkitScheduler gameTimer = Bukkit.getScheduler();
+    private final BukkitScheduler bossBarProgress = Bukkit.getScheduler();
+    private final BukkitScheduler redLight = Bukkit.getScheduler();
+    private final BukkitScheduler greenLight = Bukkit.getScheduler();
+    private final BukkitScheduler delay = Bukkit.getScheduler();
     private BossBar bossBar;
     private double timerInterval;
     private int timeGlobal;
@@ -65,8 +64,8 @@ public class RedLightGreenLight implements Runnable {
         }
         Location spawn = arena.getStructureManager().getSpawn(Games.Game1);
         for (Player p : arena.getPlayerHandler().getAllPlayers()) {
-            Objects.requireNonNull(p).teleport(Objects.requireNonNull(spawn));
-            bossBar.addPlayer(Objects.requireNonNull(p));
+            p.teleport(spawn);
+            bossBar.addPlayer(p);
         }
         Messages.onExplainStart(arena.getPlayerHandler().getAllPlayers(),"first");
         timerInterval = (1 / (double) timeGlobal);
@@ -100,7 +99,7 @@ public class RedLightGreenLight implements Runnable {
             List<Player> playerList = arena.getPlayerHandler().getAlivePlayers();
             arena.getGameHandler().setPvPAllowed(false);
             for (Player player : playerList) {
-                Location location = Objects.requireNonNull(player).getLocation();
+                Location location = player.getLocation();
                 if (!player.getGameMode().equals(GameMode.SPECTATOR)) {
                     if (!getGoalZone().contains(location)) { //Player didn't make it to end in time
                         Location spawn = arena.getStructureManager().getSpawn(Games.Game1);
@@ -119,10 +118,10 @@ public class RedLightGreenLight implements Runnable {
             }
             Bukkit.getScheduler().runTaskLater(plugin, () -> {
                 for (final Player player : arena.getPlayerHandler().getDeadPlayers()) {
-                    Objects.requireNonNull(player).sendTitle(Messages.formatMessage(player,"events.game-timeout-died.title") , Messages.formatMessage(player,"events.game-timeout-died.subtitle"),10, 30,10);
+                    player.sendTitle(Messages.formatMessage(player,"events.game-timeout-died.title") , Messages.formatMessage(player,"events.game-timeout-died.subtitle"),10, 30,10);
                 }
                 for (final Player player : arena.getPlayerHandler().getAlivePlayers()) {
-                    Objects.requireNonNull(player).sendTitle(Messages.formatMessage(player,"events.game-pass.title") , Messages.formatMessage(player,"events.game-pass.subtitle"),10, 30,10);
+                    player.sendTitle(Messages.formatMessage(player,"events.game-pass.title") , Messages.formatMessage(player,"events.game-pass.subtitle"),10, 30,10);
                 }
             }, 40L);
             Bukkit.getScheduler().runTaskLater(plugin, () -> arena.getGameHandler().intermission(Games.Game2), 20L * arena.getStructureManager().getEndTime());
@@ -131,9 +130,9 @@ public class RedLightGreenLight implements Runnable {
     }
 
     private Runnable singDoll() {
-        if (!arena.getGameHandler().getStatus().equals(Status.Online)) {
-            return null;
-        }
+//        if (!arena.getGameHandler().getStatus().equals(Status.Online)) {
+//            return;
+//        }
         final int time = (int) Math.floor(Math.random()*(max-min+1)+min);
         Messages.broadcastTitle(arena.getPlayerHandler().getAllPlayers(),"games.first.green-light.title", "games.first.green-light.subtitle",time);
         canWalk = true;

@@ -7,11 +7,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import java.util.List;
-import java.util.Objects;
 
 public class GameHandler {
-    private SquidGame plugin;
-    private Arena arena;
+    private final SquidGame plugin;
+    private final Arena arena;
     //Arena Status
     private Status gameStatus;
     //Global
@@ -59,13 +58,13 @@ public class GameHandler {
                     arena.getPlayerHandler().Initialise();
                     intermission(Games.Game1);
                     for (Player player : playerList) {
-                        Objects.requireNonNull(player).sendMessage(Messages.formatMessage(player, "arena.started"));
+                        player.sendMessage(Messages.formatMessage(player, "arena.started"));
                     }
                     setGameStatus(Status.Online);
                 }, 20L * arena.getStructureManager().getCountdown(Games.Game1));
                 //Message Starting
                 for (Player player : playerList) {
-                    Objects.requireNonNull(player).sendMessage(Messages.formatMessage(player, "arena.starting"));
+                    player.sendMessage(Messages.formatMessage(player, "arena.starting"));
                 }
                 setGameStatus(Status.Starting);
                 return true;
@@ -101,7 +100,7 @@ public class GameHandler {
             Messages.broadcastTitle(arena.getPlayerHandler().getAllPlayers(),"events.intermission.title", "events.intermission.subtitle" , 3);
         }
         if (games.equals(Games.Game1)) {
-            //No Delay on Game 1 as players already in lobby
+            // No Delay on Game 1 as players already in lobby
             redLightGreenLight = new RedLightGreenLight(plugin,arena);
             redLightGreenLight.run();
         } else if (games.equals(Games.Game2)) {

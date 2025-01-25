@@ -23,10 +23,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 public final class SquidGame extends JavaPlugin {
     public static SquidGame plugin;
@@ -52,7 +49,7 @@ public final class SquidGame extends JavaPlugin {
         if (Bukkit.getPluginManager().isPluginEnabled("WorldEdit")) {
             getLogger().info("Hooked into WorldEdit");
         } else {
-            getLogger().info("Could not Find WorldEdit, Game2 Wont Work Without it");
+            getLogger().info("Could not Find WorldEdit, SpeedBuilders (Game2) Wont Work Without it!");
         }
 
         //Load EventHandler and Commands
@@ -65,7 +62,7 @@ public final class SquidGame extends JavaPlugin {
         try {
             createSchematicsDir();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
         //Config
@@ -81,17 +78,21 @@ public final class SquidGame extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
-        for (String name:Arena.getArenasNames()) {
-            Arena arena = Arena.getArenaByName(name);
-            List<Player> allPlayers = arena.getPlayerHandler().getAllPlayers();
-            for (Player player: allPlayers) {
-                arena.getPlayerHandler().playerQuit(player);
+        try {
+            for (String name : Arena.getArenasNames()) {
+                Arena arena = Arena.getArenaByName(name);
+                List<Player> allPlayers = arena.getPlayerHandler().getAllPlayers();
+                for (Player player : allPlayers) {
+                    arena.getPlayerHandler().playerQuit(player);
+                }
             }
+            plugin.saveFile();
+            plugin.saveMessages();
+            plugin.saveArenas();
+            getLogger().info("The plugin has been disabled correctly!");
+        } catch (Exception e) {
+            getLogger().severe("An error occurred during plugin shutdown: " + e.getMessage());
         }
-        plugin.saveFile();
-        plugin.saveMessages();
-        plugin.saveArenas();
-        getLogger().info("The plugin has been disabled correctly!");
     }
 
     //Loads all the Events and Commands
@@ -117,102 +118,141 @@ public final class SquidGame extends JavaPlugin {
         new placeholder().register();
     }
 
-    //Save the data file.
+    // Save the data file.
     public void saveFile() {
         try {
             data.save(dataFile);
+            getLogger().info("Data file saved successfully.");
         } catch (IOException e) {
-            e.printStackTrace();
-
+            getLogger().severe("Failed to save data file: " + e.getMessage());
         }
     }
 
+    // Save the messages file.
     public void saveMessages() {
         try {
             messages.save(messageFile);
+            getLogger().info("Messages file saved successfully.");
         } catch (IOException e) {
-            e.printStackTrace();
+            getLogger().severe("Failed to save messages file: " + e.getMessage());
 
         }
     }
 
     private void saveArenas() {
         for (Arena arena : Arena.getArenas()) {
-            arena.getGameHandler().setGameStatus(Status.Offline);
-            arena.getStructureManager().saveToConfig();
-            getLogger().info("Saved " + arena.getArenaName());
+            try {
+                arena.getGameHandler().setGameStatus(Status.Offline);
+                arena.getStructureManager().saveToConfig();
+                getLogger().info("Saved " + arena.getArenaName());
+            } catch (Exception e) {
+                getLogger().severe("Failed to save arena: " + arena.getArenaName());
+                getLogger().severe("Exception occurred while saving arena: " + arena.getArenaName() + " - " + e.getMessage());
+            }
         }
     }
 
     private void loadArenas() {
-        if(!arenaFolder.exists()) {
-            arenaFolder.mkdir();
-            return;
+        if (!arenaFolder.exists()) {
+            if (!arenaFolder.mkdir()) {
+                getLogger().severe("Failed to create arena folder!");
+                return;
+            }
         }
         new BukkitRunnable() {
             @Override
             public void run() {
-                String[] arenaList = Objects.requireNonNull(arenaFolder.list());
+                String[] arenaList = arenaFolder.list();
+                if (arenaList == null) {
+                    getLogger().severe("Failed to list files in arena folder!");
+                    return;
+                }
                 for (String file : arenaList) {
-                    Arena arena = new Arena(file.substring(0, file.length() - 4), plugin);
-                    arena.getStructureManager().loadFromConfig();
-                    Arena.enableArena(arena);
-                    getLogger().info("Loaded " + arena.getArenaName());
+                    try {
+                        Arena arena = new Arena(file.substring(0, file.length() - 4), plugin);
+                        arena.getStructureManager().loadFromConfig();
+                        Arena.enableArena(arena);
+                        getLogger().info("Loaded " + arena.getArenaName());
+                    } catch (Exception e) {
+                        getLogger().severe("Failed to load arena: " + file);
+                        getLogger().severe("Exception occurred while loading arena: " + file + " - " + e.getMessage());
+                    }
                 }
             }
-        }.runTaskLater(this, 20L);
+        }.runTask(this);
     }
 
-    //Config
+    // Config
     private void registerConfig() {
         saveDefaultConfig();
     }
 
-    //Load the data file
+    // Load the data file
     public void loadFile() {
         if (dataFile.exists()) {
             try {
                 data.load(dataFile);
-            } catch (IOException | InvalidConfigurationException e) {
-
-                e.printStackTrace();
+                getLogger().info("Data file loaded successfully.");
+            } catch (IOException e) {
+                getLogger().severe("Failed to load data file due to an IOException: " + e.getMessage());
+            } catch (InvalidConfigurationException e) {
+                getLogger().severe("Failed to load data file due to an InvalidConfigurationException: " + e.getMessage());
+            } catch (Exception e) {
+                getLogger().severe("Unexpected error occurred while loading data file: " + e.getMessage());
             }
         } else {
             try {
                 data.save(dataFile);
+                getLogger().info("Data file created and saved successfully.");
             } catch (IOException e) {
-                e.printStackTrace();
+                getLogger().severe("Failed to save data file: " + e.getMessage());
+            } catch (Exception e) {
+                getLogger().severe("Unexpected error occurred while saving data file: " + e.getMessage());
             }
         }
     }
 
-    //Create schematic file
+    // Create schematic file
     public void createSchematicsDir() throws IOException {
-        if(!schematics.exists()) {
-            schematics.mkdir();
+        if (!schematics.exists()) {
+            if (schematics.mkdir()) {
+                getLogger().info("Schematics directory created successfully.");
+            } else {
+                throw new IOException("Failed to create schematics directory.");
+            }
+        } else {
+            getLogger().info("Schematics directory already exists.");
         }
     }
 
-    //Load the Message
+    // Load the Message
     public void loadMessage() {
         if (!messageFile.exists()) {
             messageFile.getParentFile().mkdirs();
             saveResource("messages.yml", false);
         }
-        messages = new YamlConfiguration();
         try {
             messages.load(messageFile);
-
-        } catch (IOException | InvalidConfigurationException e) {
-
-            e.printStackTrace();
+        } catch (IOException e) {
+            getLogger().severe("Failed to load messages file due to an IOException: " + e.getMessage());
+        } catch (InvalidConfigurationException e) {
+            getLogger().severe("Failed to load messages file due to an InvalidConfigurationException: " + e.getMessage());
+        } catch (Exception e) {
+            getLogger().severe("Unexpected error occurred while loading messages file: " + e.getMessage());
         }
     }
 
     public void reloadMessages() {
         // Look for defaults in the jar
-        Reader defConfigStream = new InputStreamReader(Objects.requireNonNull(this.getResource("messages.yml")), StandardCharsets.UTF_8);
-        YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-        messages.setDefaults(defConfig);
+        try (Reader defConfigStream = new InputStreamReader(this.getResource("messages.yml"), StandardCharsets.UTF_8)) {
+            YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
+            messages.setDefaults(defConfig);
+        } catch (NullPointerException e) {
+            getLogger().severe("Failed to find messages.yml in the plugin jar. NullPointerException: " + e.getMessage());
+        } catch (IOException e) {
+            getLogger().severe("Failed to load messages.yml. IOException: " + e.getMessage());
+        } catch (Exception e) {
+            getLogger().severe("Unexpected error occurred while loading messages.yml: " + e.getMessage());
+        }
     }
 }

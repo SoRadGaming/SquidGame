@@ -53,7 +53,7 @@ public class WorldEditHook {
         //Paste (Load before this)
         try (EditSession editSession = WorldEdit.getInstance().newEditSession(world)) {
             Operation operation = new ClipboardHolder(clipboard).createPaste(editSession)
-                    .to(BlockVector3.at(pos1.getBlockX(),pos1.getBlockY(),pos1.getBlockZ()))
+                    .to(BlockVector3.at(pos1.x(),pos1.y(),pos1.z()))
                     // configure here
                     .build();
             Operations.complete(operation);
@@ -70,7 +70,7 @@ public class WorldEditHook {
     }
 
     private Cuboid BlockVector3ToCuboid(BlockVector3 pos1, BlockVector3 pos2) {
-        return new Cuboid(BukkitAdapter.adapt(world),pos1.getBlockX(),pos1.getBlockY(),pos1.getBlockZ(),pos2.getBlockX(),pos2.getBlockY(),pos2.getBlockZ());
+        return new Cuboid(BukkitAdapter.adapt(world),pos1.x(),pos1.y(),pos1.z(),pos2.x(),pos2.y(),pos2.z());
     }
 
     public void copy() throws WorldEditException {

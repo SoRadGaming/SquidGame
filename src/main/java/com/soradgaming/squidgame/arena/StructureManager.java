@@ -12,19 +12,18 @@ import java.io.IOException;
 import java.util.*;
 
 public class StructureManager {
-    private SquidGame plugin;
-    private Arena arena;
+    private final Arena arena;
     private int maxPlayers = 12;
     private int minPlayers = 2;
     private int startTime = 30;
     private int endTime = 5;
     private int intermissionTime = 10;
-    private HashMap<Games, Integer> timeLimit = new HashMap<>();
-    private HashMap<Games, Integer> countdown = new HashMap<>();
-    private HashMap<Games,Location> spawn = new HashMap<>();//
-    private HashMap<String,Location> spawnGame2 = new HashMap<>();
-    private HashMap<Games,List<Location>> additionalSpawnPoints = new HashMap<>();//
-    private HashMap<Games,List<Location>> freeSpawnList = new HashMap<>();
+    private final HashMap<Games, Integer> timeLimit = new HashMap<>();
+    private final HashMap<Games, Integer> countdown = new HashMap<>();
+    private final HashMap<Games,Location> spawn = new HashMap<>();//
+    private final HashMap<String,Location> spawnGame2 = new HashMap<>();
+    private final HashMap<Games,List<Location>> additionalSpawnPoints = new HashMap<>();//
+    private final HashMap<Games,List<Location>> freeSpawnList = new HashMap<>();
     private int lightSwitchMin = 1;
     private int lightSwitchMax = 5;
     private int lightSwitchOn = 1;
@@ -34,7 +33,7 @@ public class StructureManager {
     private final ArrayList<Games> allGames = new ArrayList<>(Arrays.asList(Games.Game1,Games.Game2,Games.Game3,Games.Game4,Games.Game6,Games.Game7));
 
     public StructureManager(Arena arena) {
-        this.plugin = SquidGame.plugin;
+        SquidGame plugin = SquidGame.plugin;
         this.arena = arena;
     }
 
