@@ -1,52 +1,42 @@
-# Squid Game
-SquidGame plugin for Minecraft
-https://www.spigotmc.org/resources/squidgame.97868/
+# Squid Game Plugin for Minecraft
 
-**Commands**:
-- /sq
-- /sq help
-- /sq reload
-- /sq join
-- /sq leave
-- /sq list
-- /sq start
-- /sq wand
-- /sq end
-- /sq set lobby
-- /sq set game1-7 Variable
+A Minecraft plugin inspired by the popular Netflix series *Squid Game*. This plugin brings the intense and thrilling games from the show into your Minecraft server, allowing players to compete in a series of challenges.
 
-**Build Selection for Game 2:**
-- BuildPlate needs to be 10x5x10 XYZ (same as display plate)
-- first point of schematic must be same as build plate relative to build (not cords but direction)
-- schematic should have no offset
-- schematic should first and second position should be same relative to build plate
-- red = 1 // blue = 2 // green = 3 // yellow = 4
+---
 
-**Glass Selection for Game 6:**
-- Tiles need to be 2x2
-- gaped 2x2 in both directions
-- min platforms 3
-- select bottom left of first platform (left platforms)
-- select top right of last platform (right platforms)
+## **Notice**
+This project is now **closed-source**. Version 2.0 is the last public release of the code. This decision was made after discovering that my code was used to train AI models without my permission. Thank you for understanding.
 
-**Placeholders**:
-- `%squidgame_wins%` Return Player Win Count
-- `%squidgame_first%`  Get First Position Player
-- `%squidgame_second%`  Get Second Position Player
-- `%squidgame_third%`  Get Third Position Player
-- `%squidgame_fourth%`  Get Fourth Position Player
-- `%squidgame_fifth%`  Get Fifth Position Player
-- `%squidgame_arena_joined%`  Get Player who most recently Join Game
-- `%squidgame_arena_players%`  Get amount of players in Game
-- `%squidgame_arena_maxplayers%`  Get Max amount of players
-- `%squidgame_arena_leaved%`  Get Player who most recently leave the Game
-- `%squidgame_arena_time%`  Get Countdown Time
-- `%squidgame_arena_death%`  Get Player who most recently died in Game
-- `%squidgame_arena_required%`  Get Min amount of players
-- `%squidgame_arena_winner%`  Get Player who most recently won
-- `%squidgame_points%`  // Return Player Point Count
-- `%squidgame_points1%` // Get First Position Player
-- `%squidgame_points2%` // Get Second Position Player
-- `%squidgame_points3%` // Get Third Position Player
-- `%squidgame_points4%` // Get Fourth Position Player
-- `%squidgame_points5%` // Get Fifth Position Player
+---
+
+## **Downloads**
+You can download the plugin from the following platforms:
+
+- **Modrinth**: [Download Here](https://modrinth.com/plugin/squidgames)  
+- **CurseForge**: [Download Here](https://www.curseforge.com/minecraft/bukkit-plugins/squidgame)
+- **Spigot**: [Download Here](https://www.spigotmc.org/resources/squidgame.97868/)
+- **Hangar**: [Download Here](https://hangar.papermc.io/SoRadGaming/SquidGame)
+---
+
+## **Features**
+- **Multiple Mini-Games**: Play iconic games from the *Squid Game* series, such as Red Light Green Light, Glass Stepping Stones, and more.
+- **Customizable Settings**: Configure game rules, player limits, and rewards to suit your server.
+---
+
+## **Documentation**
+For detailed instructions on how to install, configure, and use the plugin, visit the [Wiki](https://github.com/SoRadGaming/SquidGame/wiki).
+
+---
+
+## **Support**
+If you encounter any issues or have questions, feel free to open an issue on the [GitHub repository](https://github.com/SoRadGaming/SquidGame)
+or join the [Discord](https://discord.gg/2NY3a3AJ8e).
+
+---
+
+## **License**
+This project is closed-source. All rights reserved. Unauthorized use, distribution, or modification of the code is prohibited.
+
+---
+
+Enjoy the games, and may the best player win! 🦑
