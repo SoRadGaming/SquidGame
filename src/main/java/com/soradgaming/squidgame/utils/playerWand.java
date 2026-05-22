@@ -15,9 +15,9 @@ import java.util.List;
 import java.util.Objects;
 
 public class playerWand {
-    private static HashMap<Player, BlockVector> firstPoint = new HashMap<>();
-    private static HashMap<Player, BlockVector> secondPoint = new HashMap<>();
-    private static HashMap<Player, World> world = new HashMap<>();
+    private static final HashMap<Player, BlockVector> firstPoint = new HashMap<>();
+    private static final HashMap<Player, BlockVector> secondPoint = new HashMap<>();
+    private static final HashMap<Player, World> world = new HashMap<>();
     private static ItemStack wand = null;
 
     public static BlockVector getFirstPoint(Player player) {
@@ -43,7 +43,7 @@ public class playerWand {
     }
 
     public static boolean isComplete(Player player) {
-        return firstPoint.get(player) != null && secondPoint.get(player) != null;
+        return firstPoint.get(player) == null || secondPoint.get(player) == null;
     }
 
     public static ItemStack getWand() {

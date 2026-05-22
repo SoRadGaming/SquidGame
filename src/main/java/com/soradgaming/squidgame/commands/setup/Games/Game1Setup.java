@@ -2,12 +2,10 @@ package com.soradgaming.squidgame.commands.setup.Games;
 
 import com.soradgaming.squidgame.SquidGame;
 import com.soradgaming.squidgame.arena.Arena;
-import com.soradgaming.squidgame.arena.Messages;
 import com.soradgaming.squidgame.arena.Status;
 import com.soradgaming.squidgame.commands.setup.CommandHandlerInterface;
 import com.soradgaming.squidgame.games.Games;
 import com.soradgaming.squidgame.utils.playerWand;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 

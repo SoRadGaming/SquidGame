@@ -18,16 +18,19 @@ public class StructureManager {
     private int startTime = 30;
     private int endTime = 5;
     private int intermissionTime = 10;
+
     private final HashMap<Games, Integer> timeLimit = new HashMap<>();
     private final HashMap<Games, Integer> countdown = new HashMap<>();
     private final HashMap<Games,Location> spawn = new HashMap<>();//
     private final HashMap<String,Location> spawnGame2 = new HashMap<>();
     private final HashMap<Games,List<Location>> additionalSpawnPoints = new HashMap<>();//
     private final HashMap<Games,List<Location>> freeSpawnList = new HashMap<>();
+
     private int lightSwitchMin = 1;
     private int lightSwitchMax = 5;
     private int lightSwitchOn = 1;
     private int lightSwitchOff = 8;
+
     private Material bridgeBlock = Material.LIGHT_GRAY_STAINED_GLASS;
     private Material killBlock = Material.LIGHT_GRAY_STAINED_GLASS;
     private final ArrayList<Games> allGames = new ArrayList<>(Arrays.asList(Games.Game1,Games.Game2,Games.Game3,Games.Game4,Games.Game6,Games.Game7));
